@@ -1,0 +1,1502 @@
+fileFormatVersion: 2
+guid: 978d3211dc66b914689356cf14cdb73a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5568581241011191526
+    second: HC_Sewer&FactoryA4_0
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 48
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_0
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 672
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a11cf9a6ddc68b2b0800000000000000
+      internalID: -5568581241011191526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_1
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 672
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b36e502d1458074b8bb435b7a80547f
+      internalID: 2099660780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_2
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 672
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8d598c3a47e65c479e90afa87865875
+      internalID: 2012099686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_3
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 672
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd2c53f3bb8246146a51f883d0a53c8a
+      internalID: -1875631231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_4
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 672
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf2c9774ef87ef744b67a06c0c3b2e09
+      internalID: -1291673115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_5
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 672
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f3d4d3f40a50eb4096150816ef20832
+      internalID: 1444181789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_6
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 672
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7cff97adaf2b9d944b9bdc4edc8acfcc
+      internalID: -1724449208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_7
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 672
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ff510fc0a4ca974eb1b0817ca9cfe18
+      internalID: -1812013667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_8
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 672
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6d3d506b5d71ef42b750ac5f3c47e6f
+      internalID: -760696415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_9
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 672
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 60900d34b0d59eb418fcf1df420bb347
+      internalID: 911519652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_10
+      rect:
+        serializedVersion: 2
+        x: 504
+        y: 672
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f28abef1d9a9d2a4290bc85100f20f5d
+      internalID: -1275820956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_11
+      rect:
+        serializedVersion: 2
+        x: 552
+        y: 672
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 631011f569c554e47ba8ccfd0cc97040
+      internalID: -1931610893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_12
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 624
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a775df0b2d13944419b1957f0860cd21
+      internalID: 845771325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_13
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 624
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7389d9f6cea242d428f0a0a29e3eb846
+      internalID: -583375284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_14
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 624
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf2c1258ef679b6478a0827f0d142065
+      internalID: 732314258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_15
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 624
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08fe6d61540b9de40a88cd8723e1a501
+      internalID: -589609185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_16
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 624
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96d4864afa2d4f84b823e78ec288ecdf
+      internalID: -1879882039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_17
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 624
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a96e19f07dab434b9f6e87ece4140f7
+      internalID: 718862947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_18
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 624
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7fd3c7d6166f7c44b8a970a23a68e28
+      internalID: -1961908957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_19
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 624
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9eeb89dabc5756142a2314a9a90ea5d5
+      internalID: 1939697614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_20
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 624
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: efb0fd5ada659384d84f5f932c94016b
+      internalID: 203815704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_21
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 624
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 104be74fc9134744cb152a8aba07e1a2
+      internalID: -22565050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_22
+      rect:
+        serializedVersion: 2
+        x: 504
+        y: 624
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc37f4c866c9d8445aa1a78d89952ef4
+      internalID: -133490584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_23
+      rect:
+        serializedVersion: 2
+        x: 552
+        y: 624
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f499b3f7f05c8e64d9b9508fa767d1dc
+      internalID: 1719037559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_24
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 576
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e06240cbd222d0f4aae78839522a02b2
+      internalID: -148266796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_25
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 576
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4612fb9d45e81f245b536c9b153976d5
+      internalID: 2141846688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_26
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 576
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ada9fea5850ec0478f44c0998abcbbd
+      internalID: 1840529738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_27
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 576
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cecaab03cc2518f49a01e99a51509450
+      internalID: -861073264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_28
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 576
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bcd9dad10694a8a4d906ee7402ef4fab
+      internalID: 442288326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_29
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 576
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cda48ea36ae3efb40bb18b5c4cec5e12
+      internalID: 1594690254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_30
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 576
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0d3a9652395994e49844463a77eea69d
+      internalID: 930645281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_31
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 576
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 14ff08d01e1d04c40aa3737d7a9e92f4
+      internalID: 1879150667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_32
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 576
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d64bde0c66795b48a638da694781cab
+      internalID: 1033884702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_33
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 576
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d3e56267ff8466438dbc6131b3b5df6
+      internalID: 1579258424
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_34
+      rect:
+        serializedVersion: 2
+        x: 504
+        y: 576
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 51c6adeaaf5f89541985fc57879c2724
+      internalID: 658158622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_35
+      rect:
+        serializedVersion: 2
+        x: 552
+        y: 576
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f69510e9e6fb20344abf564173375670
+      internalID: -364746530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_36
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 528
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec26bc5e4209b4e469209283ebaa955b
+      internalID: -710644942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_37
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 528
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5060b494fb579534caadf0e178229ac0
+      internalID: 1740192965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_38
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 528
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a8b9ff4fb6d2dd419c9c515acffa7e8
+      internalID: 1632788257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_39
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 528
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2fb8abf1003b67840b1d8bdcdebb64f0
+      internalID: 834617639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_40
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 528
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6ee804b3c3a0654d89c82bf995d6d4a
+      internalID: 1440442522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_41
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 528
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26d0b85e8cfedcc46abbd339e33e0479
+      internalID: 252784642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_42
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 528
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f0e3b23e7dc99242b45ff239fb559c4
+      internalID: -1099170841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_43
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 528
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c082300b1bf8fe64db77abff2a6b8acb
+      internalID: -725461434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_44
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 528
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd56c7ce877bf6a408b421716e41c6f6
+      internalID: 1465415442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_45
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 528
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80faf872d5ea843449bcf7bb0c41d2d0
+      internalID: 1898993441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_46
+      rect:
+        serializedVersion: 2
+        x: 504
+        y: 528
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec12622d7c0ed324db0953aa787f43ec
+      internalID: -1825884089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_47
+      rect:
+        serializedVersion: 2
+        x: 552
+        y: 528
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: edcfb67edc19a044bbe716ed4975a343
+      internalID: -816932560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_48
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 480
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e593d943f93770f4bb1fafc71f1beada
+      internalID: -266884777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_49
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 480
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab23f97e6f59f5e4e9e113970a724abc
+      internalID: 341805442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_50
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 480
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85c9ea8822d3b4649b8486d163bfe56a
+      internalID: 1163776409
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_51
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 480
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7361b12bb40de8d449b8ea59d3b95883
+      internalID: 5659321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_52
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 480
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 599e816ed6f193744a6f052ea5c41798
+      internalID: 2096392338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_53
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 480
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d9fb00d9174e774b8fa3f294e01cdf8
+      internalID: 2083764276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_54
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 480
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1d13d8187b04374cb0f666881e896bc
+      internalID: 892839683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_55
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 480
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85ec3d727bf1a3142a6d448b253b30ad
+      internalID: 65282815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_56
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 480
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9bbd34650fb74904ca8fb0ed9e92b77e
+      internalID: 1119753584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_57
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 480
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea75e7a078af2364fa38093c851ce885
+      internalID: -1960603438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_58
+      rect:
+        serializedVersion: 2
+        x: 504
+        y: 480
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 72e8962e43b595946af6f1a75d98db80
+      internalID: 184389812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HC_Sewer&FactoryA4_59
+      rect:
+        serializedVersion: 2
+        x: 552
+        y: 480
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3abb177bb9d636b4bb86ce3cf5475728
+      internalID: 1599857652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 1e16cbd8d0aefdc4dab78e7d19f4d2fa
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":48.0,"y":48.0},"gridSpriteOffset":{"x":24.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      HC_Sewer&FactoryA4_0: -5568581241011191526
+      HC_Sewer&FactoryA4_1: 2099660780
+      HC_Sewer&FactoryA4_10: -1275820956
+      HC_Sewer&FactoryA4_11: -1931610893
+      HC_Sewer&FactoryA4_12: 845771325
+      HC_Sewer&FactoryA4_13: -583375284
+      HC_Sewer&FactoryA4_14: 732314258
+      HC_Sewer&FactoryA4_15: -589609185
+      HC_Sewer&FactoryA4_16: -1879882039
+      HC_Sewer&FactoryA4_17: 718862947
+      HC_Sewer&FactoryA4_18: -1961908957
+      HC_Sewer&FactoryA4_19: 1939697614
+      HC_Sewer&FactoryA4_2: 2012099686
+      HC_Sewer&FactoryA4_20: 203815704
+      HC_Sewer&FactoryA4_21: -22565050
+      HC_Sewer&FactoryA4_22: -133490584
+      HC_Sewer&FactoryA4_23: 1719037559
+      HC_Sewer&FactoryA4_24: -148266796
+      HC_Sewer&FactoryA4_25: 2141846688
+      HC_Sewer&FactoryA4_26: 1840529738
+      HC_Sewer&FactoryA4_27: -861073264
+      HC_Sewer&FactoryA4_28: 442288326
+      HC_Sewer&FactoryA4_29: 1594690254
+      HC_Sewer&FactoryA4_3: -1875631231
+      HC_Sewer&FactoryA4_30: 930645281
+      HC_Sewer&FactoryA4_31: 1879150667
+      HC_Sewer&FactoryA4_32: 1033884702
+      HC_Sewer&FactoryA4_33: 1579258424
+      HC_Sewer&FactoryA4_34: 658158622
+      HC_Sewer&FactoryA4_35: -364746530
+      HC_Sewer&FactoryA4_36: -710644942
+      HC_Sewer&FactoryA4_37: 1740192965
+      HC_Sewer&FactoryA4_38: 1632788257
+      HC_Sewer&FactoryA4_39: 834617639
+      HC_Sewer&FactoryA4_4: -1291673115
+      HC_Sewer&FactoryA4_40: 1440442522
+      HC_Sewer&FactoryA4_41: 252784642
+      HC_Sewer&FactoryA4_42: -1099170841
+      HC_Sewer&FactoryA4_43: -725461434
+      HC_Sewer&FactoryA4_44: 1465415442
+      HC_Sewer&FactoryA4_45: 1898993441
+      HC_Sewer&FactoryA4_46: -1825884089
+      HC_Sewer&FactoryA4_47: -816932560
+      HC_Sewer&FactoryA4_48: -266884777
+      HC_Sewer&FactoryA4_49: 341805442
+      HC_Sewer&FactoryA4_5: 1444181789
+      HC_Sewer&FactoryA4_50: 1163776409
+      HC_Sewer&FactoryA4_51: 5659321
+      HC_Sewer&FactoryA4_52: 2096392338
+      HC_Sewer&FactoryA4_53: 2083764276
+      HC_Sewer&FactoryA4_54: 892839683
+      HC_Sewer&FactoryA4_55: 65282815
+      HC_Sewer&FactoryA4_56: 1119753584
+      HC_Sewer&FactoryA4_57: -1960603438
+      HC_Sewer&FactoryA4_58: 184389812
+      HC_Sewer&FactoryA4_59: 1599857652
+      HC_Sewer&FactoryA4_6: -1724449208
+      HC_Sewer&FactoryA4_7: -1812013667
+      HC_Sewer&FactoryA4_8: -760696415
+      HC_Sewer&FactoryA4_9: 911519652
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
