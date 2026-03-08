@@ -107,7 +107,7 @@ TextureImporter:
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: -1
+    textureFormat: 4
     textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
@@ -136,12 +136,12 @@ TextureImporter:
       name: $Dr Frankenstien_0
       rect:
         serializedVersion: 2
-        x: 11
-        y: 287
-        width: 47
-        height: 80
+        x: 12
+        y: 288
+        width: 45
+        height: 78
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -158,12 +158,12 @@ TextureImporter:
       name: $Dr Frankenstien_1
       rect:
         serializedVersion: 2
-        x: 86
-        y: 287
-        width: 41
-        height: 83
+        x: 87
+        y: 288
+        width: 39
+        height: 81
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -180,12 +180,12 @@ TextureImporter:
       name: $Dr Frankenstien_2
       rect:
         serializedVersion: 2
-        x: 155
-        y: 287
-        width: 47
-        height: 80
+        x: 156
+        y: 288
+        width: 45
+        height: 78
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -202,12 +202,12 @@ TextureImporter:
       name: $Dr Frankenstien_3
       rect:
         serializedVersion: 2
-        x: 14
-        y: 191
-        width: 47
-        height: 80
+        x: 15
+        y: 192
+        width: 45
+        height: 78
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -224,12 +224,12 @@ TextureImporter:
       name: $Dr Frankenstien_4
       rect:
         serializedVersion: 2
-        x: 86
-        y: 191
-        width: 47
-        height: 83
+        x: 87
+        y: 192
+        width: 45
+        height: 81
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -246,12 +246,12 @@ TextureImporter:
       name: $Dr Frankenstien_5
       rect:
         serializedVersion: 2
-        x: 158
-        y: 191
-        width: 50
-        height: 80
+        x: 159
+        y: 192
+        width: 48
+        height: 78
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -268,12 +268,12 @@ TextureImporter:
       name: $Dr Frankenstien_6
       rect:
         serializedVersion: 2
-        x: 11
-        y: 95
-        width: 47
-        height: 80
+        x: 12
+        y: 96
+        width: 45
+        height: 78
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -290,12 +290,12 @@ TextureImporter:
       name: $Dr Frankenstien_7
       rect:
         serializedVersion: 2
-        x: 83
-        y: 95
-        width: 47
-        height: 83
+        x: 84
+        y: 96
+        width: 45
+        height: 81
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -312,12 +312,12 @@ TextureImporter:
       name: $Dr Frankenstien_8
       rect:
         serializedVersion: 2
-        x: 152
-        y: 95
-        width: 50
-        height: 80
+        x: 153
+        y: 96
+        width: 48
+        height: 78
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -334,12 +334,12 @@ TextureImporter:
       name: $Dr Frankenstien_9
       rect:
         serializedVersion: 2
-        x: 14
+        x: 15
         y: 0
-        width: 44
-        height: 79
+        width: 42
+        height: 78
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -356,12 +356,12 @@ TextureImporter:
       name: $Dr Frankenstien_10
       rect:
         serializedVersion: 2
-        x: 86
+        x: 87
         y: 0
-        width: 41
-        height: 82
+        width: 39
+        height: 81
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -378,12 +378,12 @@ TextureImporter:
       name: $Dr Frankenstien_11
       rect:
         serializedVersion: 2
-        x: 155
+        x: 156
         y: 0
-        width: 44
-        height: 79
+        width: 42
+        height: 78
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -400,7 +400,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 513587e477147ad479c50daab4ab63ac
     internalID: 0
     vertices: []
     indices: 
@@ -408,7 +408,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":48.0,"y":48.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       $Dr Frankenstien_0: 3654948739490086776
       $Dr Frankenstien_1: -4707257437339445548
