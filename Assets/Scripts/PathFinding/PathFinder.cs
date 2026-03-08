@@ -1,0 +1,101 @@
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+public class PathFinder : MonoBehaviour
+{
+    [SerializeField] private List<PathNode> allNodes = new List<PathNode>();
+
+    public List<PathNode> FindPath(Vector2 startPos, Vector2 targetPos)
+    {
+        PathNode startNode = GetClosestNode(startPos);
+        PathNode targetNode = GetClosestNode(targetPos);
+
+        if (startNode == null || targetNode == null)
+            return null;
+
+        List<PathNode> openSet = new List<PathNode> { startNode };
+        HashSet<PathNode> closedSet = new HashSet<PathNode>();
+
+        Dictionary<PathNode, PathNode> cameFrom = new Dictionary<PathNode, PathNode>();
+        Dictionary<PathNode, float> gScore = new Dictionary<PathNode, float>();
+        Dictionary<PathNode, float> fScore = new Dictionary<PathNode, float>();
+
+        foreach (var node in allNodes)
+        {
+            gScore[node] = float.PositiveInfinity;
+            fScore[node] = float.PositiveInfinity;
+        }
+
+        gScore[startNode] = 0f;
+        fScore[startNode] = Heuristic(startNode, targetNode);
+
+        while (openSet.Count > 0)
+        {
+            PathNode current = openSet.OrderBy(n => fScore[n]).First();
+
+            if (current == targetNode)
+                return ReconstructPath(cameFrom, current);
+
+            openSet.Remove(current);
+            closedSet.Add(current);
+
+            foreach (var neighbour in current.neighbours)
+            {
+                if (neighbour == null || closedSet.Contains(neighbour))
+                    continue;
+
+                float tentativeG = gScore[current] + Vector2.Distance(current.transform.position, neighbour.transform.position);
+
+                if (!openSet.Contains(neighbour))
+                    openSet.Add(neighbour);
+                else if (tentativeG >= gScore[neighbour])
+                    continue;
+
+                cameFrom[neighbour] = current;
+                gScore[neighbour] = tentativeG;
+                fScore[neighbour] = tentativeG + Heuristic(neighbour, targetNode);
+            }
+        }
+
+        return null;
+    }
+
+    private float Heuristic(PathNode a, PathNode b)
+    {
+        return Vector2.Distance(a.transform.position, b.transform.position);
+    }
+
+    private List<PathNode> ReconstructPath(Dictionary<PathNode, PathNode> cameFrom, PathNode current)
+    {
+        List<PathNode> path = new List<PathNode> { current };
+
+        while (cameFrom.ContainsKey(current))
+        {
+            current = cameFrom[current];
+            path.Insert(0, current);
+        }
+
+        return path;
+    }
+
+    private PathNode GetClosestNode(Vector2 position)
+    {
+        PathNode bestNode = null;
+        float bestDistance = float.PositiveInfinity;
+
+        foreach (var node in allNodes)
+        {
+            if (node == null) continue;
+
+            float dist = Vector2.Distance(position, node.transform.position);
+            if (dist < bestDistance)
+            {
+                bestDistance = dist;
+                bestNode = node;
+            }
+        }
+
+        return bestNode;
+    }
+}
