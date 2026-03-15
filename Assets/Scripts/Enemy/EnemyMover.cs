@@ -15,22 +15,32 @@ public class EnemyMover : MonoBehaviour
     bool playingFootsteps = false;
     [SerializeField] private float footstepSpeed = 5f;
     [SerializeField] private float footstepVolume = 0.05f;
+    private Animator animator;
 
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     private void FixedUpdate()
     {
+        
         if (MovementInput.magnitude > 0 && currentSpeed >= 0)
         {
             oldMovementInput = MovementInput;
             currentSpeed += acceleration * maxSpeed * Time.deltaTime;
+
+            animator.SetBool("isWalking", true);
+            animator.SetFloat("InputX", MovementInput.x);
+            animator.SetFloat("InputY", MovementInput.y);
         }
         else
         {
             currentSpeed -= deacceleration * maxSpeed * Time.deltaTime;
+            animator.SetBool("isWalking", false);
+            animator.SetFloat("LastInputX", oldMovementInput.x);
+            animator.SetFloat("LastInputY", oldMovementInput.y);
         }
         currentSpeed = Mathf.Clamp(currentSpeed, 0, maxSpeed);
         rb2d.linearVelocity = oldMovementInput * currentSpeed;
