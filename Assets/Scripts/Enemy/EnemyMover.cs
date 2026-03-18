@@ -25,10 +25,13 @@ public class EnemyMover : MonoBehaviour
     [SerializeField] private FootstepSound footstepSound;
     private Animator animator;
 
+  
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
+
 
     private void FixedUpdate()
     {
@@ -36,13 +39,21 @@ public class EnemyMover : MonoBehaviour
         {
             oldMovementInput = MovementInput;
             currentSpeed += acceleration * maxSpeed * Time.deltaTime;
+
+            animator.SetBool("isWalking", true);
+            animator.SetFloat("InputX", MovementInput.x);
+            animator.SetFloat("InputY", MovementInput.y);
         }
         else
         {
             currentSpeed -= deacceleration * maxSpeed * Time.deltaTime;
+            animator.SetBool("isWalking", false);
+            animator.SetFloat("LastInputX", oldMovementInput.x);
+            animator.SetFloat("LastInputY", oldMovementInput.y);
         }
         currentSpeed = Mathf.Clamp(currentSpeed, 0, maxSpeed);
         rb2d.linearVelocity = oldMovementInput * currentSpeed;
+
 
         if (MovementInput.magnitude > 0 && !playingFootsteps)
         {
