@@ -1,5 +1,3 @@
-using NUnit.Framework;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -43,6 +41,9 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float stuckCheckInterval = 0.5f;
     [SerializeField] private float stuckDistanceThreshold = 0.08f;
 
+    [SerializeField] private GameObject exclamationMark;
+ 
+
     private Vector2 lastStuckCheckPosition;
     private float stuckCheckTimer;
 
@@ -58,6 +59,7 @@ public class EnemyAI : MonoBehaviour
 
  
     private AIState queuedStateAfterWait = AIState.Patrol;
+
 
     private void Start()
     {
@@ -135,6 +137,8 @@ public class EnemyAI : MonoBehaviour
             lastStuckCheckPosition = transform.position;
             stuckCheckTimer = 0f;
         }
+        Debug.Log($"State: {currentState} | SeesPlayer: {seesPlayer} | Targets: {aiData.targets?.Count}");
+
     }
 
     private void HandleTransitions(bool seesPlayer)
@@ -292,15 +296,19 @@ public class EnemyAI : MonoBehaviour
         switch (currentState)
         {
             case AIState.Patrol:
+                exclamationMark.SetActive(false);
                 break;
 
             case AIState.Chase:
+                exclamationMark.SetActive(false);
                 break;
 
             case AIState.Investigate:
+                exclamationMark.SetActive(false);
                 break;
 
             case AIState.Wait:
+                exclamationMark.SetActive(true);
                 movementInput = Vector2.zero;
                 break;
         }
@@ -314,6 +322,11 @@ public class EnemyAI : MonoBehaviour
         if (currentState == AIState.Wait)
         {
             movementInput = Vector2.zero;
+
+            if (queuedStateAfterWait == AIState.Chase)
+                exclamationMark.SetActive(true);
+            else
+                exclamationMark.SetActive(false);
         }
     }
 }

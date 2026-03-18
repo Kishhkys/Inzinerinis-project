@@ -2,7 +2,14 @@ using UnityEngine;
 
 public class EnemyMover : MonoBehaviour
 {
+    public enum FootstepSound
+    {
+        None,
+        MonsterFootsteps,
+        MouseFootsteps
+    }
 
+    
     private Rigidbody2D rb2d;
 
     [SerializeField]
@@ -15,6 +22,8 @@ public class EnemyMover : MonoBehaviour
     bool playingFootsteps = false;
     [SerializeField] private float footstepSpeed = 5f;
     [SerializeField] private float footstepVolume = 0.05f;
+    [SerializeField] private FootstepSound footstepSound;
+    private Animator animator;
 
     private void Awake()
     {
@@ -59,6 +68,6 @@ public class EnemyMover : MonoBehaviour
 
     private void PlayFootstep()
     {
-        SoundEffectManager.Play("MonsterFootsteps", footstepVolume);
+        SoundEffectManager.Play(footstepSound.ToString(), footstepVolume);
     }
 }

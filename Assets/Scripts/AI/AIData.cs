@@ -22,6 +22,7 @@ public class AIData : MonoBehaviour
     public List<PathNode> currentPath = new List<PathNode>();
     public int currentPathIndex = 0;
 
+
     public int GetTargetsCount() => targets == null ? 0 : targets.Count;
 
 }
