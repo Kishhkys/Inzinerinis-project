@@ -16,9 +16,6 @@ public class ObstacleAvoidanceBehaviour : SteeringBehaviour
 
     public override (float[] danger, float[] interest) GetSteering(float[] danger, float[] interest, AIData aiData)
     {
-        if (aiData.obstacles == null || aiData.obstacles.Length == 0)
-            return (danger, interest);
-
         foreach (Collider2D obstacleCollider in aiData.obstacles)
         {
             Vector2 directionToObstacle

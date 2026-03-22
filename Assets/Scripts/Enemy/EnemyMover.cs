@@ -2,7 +2,14 @@ using UnityEngine;
 
 public class EnemyMover : MonoBehaviour
 {
+    public enum FootstepSound
+    {
+        None,
+        MonsterFootsteps,
+        MouseFootsteps
+    }
 
+    
     private Rigidbody2D rb2d;
 
     [SerializeField]
@@ -15,11 +22,16 @@ public class EnemyMover : MonoBehaviour
     bool playingFootsteps = false;
     [SerializeField] private float footstepSpeed = 5f;
     [SerializeField] private float footstepVolume = 0.05f;
+    [SerializeField] private FootstepSound footstepSound;
+    private Animator animator;
 
+  
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
+
 
     private void FixedUpdate()
     {
@@ -27,13 +39,21 @@ public class EnemyMover : MonoBehaviour
         {
             oldMovementInput = MovementInput;
             currentSpeed += acceleration * maxSpeed * Time.deltaTime;
+
+            animator.SetBool("isWalking", true);
+            animator.SetFloat("InputX", MovementInput.x);
+            animator.SetFloat("InputY", MovementInput.y);
         }
         else
         {
             currentSpeed -= deacceleration * maxSpeed * Time.deltaTime;
+            animator.SetBool("isWalking", false);
+            animator.SetFloat("LastInputX", oldMovementInput.x);
+            animator.SetFloat("LastInputY", oldMovementInput.y);
         }
         currentSpeed = Mathf.Clamp(currentSpeed, 0, maxSpeed);
         rb2d.linearVelocity = oldMovementInput * currentSpeed;
+
 
         if (MovementInput.magnitude > 0 && !playingFootsteps)
         {
@@ -59,6 +79,6 @@ public class EnemyMover : MonoBehaviour
 
     private void PlayFootstep()
     {
-        SoundEffectManager.Play("MonsterFootsteps", footstepVolume);
+        SoundEffectManager.Play(footstepSound.ToString(), footstepVolume);
     }
 }
