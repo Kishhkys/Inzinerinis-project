@@ -49,7 +49,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void Die()
     {
-        
+        GetComponent<PlayerController>().enabled = false;
         GetComponent<SpriteRenderer>().enabled = false;
         GetComponent<Collider2D>().enabled = false;
         if (deathScreen != null) deathScreen.SetActive(true);
@@ -60,6 +60,7 @@ public class PlayerHealth : MonoBehaviour
     {
         health = maxHealth;
         transform.position = startPosition;
+        GetComponent<PlayerController>().enabled = true;
         GetComponent<SpriteRenderer>().enabled = true;
         GetComponent<Collider2D>().enabled = true;
         if (healthBar != null) healthBar.value = health;
