@@ -4,7 +4,6 @@ using UnityEngine.Events;
 
 public class EnemyAI : MonoBehaviour
 {
-
     private enum AIState
     {
         Patrol,
@@ -38,11 +37,11 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float investigateWaitDelay = 1.5f;
     [SerializeField] private float chaseReactionDelay = 0.1f;
 
+    [Header("Stuck Check")]
     [SerializeField] private float stuckCheckInterval = 0.5f;
     [SerializeField] private float stuckDistanceThreshold = 0.08f;
 
     [SerializeField] private GameObject exclamationMark;
- 
 
     private Vector2 lastStuckCheckPosition;
     private float stuckCheckTimer;
@@ -56,13 +55,13 @@ public class EnemyAI : MonoBehaviour
 
     private AIState currentState = AIState.Patrol;
     private float stateTimer = 0f;
-
- 
     private AIState queuedStateAfterWait = AIState.Patrol;
 
+    private float ignorePlayerUntil = 0f;
 
     private void Start()
     {
+        lastStuckCheckPosition = transform.position;
         InvokeRepeating(nameof(PerformDetection), 0f, detectionDelay);
         ChangeState(AIState.Patrol);
     }
@@ -77,14 +76,18 @@ public class EnemyAI : MonoBehaviour
 
     private void Update()
     {
-        bool seesPlayer = aiData.targets != null && aiData.targets.Count > 0;
+        bool rawSeesPlayer = aiData.targets != null && aiData.targets.Count > 0;
+        bool seesPlayer = rawSeesPlayer && Time.time >= ignorePlayerUntil;
 
-       
-        if (seesPlayer)
+        if (rawSeesPlayer)
         {
             aiData.currentTarget = aiData.targets[0];
-            aiData.lastSeenPosition = aiData.currentTarget.position;
-            aiData.hasLastSeenPosition = true;
+
+            if (Time.time >= ignorePlayerUntil)
+            {
+                aiData.lastSeenPosition = aiData.currentTarget.position;
+                aiData.hasLastSeenPosition = true;
+            }
         }
         else
         {
@@ -110,35 +113,59 @@ public class EnemyAI : MonoBehaviour
 
         OnMovementInput?.Invoke(movementInput);
 
+        CheckIfStuck(rawSeesPlayer);
+
+        Debug.Log($"State: {currentState} | SeesPlayer: {seesPlayer} | RawSeesPlayer: {rawSeesPlayer} | Targets: {aiData.targets?.Count}");
+    }
+
+    private void CheckIfStuck(bool rawSeesPlayer)
+    {
+        if (currentState == AIState.Wait || currentState == AIState.Attack)
+        {
+            lastStuckCheckPosition = transform.position;
+            stuckCheckTimer = 0f;
+            return;
+        }
 
         stuckCheckTimer += Time.deltaTime;
 
-        if (stuckCheckTimer >= stuckCheckInterval)
-        {
-            float movedDistance = Vector2.Distance(transform.position, lastStuckCheckPosition);
+        if (stuckCheckTimer < stuckCheckInterval)
+            return;
 
-            if (movedDistance < stuckDistanceThreshold)
+        float movedDistance = Vector2.Distance(transform.position, lastStuckCheckPosition);
+
+        if (movedDistance < stuckDistanceThreshold)
+        {
+            Debug.Log("Enemy stuck");
+
+            if (currentState == AIState.Patrol)
             {
-                // If patrolling, skip to next waypoint
-                if (currentState == AIState.Patrol && aiData.patrolPoints != null && aiData.patrolPoints.Count > 0)
+                if (aiData.patrolPoints != null && aiData.patrolPoints.Count > 0)
                 {
                     aiData.currentPatrolIndex = (aiData.currentPatrolIndex + 1) % aiData.patrolPoints.Count;
                 }
-
-                // If investigating, give up and go back to patrol
-                if (currentState == AIState.Investigate)
-                {
-                    aiData.hasLastSeenPosition = false;
-                    queuedStateAfterWait = AIState.Patrol;
-                    ChangeState(AIState.Wait, 0.2f);
-                }
             }
+            else if (currentState == AIState.Investigate)
+            {
+                aiData.hasLastSeenPosition = false;
+                queuedStateAfterWait = AIState.Patrol;
+                ChangeState(AIState.Wait, 0.2f);
+            }
+            else if (currentState == AIState.Chase)
+            {
+                if (rawSeesPlayer && aiData.currentTarget != null)
+                {
+                    aiData.lastSeenPosition = aiData.currentTarget.position;
+                    aiData.hasLastSeenPosition = true;
+                }
 
-            lastStuckCheckPosition = transform.position;
-            stuckCheckTimer = 0f;
+                ignorePlayerUntil = Time.time + 0.75f;
+                ChangeState(AIState.Investigate);
+            }
         }
-        Debug.Log($"State: {currentState} | SeesPlayer: {seesPlayer} | Targets: {aiData.targets?.Count}");
 
+        lastStuckCheckPosition = transform.position;
+        stuckCheckTimer = 0f;
     }
 
     private void HandleTransitions(bool seesPlayer)
@@ -164,7 +191,7 @@ public class EnemyAI : MonoBehaviour
                         break;
                     }
 
-                    if (seesPlayer && aiData.currentTarget != null)
+                    if (aiData.currentTarget != null)
                     {
                         float dist = Vector2.Distance(transform.position, aiData.currentTarget.position);
                         if (dist <= attackDistance)
@@ -245,14 +272,11 @@ public class EnemyAI : MonoBehaviour
             case AIState.Chase:
                 return chaseBehaviours;
 
-            case AIState.Attack:
-                return new List<SteeringBehaviour>();
-
             case AIState.Investigate:
                 return investigateBehaviours;
 
+            case AIState.Attack:
             case AIState.Wait:
-                // Stand still during waits
                 return new List<SteeringBehaviour>();
 
             case AIState.Patrol:
@@ -307,6 +331,10 @@ public class EnemyAI : MonoBehaviour
                 exclamationMark.SetActive(false);
                 break;
 
+            case AIState.Attack:
+                exclamationMark.SetActive(false);
+                break;
+
             case AIState.Wait:
                 exclamationMark.SetActive(true);
                 movementInput = Vector2.zero;
@@ -327,6 +355,10 @@ public class EnemyAI : MonoBehaviour
                 exclamationMark.SetActive(true);
             else
                 exclamationMark.SetActive(false);
+        }
+        else
+        {
+            exclamationMark.SetActive(false);
         }
     }
 }

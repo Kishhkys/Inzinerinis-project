@@ -8,4 +8,9 @@ public class ItemSO : ScriptableObject
     public Sprite icon;
 
 
+    public virtual void Use(GameObject user)
+    {
+        Debug.Log(user.name + " used item: " + itemName);
+    }
+
 }

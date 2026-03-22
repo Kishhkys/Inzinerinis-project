@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnDisable()
     {
+        StopFootsteps();
         playerControls.Disable();
     }
 
@@ -95,4 +96,5 @@ public class PlayerController : MonoBehaviour
     {
         SoundEffectManager.Play("PlayerFootsteps", footstepVolume);
     }
+
 }
