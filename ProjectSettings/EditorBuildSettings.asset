@@ -12,5 +12,5 @@ EditorBuildSettings:
     path: Assets/Scenes/milda1.unity
     guid: 1b6035641067be84685ef5773f19a08b
   m_configObjects:
-    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 48c9cd1b367d869498027bf2cf40d6b2, type: 3}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
