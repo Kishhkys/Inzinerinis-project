@@ -712,7 +712,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 166aef931df235644b7ea65797d75d4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  attackDamage: 10
+  attackDamage: 5
   attackRange: 1.5
 --- !u!114 &43555509
 MonoBehaviour:
@@ -1090,6 +1090,7 @@ MonoBehaviour:
   healthBar: {fileID: 252866824}
   deathScreen: {fileID: 403117492}
   bloodPrefab: {fileID: 6160702429672169283, guid: 9f70f27c49bbebf4786e4d886f90cc7c, type: 3}
+  virtualCamera: {fileID: 156726813}
 --- !u!50 &161881870
 Rigidbody2D:
   serializedVersion: 5
@@ -1545,10 +1546,7 @@ PrefabInstance:
     - {fileID: -1014256174420861117, guid: 209785b04793fa740b487e9ed3e2d875, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4853828866745670601, guid: 209785b04793fa740b487e9ed3e2d875, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1157424124}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 209785b04793fa740b487e9ed3e2d875, type: 3}
 --- !u!1 &252866822
 GameObject:
@@ -4098,6 +4096,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chest
   itemPrefab: {fileID: 1971892885110371748, guid: f391aa04f482ff14aae31440c385b987, type: 3}
+  defaultSprite: {fileID: 5858664439112777169, guid: f236bcd59e6628a4b91ee6824ff7a4f0, type: 3}
+  lockedSprite: {fileID: 5088316998373936774, guid: f9ea7328e284cef43a2f94646c5496a8, type: 3}
   openedSprite: {fileID: -2563806276303317244, guid: f236bcd59e6628a4b91ee6824ff7a4f0, type: 3}
   requiredKeyID: first_chest
 --- !u!61 &581385745
@@ -4214,7 +4214,7 @@ Transform:
   m_GameObject: {fileID: 581385743}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.51, y: 0.41, z: 0}
+  m_LocalPosition: {x: -5.51, y: 1.53, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13985,7 +13985,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 166aef931df235644b7ea65797d75d4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  attackDamage: 10
+  attackDamage: 5
   attackRange: 1.5
 --- !u!95 &658656522
 Animator:
@@ -14250,6 +14250,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 669173056}
   m_CullTransparentMesh: 1
+--- !u!1001 &680500855
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2107844811326388870, guid: 7fed29eb37670de4d86236b0d075e576, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -10.18524
+      objectReference: {fileID: 0}
+    - target: {fileID: 2107844811326388870, guid: 7fed29eb37670de4d86236b0d075e576, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.52
+      objectReference: {fileID: 0}
+    - target: {fileID: 2107844811326388870, guid: 7fed29eb37670de4d86236b0d075e576, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2107844811326388870, guid: 7fed29eb37670de4d86236b0d075e576, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2107844811326388870, guid: 7fed29eb37670de4d86236b0d075e576, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2107844811326388870, guid: 7fed29eb37670de4d86236b0d075e576, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2107844811326388870, guid: 7fed29eb37670de4d86236b0d075e576, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2107844811326388870, guid: 7fed29eb37670de4d86236b0d075e576, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2107844811326388870, guid: 7fed29eb37670de4d86236b0d075e576, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2107844811326388870, guid: 7fed29eb37670de4d86236b0d075e576, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8885741293447990872, guid: 7fed29eb37670de4d86236b0d075e576, type: 3}
+      propertyPath: requiredKeyID
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 9007646691954554837, guid: 7fed29eb37670de4d86236b0d075e576, type: 3}
+      propertyPath: m_Name
+      value: Chest (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7fed29eb37670de4d86236b0d075e576, type: 3}
 --- !u!1 &704506766
 GameObject:
   m_ObjectHideFlags: 0
@@ -15004,6 +15065,24 @@ MonoBehaviour:
     - {fileID: 8300000, guid: dafcc7f10d4fae84e95263973137fe71, type: 3}
     - {fileID: 8300000, guid: d8946b5ee34cb8b428e76f103857d488, type: 3}
     - {fileID: 8300000, guid: fc0f3d092b7ce89458f996dc2f6fa600, type: 3}
+  - name: Chest
+    audioClips:
+    - {fileID: 8300000, guid: d776ce91f78a5934ab6e01e854554411, type: 3}
+    - {fileID: 8300000, guid: d0d575edec7696f41822ce826ca522c7, type: 3}
+  - name: Key
+    audioClips:
+    - {fileID: 8300000, guid: 462887fdbfed90c4b8aec94f84d399a1, type: 3}
+    - {fileID: 8300000, guid: c2b475f8fe617ae44b95f0ed5e5eb1d4, type: 3}
+  - name: Item
+    audioClips:
+    - {fileID: 8300000, guid: dd52b366c4631d64bad7b4b597987ca7, type: 3}
+  - name: Potion
+    audioClips:
+    - {fileID: 8300000, guid: de77cdcc5846df04f87e425bfe3550d5, type: 3}
+  - name: Health
+    audioClips:
+    - {fileID: 8300000, guid: 2df7ad2c8b42ed44a97396efde50167e, type: 3}
+    - {fileID: 8300000, guid: bc012d1175dfed04990d186017908a92, type: 3}
 --- !u!82 &1020537438
 AudioSource:
   m_ObjectHideFlags: 0
@@ -15269,26 +15348,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 620408152}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1157424116 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4853828866745670601, guid: 209785b04793fa740b487e9ed3e2d875, type: 3}
+--- !u!114 &1157424124 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2394109698308417202, guid: 209785b04793fa740b487e9ed3e2d875, type: 3}
   m_PrefabInstance: {fileID: 232064964}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1157424124
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1157424116}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 407b448234507844eb2110863f60555f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KeyItem
-  ID: 0
-  Name: Key
-  targetID: first_chest
 --- !u!1 &1157761676
 GameObject:
   m_ObjectHideFlags: 0
@@ -22643,3 +22713,4 @@ SceneRoots:
   - {fileID: 232064964}
   - {fileID: 1010180591}
   - {fileID: 581385747}
+  - {fileID: 680500855}

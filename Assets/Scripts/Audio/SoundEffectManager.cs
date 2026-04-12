@@ -26,12 +26,21 @@ public class SoundEffectManager : MonoBehaviour
         }
     }
 
-    public static void Play(string soundName, float volume = 1f)
+    public static void PlayRandomClip(string soundName, float volume = 1f)
     {
         AudioClip audioClip = soundEffectLibrary.GetRandomClip(soundName);
         if (audioClip != null)
         {
  
+            audioSource.PlayOneShot(audioClip, volume * sfxVolume);
+        }
+    }
+
+    public static void PlayClip(string groupName, string soundName, float volume = 1f)
+    {
+        AudioClip audioClip = soundEffectLibrary.GetClip(groupName, soundName);
+        if (audioClip != null)
+        {
             audioSource.PlayOneShot(audioClip, volume * sfxVolume);
         }
     }

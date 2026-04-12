@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour
 
     private void PlayFootstep()
     {
-        SoundEffectManager.Play("PlayerFootsteps", footstepVolume);
+        SoundEffectManager.PlayRandomClip("PlayerFootsteps", footstepVolume);
     }
 
 }

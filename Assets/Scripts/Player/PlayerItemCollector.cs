@@ -55,7 +55,7 @@ public class PlayerItemCollector : MonoBehaviour
                 bool itemAdded = inventoryController.AddItem(collision.gameObject);
                 if (itemAdded)
                 {
-                    SoundEffectManager.Play("ItemCollect", 1f);
+                    SoundEffectManager.PlayRandomClip("ItemCollect", 1f);
                     item.PickUp();
                     collision.gameObject.SetActive(false);
                     Destroy(collision.gameObject);

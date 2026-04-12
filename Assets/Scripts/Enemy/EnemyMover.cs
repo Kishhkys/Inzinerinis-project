@@ -79,6 +79,6 @@ public class EnemyMover : MonoBehaviour
 
     private void PlayFootstep()
     {
-        SoundEffectManager.Play(footstepSound.ToString(), footstepVolume);
+        SoundEffectManager.PlayRandomClip(footstepSound.ToString(), footstepVolume);
     }
 }

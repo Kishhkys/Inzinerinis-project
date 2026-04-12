@@ -21,6 +21,10 @@ public class InventoryController : MonoBehaviour
             Slot slot = Instantiate(slotPrefab, inventoryPanel.transform).GetComponent<Slot>();
             slot.slotNum.text = (i + 1).ToString();
             inventoryKeys[i] = i < 9 ? (Key)((int)Key.Digit1 + i) : Key.Digit0;
+            if(i == 0)
+            {
+                SelectSlot(i);
+            }
 
             //if (i < itemPrefabs.Length)
             //{

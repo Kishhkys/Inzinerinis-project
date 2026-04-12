@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Cinemachine;
+using System;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private Slider healthBar;
     [SerializeField] private GameObject deathScreen;
     [SerializeField] private GameObject bloodPrefab;
+    [SerializeField] private CinemachineCamera virtualCamera;
 
     private Vector2 startPosition;
 
@@ -31,6 +33,8 @@ public class PlayerHealth : MonoBehaviour
         health += mod;
         if (mod < 0 && bloodPrefab != null)
         {
+            float volume = Mathf.Clamp01(Mathf.Abs(mod) / 10f);
+            SoundEffectManager.PlayClip("Health", "Hit", volume);
             Vector2 spawnPos = hitPosition == default ? (Vector2)transform.position : hitPosition;
             GameObject blood = Instantiate(bloodPrefab, spawnPos, Quaternion.identity);
             Destroy(blood, 0.5f);
@@ -54,6 +58,12 @@ public class PlayerHealth : MonoBehaviour
         GetComponent<PlayerController>().enabled = false;
         GetComponent<SpriteRenderer>().enabled = false;
         GetComponent<Collider2D>().enabled = false;
+        SoundEffectManager.PlayClip("Health", "Player_death");
+        if (virtualCamera != null)
+        {
+            virtualCamera.Follow = null;
+            virtualCamera.LookAt = null;
+        }
         if (deathScreen != null) deathScreen.SetActive(true);
         Invoke(nameof(Respawn), respawnDelay);
     }
@@ -62,6 +72,11 @@ public class PlayerHealth : MonoBehaviour
     {
         health = maxHealth;
         transform.position = startPosition;
+        if (virtualCamera != null)
+        {
+            virtualCamera.Follow = transform;
+            virtualCamera.LookAt = transform;
+        }
         GetComponent<PlayerController>().enabled = true;
         GetComponent<SpriteRenderer>().enabled = true;
         GetComponent<Collider2D>().enabled = true;

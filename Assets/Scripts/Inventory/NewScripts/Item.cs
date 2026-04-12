@@ -12,13 +12,30 @@ public class Item : MonoBehaviour
         Debug.Log("Using item" + name);
     }
 
-    public virtual void PickUp()
-    {
-        Sprite itemIcon = GetComponent<Image>().sprite;
+    //public virtual void PickUp()
+    //{
+    //    Sprite itemIcon = GetComponent<Image>().sprite;
 
+    //    if (ItemPickupUIController.Instance != null)
+    //    {
+    //        ItemPickupUIController.Instance.ShowItemPickup(Name, itemIcon);
+    //        SoundEffectManager.Play("Item", 1f);
+    //    }
+    //}
+
+    public virtual void PickUp(string group = "Item", string sound = "Item_pick_up")
+    {
+
+        Sprite itemIcon = GetComponent<Image>().sprite;
         if (ItemPickupUIController.Instance != null)
         {
             ItemPickupUIController.Instance.ShowItemPickup(Name, itemIcon);
         }
+
+        if (!string.IsNullOrEmpty(sound) && !string.IsNullOrEmpty(group))
+        {
+            SoundEffectManager.PlayClip(group, sound, 1f);
+        }
     }
+
 }

@@ -35,6 +35,25 @@ public class SoundEffectLibrary : MonoBehaviour
         return null;
     }
 
+    public AudioClip GetClip(string groupName, string soundName)
+    {
+        if (soundDictionary.ContainsKey(groupName))
+        {
+            List<AudioClip> audioClips = soundDictionary[groupName];
+
+            foreach (AudioClip clip in audioClips)
+            {
+                if (clip != null && clip.name == soundName)
+                {
+                    return clip;
+                }
+            }
+        }
+        return null;
+    }
+
+
+
 }
 
 [System.Serializable]

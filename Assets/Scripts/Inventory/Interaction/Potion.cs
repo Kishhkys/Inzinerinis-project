@@ -9,6 +9,7 @@ public class Potion : Item
         PlayerHealth player = FindFirstObjectByType<PlayerHealth>();
         if (player != null)
         {
+            SoundEffectManager.PlayClip("Potion", "Potion_drink");
             player.UpdateHealth(healAmount);
             Debug.Log($"Healed {healAmount}");
 
