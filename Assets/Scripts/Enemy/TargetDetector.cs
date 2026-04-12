@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -51,10 +50,17 @@ public class TargetDetector : Detector
     {
         Collider2D playerCollider = Physics2D.OverlapCircle(transform.position, targetDetectionRange, playerLayerMask);
 
-        Debug.Log($"OverlapCircle: {(playerCollider != null ? playerCollider.name : "NONE")}");
-
         if (playerCollider == null)
         {
+            colliders = null;
+            aiData.targets = null;
+            return;
+        }
+
+        PlayerController playerController = playerCollider.GetComponentInParent<PlayerController>();
+        if (playerController != null && playerController.IsHidden)
+        {
+            colliders = null;
             aiData.targets = null;
             return;
         }
@@ -65,23 +71,19 @@ public class TargetDetector : Detector
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, targetDetectionRange, combinedMask);
 
-        if (hit.collider != null)
-        {
-            Debug.Log($"Raycast hit: {hit.collider.name} | Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
-        }
-        else
-        {
-            Debug.Log("Raycast hit: NONE");
-        }
-
         if (hit.collider != null && ((1 << hit.collider.gameObject.layer) & playerLayerMask) != 0)
         {
-            Debug.Log("Player VISIBLE");
+            if (playerController != null)
+            {
+                playerController.NotifyDetected();
+            }
+
+            colliders = new List<Transform> { playerCollider.transform };
             aiData.targets = new List<Transform> { playerCollider.transform };
         }
         else
         {
-            Debug.Log("Player BLOCKED");
+            colliders = null;
             aiData.targets = null;
         }
 

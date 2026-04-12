@@ -31,13 +31,23 @@ public class PlayerHealth : MonoBehaviour
     {
         if (health <= 0) return;
         health += mod;
-        if (mod < 0 && bloodPrefab != null)
+        if (mod < 0)
         {
+            PlayerController playerController = GetComponent<PlayerController>();
+            if (playerController != null)
+            {
+                playerController.NotifyDamaged();
+            }
+
             float volume = Mathf.Clamp01(Mathf.Abs(mod) / 10f);
             SoundEffectManager.PlayClip("Health", "Hit", volume);
-            Vector2 spawnPos = hitPosition == default ? (Vector2)transform.position : hitPosition;
-            GameObject blood = Instantiate(bloodPrefab, spawnPos, Quaternion.identity);
-            Destroy(blood, 0.5f);
+
+            if (bloodPrefab != null)
+            {
+                Vector2 spawnPos = hitPosition == default ? (Vector2)transform.position : hitPosition;
+                GameObject blood = Instantiate(bloodPrefab, spawnPos, Quaternion.identity);
+                Destroy(blood, 0.5f);
+            }
         }
 
         if (health > maxHealth) health = maxHealth;
