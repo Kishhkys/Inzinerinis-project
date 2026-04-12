@@ -13,6 +13,8 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private GameObject deathScreen;
     [SerializeField] private GameObject bloodPrefab;
     [SerializeField] private CinemachineCamera virtualCamera;
+    public GameObject inventoryPanel;
+    public GameObject popupPanel;
 
     private Vector2 startPosition;
 
@@ -68,7 +70,9 @@ public class PlayerHealth : MonoBehaviour
         GetComponent<PlayerController>().enabled = false;
         GetComponent<SpriteRenderer>().enabled = false;
         GetComponent<Collider2D>().enabled = false;
-        SoundEffectManager.PlayClip("Health", "Player_death");
+        inventoryPanel.SetActive(false);
+        popupPanel.SetActive(false);
+        SoundEffectManager.PlayClip("Health", "Player_death", 0.6f);
         if (virtualCamera != null)
         {
             virtualCamera.Follow = null;
@@ -92,6 +96,8 @@ public class PlayerHealth : MonoBehaviour
         GetComponent<Collider2D>().enabled = true;
         if (healthBar != null) healthBar.value = health;
         if (deathScreen != null) deathScreen.SetActive(false);
+        inventoryPanel.SetActive(true);
+        popupPanel.SetActive(true);
         ResetEnemies();
     }
 

@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;  // ← add this at the top
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenuPanel;
+    public GameObject inventoryPanel;
+    public GameObject popupPanel;
     private bool isPaused = false;
 
     void Start()
@@ -29,6 +31,8 @@ public class PauseMenu : MonoBehaviour
     public void Pause()
     {
         pauseMenuPanel.SetActive(true);
+        inventoryPanel.SetActive(false);
+        popupPanel.SetActive(false);
         Time.timeScale = 0f;
         isPaused = true;
     }
@@ -36,8 +40,11 @@ public class PauseMenu : MonoBehaviour
     public void Resume()
     {
         pauseMenuPanel.SetActive(false);
+        inventoryPanel.SetActive(true);
+        popupPanel.SetActive(true);
         Time.timeScale = 1f;
         isPaused = false;
+        SoundEffectManager.PlayClip("Menu", "Menu_click", 0.5f);  
     }
 
     public void QuitGame()

@@ -4,22 +4,20 @@ using UnityEngine.InputSystem;
 
 public class Chest : MonoBehaviour, IInteractable
 {
-    public bool isOpened {  get; private set; }
+    public bool isOpened { get; private set; }
     public string ChestID { get; private set; }
     public GameObject itemPrefab;
     public Sprite defaultSprite;
     public Sprite lockedSprite;
     public Sprite openedSprite;
     public string requiredKeyID = null;
+
     private bool isLocked = false;
+    private bool isUnlocking = false;
 
     public bool CanInteract()
     {
-        if (isLocked && Keyboard.current.eKey.wasPressedThisFrame)
-        {
-            SoundEffectManager.PlayClip("Chest", "Chest_locked", 0.5f);
-        }
-        return !isOpened;
+        return !isOpened && !isUnlocking;
     }
 
     public void Interact()
@@ -27,66 +25,69 @@ public class Chest : MonoBehaviour, IInteractable
         if (!CanInteract()) return;
 
         InventoryController inventory = FindFirstObjectByType<InventoryController>();
+        if (inventory == null) return;
+
         Item selectedItem = inventory.GetSelectedItem();
-        if(!string.IsNullOrEmpty(requiredKeyID))
+
+        if (isLocked)
         {
-            if (selectedItem != null && selectedItem is KeyItem key && key.targetID == requiredKeyID)
+            if (selectedItem is KeyItem key && key.targetID == requiredKeyID)
             {
-                key.UseItem();
+                isUnlocking = true;
+                key.UseKey();
                 inventory.RemoveSelectedItem();
                 StartCoroutine(UnlockAndOpenChest());
-                return;
             }
+            else
+            {
+                SoundEffectManager.PlayClip("Chest", "Chest_locked", 0.5f);
+            }
+
+            return;
         }
 
-        else
-        {
-            OpenChest();
-
-        }
-
+        OpenChest();
     }
 
     private IEnumerator UnlockAndOpenChest()
     {
+        isLocked = false;
         GetComponent<SpriteRenderer>().sprite = defaultSprite;
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3f);
         OpenChest();
-
     }
 
-    private void OpenChest() 
+    private void OpenChest()
     {
         SetOpened(true);
-        SoundEffectManager.PlayRandomClip("Chest", 1f);
+        isUnlocking = false;
+        SoundEffectManager.PlayClip("Chest", "Chest_open", 1f);
+
         if (itemPrefab)
         {
-            GameObject droppedItem = Instantiate(itemPrefab, transform.position + Vector3.down , Quaternion.identity);
-
+            Instantiate(itemPrefab, transform.position + Vector3.down, Quaternion.identity);
         }
-    
     }
 
-    public void SetOpened(bool opened) 
+    public void SetOpened(bool opened)
     {
         isOpened = opened;
-        if(isOpened)
+
+        if (isOpened)
         {
             GetComponent<SpriteRenderer>().sprite = openedSprite;
-            Debug.Log("Sprite changed");
         }
-    
     }
 
     void Start()
     {
         ChestID ??= GlobalHelper.GenerateUniqueId(gameObject);
-        if(!string.IsNullOrEmpty(requiredKeyID))
+
+        if (!string.IsNullOrEmpty(requiredKeyID))
         {
             isLocked = true;
             GetComponent<SpriteRenderer>().sprite = lockedSprite;
         }
-
     }
 
 }

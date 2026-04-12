@@ -7,6 +7,11 @@ public class KeyItem : Item
 
     public override void UseItem()
     {
+        
+    }
+
+    public void UseKey()
+    {
         SoundEffectManager.PlayClip("Key", "Keys_unlock");
     }
 

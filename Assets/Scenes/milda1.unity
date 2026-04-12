@@ -1212,6 +1212,8 @@ MonoBehaviour:
   deathScreen: {fileID: 403117492}
   bloodPrefab: {fileID: 6160702429672169283, guid: 9f70f27c49bbebf4786e4d886f90cc7c, type: 3}
   virtualCamera: {fileID: 156726813}
+  inventoryPanel: {fileID: 1739651266}
+  popupPanel: {fileID: 1306084780}
 --- !u!50 &161881870
 Rigidbody2D:
   serializedVersion: 5
@@ -15211,8 +15213,11 @@ MonoBehaviour:
     - {fileID: 8300000, guid: de77cdcc5846df04f87e425bfe3550d5, type: 3}
   - name: Health
     audioClips:
-    - {fileID: 8300000, guid: 2df7ad2c8b42ed44a97396efde50167e, type: 3}
+    - {fileID: 8300000, guid: ed3e2a0f196330942b33f4f284f4a57c, type: 3}
     - {fileID: 8300000, guid: bc012d1175dfed04990d186017908a92, type: 3}
+  - name: Menu
+    audioClips:
+    - {fileID: 8300000, guid: c4928a005119e6b4e90653243cbe629a, type: 3}
 --- !u!82 &1020537438
 AudioSource:
   m_ObjectHideFlags: 0
@@ -16824,7 +16829,7 @@ GameObject:
   - component: {fileID: 1671563471}
   - component: {fileID: 1671563470}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23178,6 +23183,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2966926867993864664, guid: c2dc595b93bc06745a10a0c7660b9b2e, type: 3}
+      propertyPath: popupPanel
+      value: 
+      objectReference: {fileID: 1306084780}
+    - target: {fileID: 2966926867993864664, guid: c2dc595b93bc06745a10a0c7660b9b2e, type: 3}
+      propertyPath: inventoryPanel
+      value: 
+      objectReference: {fileID: 1739651266}
     - target: {fileID: 2966926867993864664, guid: c2dc595b93bc06745a10a0c7660b9b2e, type: 3}
       propertyPath: pauseMenuPanel
       value: 
