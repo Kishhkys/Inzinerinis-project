@@ -1,86 +1,78 @@
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
-[RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 3.0f;
-
-    private PlayerControls playerControls;
-    private Vector2 movement;
+    [SerializeField] private float moveSpeed = 5f;
     private Rigidbody2D rb;
+    private Vector2 moveInput;
     private Animator animator;
     private bool playingFootsteps = false;
-    [SerializeField] private float footstepSpeed = 0.3f;
+    public float footstepSpeed = 0.5f;
     [SerializeField] private float footstepVolume = 0.5f;
+    [SerializeField] private float runSpeed = 1.5f;
 
-    private void Awake()
+
+    void Start()
     {
-        playerControls = new PlayerControls();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
     }
 
-    private void OnEnable()
+    // Update is called once per frame
+    void Update()
     {
-        playerControls.Enable();
-    }
-    private void OnDisable()
-    {
-        StopFootsteps();
-        playerControls.Disable();
-    }
+        //if (PauseController.isGamePaused)
+        //{
+        //    rb.linearVelocity = Vector2.zero;
+        //    animator.SetBool("isWalking", false);
+        //    StopFootsteps();
+        //    return;
+        //}
+        
+        
+        if(Keyboard.current.shiftKey.isPressed)
+        {
+            rb.linearVelocity = moveInput * runSpeed;
+        }
+        else
+        {
+            rb.linearVelocity = moveInput * moveSpeed;
+        }
+        animator.SetBool("isMoving", rb.linearVelocity.magnitude > 0);
 
-    private void Update()
-    {
-        PlayerInput();
-        if (movement.magnitude > 0 && !playingFootsteps)
+        if (rb.linearVelocity.magnitude > 0 && !playingFootsteps)
         {
             StartFootsteps();
         }
-        else if (movement.magnitude == 0)
+        else if (rb.linearVelocity.magnitude == 0)
         {
             StopFootsteps();
         }
     }
 
-    private void PlayerInput()
+    public void Move(InputAction.CallbackContext context)
     {
-        movement = playerControls.Movement.Move.ReadValue<Vector2>();
+        //if (PauseController.isGamePaused) return;
 
-        bool isMoving = movement.sqrMagnitude > 0;
-        animator.SetBool("isMoving", isMoving);
-
-        if (isMoving)
+        if (context.canceled)
         {
-            if (Mathf.Abs(movement.x) > Mathf.Abs(movement.y))
-            {
-                animator.SetFloat("horizontal", movement.x);
-                animator.SetFloat("vertical", 0f);
-            }
-            else
-            {
-                animator.SetFloat("horizontal", 0f);
-                animator.SetFloat("vertical", movement.y);
-            }
+            animator.SetBool("isMoving", false);
+            animator.SetFloat("LastInputX", moveInput.x);
+            animator.SetFloat("LastInputY", moveInput.y);
+
         }
 
+        moveInput = context.ReadValue<Vector2>();
+        animator.SetFloat("inputX", moveInput.x);
+        animator.SetFloat("inputY", moveInput.y);
     }
 
-    private void FixedUpdate()
-    {
-        Move();
-    }
 
-    private void Move()
-    {
-        rb.MovePosition(rb.position + moveSpeed * Time.fixedDeltaTime * movement);
-    }
-
-    private void StopFootsteps()
+    public void StopFootsteps()
     {
         playingFootsteps = false;
         CancelInvoke(nameof(PlayFootstep));

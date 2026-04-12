@@ -6,9 +6,16 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenuPanel;
     private bool isPaused = false;
 
-void Update()
+    void Start()
+    {
+        pauseMenuPanel.SetActive(false);
+        isPaused = false;
+        Time.timeScale = 1f;
+    }
+
+
+    void Update()
 {
-    Debug.Log("Update running test");
     if (Keyboard.current != null &&Keyboard.current.escapeKey.wasPressedThisFrame)
     {
         Debug.Log("Escape pressed");

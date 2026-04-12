@@ -49,6 +49,8 @@ public class PlayerHealth : MonoBehaviour
 
     private void Die()
     {
+        GetComponent<PlayerController>().StopFootsteps();
+        GetComponent<PlayerController>().enabled = false;
         GetComponent<PlayerController>().enabled = false;
         GetComponent<SpriteRenderer>().enabled = false;
         GetComponent<Collider2D>().enabled = false;
