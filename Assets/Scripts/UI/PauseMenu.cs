@@ -5,7 +5,6 @@ public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenuPanel;
     public GameObject inventoryPanel;
-    public GameObject popupPanel;
     private bool isPaused = false;
 
     void Start()
@@ -32,7 +31,6 @@ public class PauseMenu : MonoBehaviour
     {
         pauseMenuPanel.SetActive(true);
         inventoryPanel.SetActive(false);
-        popupPanel.SetActive(false);
         Time.timeScale = 0f;
         isPaused = true;
     }
@@ -41,7 +39,6 @@ public class PauseMenu : MonoBehaviour
     {
         pauseMenuPanel.SetActive(false);
         inventoryPanel.SetActive(true);
-        popupPanel.SetActive(true);
         Time.timeScale = 1f;
         isPaused = false;
         SoundEffectManager.PlayClip("Menu", "Menu_click", 0.5f);  
@@ -49,6 +46,7 @@ public class PauseMenu : MonoBehaviour
 
     public void QuitGame()
     {
+        SoundEffectManager.PlayClip("Menu", "Menu_click", 0.5f);
         Time.timeScale = 1f;
         Application.Quit();
         Debug.Log("Quit called");
