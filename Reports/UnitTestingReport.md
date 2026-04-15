@@ -27,7 +27,9 @@ The project was organized into two test assemblies:
 - `Assets/Tests/EditMode`
 - `Assets/Tests/PlayMode`
 
-This separation keeps simple logic tests fast and keeps runtime interaction tests isolated.
+The gameplay scripts were also grouped under a dedicated runtime assembly definition in `Assets/Scripts/InzinerinisProject.Runtime.asmdef`.
+
+This separation keeps simple logic tests fast, keeps runtime interaction tests isolated, and allows the test assemblies to reference gameplay code reliably.
 
 ## Implemented Unit Tests
 

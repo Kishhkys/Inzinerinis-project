@@ -1,7 +1,12 @@
 {
-  "name": "InzinerinisProject.PlayModeTests",
+  "name": "InzinerinisProject.Runtime",
   "references": [
-    "InzinerinisProject.Runtime"
+    "Unity.InputSystem",
+    "Unity.Cinemachine",
+    "Unity.TextMeshPro",
+    "Unity.VisualScripting.Core",
+    "Unity.RenderPipelines.Universal.2D.Runtime",
+    "Unity.RenderPipelines.Universal.Runtime"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
@@ -11,8 +16,5 @@
   "autoReferenced": true,
   "defineConstraints": [],
   "versionDefines": [],
-  "optionalUnityReferences": [
-    "TestAssemblies"
-  ],
   "noEngineReferences": false
 }
