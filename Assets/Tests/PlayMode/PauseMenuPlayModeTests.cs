@@ -62,8 +62,12 @@ public class PauseMenuPlayModeTests
         GameObject panelObject = new("PausePanel");
         createdObjects.Add(panelObject);
 
+        GameObject inventoryPanelObject = new("InventoryPanel");
+        createdObjects.Add(inventoryPanelObject);
+
         PauseMenu pauseMenu = menuObject.AddComponent<PauseMenu>();
         pauseMenu.pauseMenuPanel = panelObject;
+        pauseMenu.inventoryPanel = inventoryPanelObject;
         return pauseMenu;
     }
 }

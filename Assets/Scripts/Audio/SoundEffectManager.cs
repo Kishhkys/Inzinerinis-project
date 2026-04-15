@@ -28,6 +28,11 @@ public class SoundEffectManager : MonoBehaviour
 
     public static void PlayRandomClip(string soundName, float volume = 1f)
     {
+        if (soundEffectLibrary == null || audioSource == null)
+        {
+            return;
+        }
+
         AudioClip audioClip = soundEffectLibrary.GetRandomClip(soundName);
         if (audioClip != null)
         {
@@ -38,6 +43,11 @@ public class SoundEffectManager : MonoBehaviour
 
     public static void PlayClip(string groupName, string soundName, float volume = 1f)
     {
+        if (soundEffectLibrary == null || audioSource == null)
+        {
+            return;
+        }
+
         AudioClip audioClip = soundEffectLibrary.GetClip(groupName, soundName);
         if (audioClip != null)
         {
