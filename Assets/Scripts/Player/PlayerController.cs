@@ -210,4 +210,10 @@ public class PlayerController : MonoBehaviour
         SoundEffectManager.PlayRandomClip("PlayerFootsteps", footstepVolume);
     }
 
+    public void Teleport(Vector3 newPosition)
+    {
+        rb.linearVelocity = Vector2.zero;
+        transform.position = newPosition;
+    }
+
 }
