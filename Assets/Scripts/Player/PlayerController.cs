@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, ITeleportable
 {
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     private float lastDetectedTime = float.NegativeInfinity;
     private Color[] originalSpriteColors;
     private readonly RaycastHit2D[] wallHits = new RaycastHit2D[4];
-
+    [SerializeField] private float teleportBlockedUntil = 2f;
     public bool IsHidden => isHidden;
 
 
@@ -216,4 +216,15 @@ public class PlayerController : MonoBehaviour
         transform.position = newPosition;
     }
 
+    public bool CanTeleport()
+    {
+        return Time.time >= teleportBlockedUntil;
+    }
+
+    public void Teleport(Vector3 newPosition, float blockDuration = 0.2f)
+    {
+        rb.linearVelocity = Vector2.zero;
+        transform.position = newPosition;
+        teleportBlockedUntil = Time.time + blockDuration;
+    }
 }

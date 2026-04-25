@@ -1,34 +1,52 @@
 using UnityEngine;
 
 using System.Collections;
-using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Door : MonoBehaviour, IInteractable
 {
     public bool isOpened { get; private set; }
     public string ChestID { get; private set; }
+
     public Sprite defaultSprite;
     public Sprite lockedSprite;
     public Sprite openedSprite;
     public string requiredKeyID = null;
 
+    [SerializeField] private Transform teleportPoint;
+    [SerializeField] private float teleportDelay = 1f;
+
     private bool isLocked = false;
     private bool isUnlocking = false;
+
     private Animator animator;
-    [SerializeField] private Transform teleportPoint;
-    PlayerController player;
+    private SpriteRenderer spriteRenderer;
 
     void Awake()
     {
-        player = FindFirstObjectByType<PlayerController>();
         animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    void Start()
+    {
+        ChestID ??= GlobalHelper.GenerateUniqueId(gameObject);
+
+        if (!string.IsNullOrEmpty(requiredKeyID))
+        {
+            isLocked = true;
+
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.sprite = lockedSprite;
+            }
+        }
     }
 
     public bool CanInteract()
     {
-            return !isOpened && !isUnlocking;
-        }
+        return !isOpened && !isUnlocking;
+    }
 
     public void Interact()
     {
@@ -56,61 +74,56 @@ public class Door : MonoBehaviour, IInteractable
             return;
         }
 
-        OpenDoor();
+        StartCoroutine(OpenAndTeleport());
     }
 
     private IEnumerator UnlockAndOpenDoor()
     {
         isLocked = false;
-        GetComponent<SpriteRenderer>().sprite = defaultSprite;
+
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.sprite = defaultSprite;
+        }
+
         yield return new WaitForSeconds(3f);
-        OpenDoor();
+        yield return StartCoroutine(OpenAndTeleport());
     }
 
-    private void OpenDoor()
+    private IEnumerator OpenAndTeleport()
     {
         SetOpened(true);
         isUnlocking = false;
-        animator.SetBool("setOpened", true);
+
+        if (animator != null)
+        {
+            animator.SetBool("setOpened", true);
+        }
+
         SoundEffectManager.PlayClip("Door", "Door_open", 0.5f);
-        player.Teleport(teleportPoint.position);
-        
+
+        yield return new WaitForSeconds(teleportDelay);
+
+        PlayerController player = FindFirstObjectByType<PlayerController>();
+        if (player != null && teleportPoint != null)
+        {
+            player.Teleport(teleportPoint.position, 0.2f);
+        }
     }
 
     public void SetOpened(bool opened)
     {
         isOpened = opened;
 
-        if (isOpened)
+        if (isOpened && spriteRenderer != null)
         {
-            GetComponent<SpriteRenderer>().sprite = openedSprite;
+            spriteRenderer.sprite = openedSprite;
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public bool IsUnlocked()
     {
-        if (!isOpened) return;
-
-        if (collision.CompareTag("Player"))
-        {
-
-            if (player != null && teleportPoint != null)
-            {
-                player.Teleport(teleportPoint.position);
-            }
-        }
-    }
-
-
-    void Start()
-    {
-        ChestID ??= GlobalHelper.GenerateUniqueId(gameObject);
-
-        if (!string.IsNullOrEmpty(requiredKeyID))
-        {
-            isLocked = true;
-            GetComponent<SpriteRenderer>().sprite = lockedSprite;
-        }
+        return !isLocked;
     }
 
 }

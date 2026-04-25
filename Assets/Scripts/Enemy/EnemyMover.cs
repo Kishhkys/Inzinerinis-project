@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyMover : MonoBehaviour
+public class EnemyMover : MonoBehaviour, ITeleportable
 {
     public enum FootstepSound
     {
@@ -24,8 +24,9 @@ public class EnemyMover : MonoBehaviour
     [SerializeField] private float footstepVolume = 0.05f;
     [SerializeField] private FootstepSound footstepSound;
     private Animator animator;
+    private float teleportBlockedUntil = 0f;
 
-  
+
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
@@ -63,6 +64,20 @@ public class EnemyMover : MonoBehaviour
         {
             StopFootsteps();
         }
+    }
+    public bool CanTeleport()
+    {
+        return Time.time >= teleportBlockedUntil;
+    }
+
+    public void Teleport(Vector3 newPosition, float blockDuration = 0.2f)
+    {
+        MovementInput = Vector2.zero;
+        oldMovementInput = Vector2.zero;
+        currentSpeed = 0f;
+        rb2d.linearVelocity = Vector2.zero;
+        transform.position = newPosition;
+        teleportBlockedUntil = Time.time + blockDuration;
     }
 
     private void StopFootsteps()
