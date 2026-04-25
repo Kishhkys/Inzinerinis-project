@@ -59,6 +59,14 @@ public class ElevatorPanel : MonoBehaviour, IInteractable
 
         if (removeItemsAfterRepair)
         {
+            Debug.Log("Selected item script type: " + selectedItem.GetType().Name);
+            if (selectedItem is KeyItem key){
+                key.UseKey();
+            }
+            else
+            {
+                selectedItem.UseItem();
+            }
             inventory.RemoveSelectedItem();
         }
 
@@ -105,7 +113,6 @@ public class ElevatorPanel : MonoBehaviour, IInteractable
         isRepaired = true;
 
         Debug.Log("Elevator repaired");
-
         if (elevator != null)
         {
             elevator.SetOpen(true);

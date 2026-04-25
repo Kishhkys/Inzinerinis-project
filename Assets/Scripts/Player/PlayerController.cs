@@ -139,7 +139,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
     private bool IsNearWall()
     {
-        if (playerCollider == null || wallLayerMask == 0)
+        if (playerCollider == null || wallLayerMask == 0 || !Keyboard.current.ctrlKey.isPressed)
         {
             return false;
         }

@@ -1,10 +1,12 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Elevator : MonoBehaviour, IInteractable
 {
     [Header("Elevator State")]
-    public bool isOpen = false;
+    public bool isRepaired = false;
+    public bool isOpened { get; private set; }
 
     [Header("Sprites")]
     public Sprite closedSprite;
@@ -14,13 +16,16 @@ public class Elevator : MonoBehaviour, IInteractable
     public SpriteRenderer elevatorLightRenderer;
     public Sprite brokenLightSprite;
     public Sprite repairedLightSprite;
+    public float lightChangeDelay = 2f;
 
     [Header("Optional Level Complete")]
     public bool loadNextSceneOnEnter = true;
     public string nextSceneName;
+    public float levelCompleteDelay = 1f;
 
     private SpriteRenderer spriteRenderer;
     private Animator animator;
+    private bool isOpening = false;
 
     private void Awake()
     {
@@ -30,59 +35,77 @@ public class Elevator : MonoBehaviour, IInteractable
 
     private void Start()
     {
-        SetOpen(false);
-    }
+        isRepaired = false;
+        isOpened = false;
+        isOpening = false;
 
-    public void SetOpen(bool open)
-    {
-        isOpen = open;
-
-        if (spriteRenderer != null)
+        if (spriteRenderer != null && closedSprite != null)
         {
-            if (isOpen && openSprite != null)
-            {
-                spriteRenderer.sprite = openSprite;
-            }
-            else if (!isOpen && closedSprite != null)
-            {
-                spriteRenderer.sprite = closedSprite;
-            }
+            spriteRenderer.sprite = closedSprite;
         }
 
-        UpdateElevatorLight();
+        if (elevatorLightRenderer != null && brokenLightSprite != null)
+        {
+            elevatorLightRenderer.sprite = brokenLightSprite;
+        }
     }
 
-    private void UpdateElevatorLight()
+    public bool CanInteract()
     {
-        if (elevatorLightRenderer == null) return;
+        return !isOpened && !isOpening;
+    }
 
-        if (isOpen)
+    public void Interact()
+    {
+        Debug.Log("INTERACTED WITH ELEVATOR: " + gameObject.name);
+        if (!CanInteract()) return;
+
+        if (!isRepaired)
         {
-            if (repairedLightSprite != null)
-            {
-                elevatorLightRenderer.sprite = repairedLightSprite;
-            }
+            Debug.Log("Elevator not working");
+            SoundEffectManager.PlayClip("Elevator", "Elevator_creak", 0.5f);
+            return;
+        }
+
+        StartCoroutine(OpenElevator());
+    }
+
+    public void SetOpen(bool repaired)
+    {
+        isRepaired = repaired;
+
+        if (isRepaired)
+        {
+            StartCoroutine(ChangeLightAfterDelay());
         }
         else
         {
-            if (brokenLightSprite != null)
+            if (elevatorLightRenderer != null && brokenLightSprite != null)
             {
                 elevatorLightRenderer.sprite = brokenLightSprite;
             }
         }
     }
 
-    public bool CanInteract()
+    private IEnumerator ChangeLightAfterDelay()
     {
-        return isOpen;
+        yield return new WaitForSeconds(lightChangeDelay);
+
+        if (elevatorLightRenderer != null && repairedLightSprite != null)
+        {
+            SoundEffectManager.PlayClip("Elevator", "Elevator_light_switch", 0.5f);
+            elevatorLightRenderer.sprite = repairedLightSprite;
+        }
     }
 
-    public void Interact()
+    private IEnumerator OpenElevator()
     {
-        if (!isOpen)
+        isOpening = true;
+        isOpened = true;
+
+        if (spriteRenderer != null && openSprite != null)
         {
-            Debug.Log("Elevator not working");
-            return;
+            spriteRenderer.sprite = openSprite;
         }
 
         if (animator != null)
@@ -90,7 +113,9 @@ public class Elevator : MonoBehaviour, IInteractable
             animator.SetBool("setOpened", true);
         }
 
-        Debug.Log("Elevator used");
+        SoundEffectManager.PlayClip("Elevator", "Elevator_open", 0.5f);
+
+        yield return new WaitForSeconds(levelCompleteDelay);
 
         if (loadNextSceneOnEnter)
         {

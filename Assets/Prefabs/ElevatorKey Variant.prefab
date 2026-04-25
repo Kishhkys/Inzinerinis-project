@@ -18,11 +18,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2394109698308417202, guid: 209785b04793fa740b487e9ed3e2d875, type: 3}
       propertyPath: Name
-      value: Elevator Key
+      value: Elevator Panel Key
       objectReference: {fileID: 0}
     - target: {fileID: 2394109698308417202, guid: 209785b04793fa740b487e9ed3e2d875, type: 3}
       propertyPath: targetID
-      value: elevator_door
+      value: elevator_panel
       objectReference: {fileID: 0}
     - target: {fileID: 2765024581845502248, guid: 209785b04793fa740b487e9ed3e2d875, type: 3}
       propertyPath: m_Sprite
