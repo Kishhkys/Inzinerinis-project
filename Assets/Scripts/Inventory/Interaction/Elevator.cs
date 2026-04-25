@@ -59,11 +59,11 @@ public class Elevator : MonoBehaviour, IInteractable
     {
         Debug.Log("INTERACTED WITH ELEVATOR: " + gameObject.name);
         if (!CanInteract()) return;
-
+        SoundEffectManager.PlayClip("Elevator", "Elevator_button_press", 0.5f);
         if (!isRepaired)
         {
             Debug.Log("Elevator not working");
-            SoundEffectManager.PlayClip("Elevator", "Elevator_creak", 0.5f);
+
             return;
         }
 

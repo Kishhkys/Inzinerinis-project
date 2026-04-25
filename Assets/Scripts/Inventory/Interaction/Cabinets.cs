@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Drawers : MonoBehaviour, IInteractable
@@ -8,6 +9,7 @@ public class Drawers : MonoBehaviour, IInteractable
     [Header("Item Spawn")]
     public GameObject itemPrefab;
     public Vector3 itemSpawnOffset = Vector3.down;
+    public float itemSpawnDelay = 1f;
 
     [Header("Lock")]
     public string requiredKeyID = null;
@@ -67,6 +69,13 @@ public class Drawers : MonoBehaviour, IInteractable
         isUnlocking = false;
 
         SoundEffectManager.PlayClip("Drawers", "Drawers_open", 1f);
+
+        StartCoroutine(SpawnItemAfterDelay());
+    }
+
+    private IEnumerator SpawnItemAfterDelay()
+    {
+        yield return new WaitForSeconds(itemSpawnDelay);
 
         if (itemPrefab != null)
         {

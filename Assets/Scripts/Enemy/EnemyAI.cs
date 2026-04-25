@@ -352,7 +352,11 @@ public class EnemyAI : MonoBehaviour
             movementInput = Vector2.zero;
 
             if (queuedStateAfterWait == AIState.Chase)
+            {
                 exclamationMark.SetActive(true);
+                SoundEffectManager.PlayClip("Monster", "Monster_growl", 0.5f);
+            }
+                
             else
                 exclamationMark.SetActive(false);
         }

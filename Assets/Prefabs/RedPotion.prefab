@@ -10,7 +10,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1971892885110371748, guid: f391aa04f482ff14aae31440c385b987, type: 3}
       propertyPath: m_Name
-      value: GreenPotion Variant (1) Variant
+      value: RedPotion
+      objectReference: {fileID: 0}
+    - target: {fileID: 2885255654037117121, guid: f391aa04f482ff14aae31440c385b987, type: 3}
+      propertyPath: ID
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2885255654037117121, guid: f391aa04f482ff14aae31440c385b987, type: 3}
       propertyPath: Name

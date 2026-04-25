@@ -6,13 +6,13 @@ public class ElevatorPanel : MonoBehaviour, IInteractable
     [Header("Elevator")]
     public Elevator elevator;
 
-    [Header("Required Items")]
+    [Header("Required Items In Order")]
     public List<int> requiredItemIDs = new List<int>();
 
     [Header("Settings")]
     public bool removeItemsAfterRepair = true;
 
-    private List<int> insertedItemIDs = new List<int>();
+    private int currentItemIndex = 0;
     private bool isRepaired = false;
 
     public bool CanInteract()
@@ -36,76 +36,71 @@ public class ElevatorPanel : MonoBehaviour, IInteractable
         if (selectedItem == null)
         {
             Debug.Log("Choose correct item");
+            PlayWrongSound();
             return;
         }
 
-        int selectedID = selectedItem.ID;
-
-        if (!requiredItemIDs.Contains(selectedID))
+        if (requiredItemIDs.Count == 0)
         {
-            Debug.Log("Wrong item");
+            Debug.LogWarning("Required Item IDs list is empty on ElevatorPanel.");
             return;
         }
 
-        if (insertedItemIDs.Contains(selectedID))
+        if (currentItemIndex >= requiredItemIDs.Count)
         {
-            Debug.Log("Item already used");
+            RepairElevator();
             return;
         }
 
-        insertedItemIDs.Add(selectedID);
+        int neededID = requiredItemIDs[currentItemIndex];
+
+        if (selectedItem.ID != neededID)
+        {
+            Debug.Log("Wrong item. Need item ID: " + neededID);
+            PlayWrongSound();
+            return;
+        }
 
         Debug.Log("Used item: " + selectedItem.name);
 
+        PlayCorrectItemSound(selectedItem);
+
         if (removeItemsAfterRepair)
         {
-            Debug.Log("Selected item script type: " + selectedItem.GetType().Name);
-            if (selectedItem is KeyItem key){
-                key.UseKey();
-            }
-            else
-            {
-                selectedItem.UseItem();
-            }
             inventory.RemoveSelectedItem();
         }
 
-        if (HasAllRequiredItems())
+        currentItemIndex++;
+
+        if (currentItemIndex >= requiredItemIDs.Count)
         {
             RepairElevator();
         }
         else
         {
-            Debug.Log("Missing parts: " + GetMissingItemCount());
+            Debug.Log("Next required item ID: " + requiredItemIDs[currentItemIndex]);
         }
     }
 
-    private bool HasAllRequiredItems()
+    private void PlayCorrectItemSound(Item selectedItem)
     {
-        foreach (int id in requiredItemIDs)
+        if (selectedItem is KeyItem key)
         {
-            if (!insertedItemIDs.Contains(id))
-            {
-                return false;
-            }
+            key.UseKey();
         }
-
-        return true;
+        else if (selectedItem is TapeItem tape)
+        {
+            tape.UseTape();
+        }
+        else
+        {
+            selectedItem.UseItem();
+        }
     }
 
-    private int GetMissingItemCount()
+    private void PlayWrongSound()
     {
-        int missing = 0;
-
-        foreach (int id in requiredItemIDs)
-        {
-            if (!insertedItemIDs.Contains(id))
-            {
-                missing++;
-            }
-        }
-
-        return missing;
+        SoundEffectManager.PlayClip("Elevator", "Elevator_creak", 0.5f);
     }
 
     private void RepairElevator()
@@ -113,9 +108,14 @@ public class ElevatorPanel : MonoBehaviour, IInteractable
         isRepaired = true;
 
         Debug.Log("Elevator repaired");
+
         if (elevator != null)
         {
             elevator.SetOpen(true);
+        }
+        else
+        {
+            Debug.LogWarning("Elevator is not assigned in ElevatorPanel inspector.");
         }
     }
 }
