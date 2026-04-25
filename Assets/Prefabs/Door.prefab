@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 43303741377484697}
   - component: {fileID: 8853214998993394182}
   - component: {fileID: 5853241999343017463}
+  - component: {fileID: 5672242673980749664}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -182,6 +183,21 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1.6875}
   m_EdgeRadius: 0
+--- !u!114 &5672242673980749664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127178310991884165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebdbfcf04d41f104a899a4c5f18b8994, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TeleportTrigger
+  destination: {fileID: 7521380985103226675}
+  requiredDoor: {fileID: 8853214998993394182}
+  cooldown: 0.5
 --- !u!1 &3271493283617556252
 GameObject:
   m_ObjectHideFlags: 0
