@@ -21,11 +21,12 @@ public class Elevator : MonoBehaviour, IInteractable
     [Header("Optional Level Complete")]
     public bool loadNextSceneOnEnter = true;
     public string nextSceneName;
-    public float levelCompleteDelay = 1f;
+    public float levelCompleteDelay = 4f;
 
     private SpriteRenderer spriteRenderer;
     private Animator animator;
     private bool isOpening = false;
+    [SerializeField] private GameObject levelCompleteScreen;
 
     private void Awake()
     {
@@ -115,18 +116,24 @@ public class Elevator : MonoBehaviour, IInteractable
 
         SoundEffectManager.PlayClip("Elevator", "Elevator_open", 0.5f);
 
-        yield return new WaitForSeconds(levelCompleteDelay);
-
-        if (loadNextSceneOnEnter)
+        if (levelCompleteScreen != null)
         {
-            if (!string.IsNullOrEmpty(nextSceneName))
-            {
-                SceneManager.LoadScene(nextSceneName);
-            }
-            else
-            {
-                Debug.Log("Level Complete!");
-            }
+            levelCompleteScreen.SetActive(true);
+        }
+
+        Time.timeScale = 0f;
+
+        yield return new WaitForSecondsRealtime(levelCompleteDelay);
+
+        Time.timeScale = 1f;
+
+        if (!string.IsNullOrEmpty(nextSceneName))
+        {
+            SceneManager.LoadScene(nextSceneName);
+        }
+        else
+        {
+            Debug.Log("Next scene name is empty!");
         }
     }
 }

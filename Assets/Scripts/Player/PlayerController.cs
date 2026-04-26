@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
     [Header("Audio")]
     public float footstepSpeed = 0.5f;
+    [SerializeField] private float runFootstepSpeed = 0.3f;
     [SerializeField] private float footstepVolume = 0.5f;
 
     [Header("Hide")]
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
     private Vector2 moveInput;
     private Animator animator;
     private bool playingFootsteps = false;
+    private bool wasRunning = false;
     private float stillNearWallTimer = 0f;
     private bool isHidden = false;
     private float hideBlockedUntil = 0f;
@@ -60,9 +62,10 @@ public class PlayerController : MonoBehaviour, ITeleportable
         //    StopFootsteps();
         //    return;
         //}
-        
-        
-        if(Keyboard.current.shiftKey.isPressed)
+
+        bool isRunning = Keyboard.current.shiftKey.isPressed;
+
+        if (isRunning)
         {
             rb.linearVelocity = moveInput * runSpeed;
         }
@@ -75,14 +78,20 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
         animator.SetBool("isMoving", rb.linearVelocity.magnitude > 0);
 
-        if (rb.linearVelocity.magnitude > 0 && !playingFootsteps)
+        if (rb.linearVelocity.magnitude > 0)
         {
-            StartFootsteps();
+            // Jei pradejo bet ar perjunge tarp run/walk — perkraunam footstepu intervala
+            if (!playingFootsteps || isRunning != wasRunning)
+            {
+                StartFootsteps(isRunning);
+            }
         }
         else if (rb.linearVelocity.magnitude == 0)
         {
             StopFootsteps();
         }
+
+        wasRunning = isRunning;
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -199,10 +208,14 @@ public class PlayerController : MonoBehaviour, ITeleportable
         CancelInvoke(nameof(PlayFootstep));
     }
 
-    private void StartFootsteps()
+    private void StartFootsteps(bool isRunning)
     {
+        // Pirma sustabdom esama InvokeRepeating, kad nesikartotu su senu intervalu
+        CancelInvoke(nameof(PlayFootstep));
+
         playingFootsteps = true;
-        InvokeRepeating(nameof(PlayFootstep), 0f, footstepSpeed);
+        float interval = isRunning ? runFootstepSpeed : footstepSpeed;
+        InvokeRepeating(nameof(PlayFootstep), 0f, interval);
     }
 
     private void PlayFootstep()
@@ -227,4 +240,5 @@ public class PlayerController : MonoBehaviour, ITeleportable
         transform.position = newPosition;
         teleportBlockedUntil = Time.time + blockDuration;
     }
+
 }
