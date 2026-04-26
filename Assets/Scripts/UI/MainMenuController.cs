@@ -5,7 +5,7 @@ public class MainMenuController : MonoBehaviour
 {
     public void PlayGame()
     {
-        SceneManager.LoadScene("milda1");
+        SceneManager.LoadScene("sprint4Milda");
     }
 
     public void QuitGame()
