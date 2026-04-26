@@ -68,6 +68,7 @@ public class InteractionDetector : MonoBehaviour
 
     public void OnInteract(InputAction.CallbackContext context)
     {
+        if (Time.timeScale == 0f) return;
         if (!context.performed) return;
         if (isOnCooldown) return;
         if (interactableInRange == null) return;

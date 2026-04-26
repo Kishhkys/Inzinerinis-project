@@ -18,15 +18,17 @@ public class Elevator : MonoBehaviour, IInteractable
     public Sprite repairedLightSprite;
     public float lightChangeDelay = 2f;
 
-    [Header("Optional Level Complete")]
-    public bool loadNextSceneOnEnter = true;
+    [Header("Level Complete")]
     public string nextSceneName;
     public float levelCompleteDelay = 4f;
 
+    [SerializeField] private GameObject levelCompleteScreen;
+
     private SpriteRenderer spriteRenderer;
     private Animator animator;
+
     private bool isOpening = false;
-    [SerializeField] private GameObject levelCompleteScreen;
+    private bool levelCompleteStarted = false;
 
     private void Awake()
     {
@@ -39,6 +41,7 @@ public class Elevator : MonoBehaviour, IInteractable
         isRepaired = false;
         isOpened = false;
         isOpening = false;
+        levelCompleteStarted = false;
 
         if (spriteRenderer != null && closedSprite != null)
         {
@@ -49,26 +52,31 @@ public class Elevator : MonoBehaviour, IInteractable
         {
             elevatorLightRenderer.sprite = brokenLightSprite;
         }
+
+        if (levelCompleteScreen != null)
+        {
+            levelCompleteScreen.SetActive(false);
+        }
     }
 
     public bool CanInteract()
     {
-        return !isOpened && !isOpening;
+        return isRepaired && !isOpening && !levelCompleteStarted;
     }
 
     public void Interact()
     {
-        Debug.Log("INTERACTED WITH ELEVATOR: " + gameObject.name);
         if (!CanInteract()) return;
-        SoundEffectManager.PlayClip("Elevator", "Elevator_button_press", 0.5f);
-        if (!isRepaired)
-        {
-            Debug.Log("Elevator not working");
 
+        SoundEffectManager.PlayClip("Elevator", "Elevator_button_press", 0.5f);
+
+        if (!isOpened)
+        {
+            StartCoroutine(OpenElevator());
             return;
         }
 
-        StartCoroutine(OpenElevator());
+        StartCoroutine(LevelCompleteRoutine());
     }
 
     public void SetOpen(bool repaired)
@@ -102,12 +110,6 @@ public class Elevator : MonoBehaviour, IInteractable
     private IEnumerator OpenElevator()
     {
         isOpening = true;
-        isOpened = true;
-
-        if (spriteRenderer != null && openSprite != null)
-        {
-            spriteRenderer.sprite = openSprite;
-        }
 
         if (animator != null)
         {
@@ -115,6 +117,23 @@ public class Elevator : MonoBehaviour, IInteractable
         }
 
         SoundEffectManager.PlayClip("Elevator", "Elevator_open", 0.5f);
+
+        yield return new WaitForSeconds(1f);
+
+        isOpened = true;
+        isOpening = false;
+
+        if (spriteRenderer != null && openSprite != null)
+        {
+            spriteRenderer.sprite = openSprite;
+        }
+
+        Debug.Log("Elevator opened. Interact again to finish level.");
+    }
+
+    private IEnumerator LevelCompleteRoutine()
+    {
+        levelCompleteStarted = true;
 
         if (levelCompleteScreen != null)
         {

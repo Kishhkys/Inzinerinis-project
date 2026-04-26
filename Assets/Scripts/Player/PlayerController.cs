@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
@@ -51,6 +52,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
     private bool flashlightOn;
     private Vector2 lastFacingDirection = Vector2.down;
     [SerializeField] private float teleportBlockedUntil = 2f;
+    private bool movementBlocked = false;
     public bool IsHidden => isHidden;
 
 
@@ -81,6 +83,11 @@ public class PlayerController : MonoBehaviour, ITeleportable
         //    StopFootsteps();
         //    return;
         //}
+        if (movementBlocked)
+        {
+            rb.linearVelocity = Vector2.zero;
+            return;
+        }
 
         Keyboard keyboard = Keyboard.current;
         bool isRunning = keyboard != null && keyboard.shiftKey.isPressed;
@@ -310,8 +317,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
     public void Teleport(Vector3 newPosition)
     {
-        rb.linearVelocity = Vector2.zero;
-        transform.position = newPosition;
+        Teleport(newPosition, 0.2f);
     }
 
     public bool CanTeleport()
@@ -321,9 +327,38 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
     public void Teleport(Vector3 newPosition, float blockDuration = 0.2f)
     {
+        StartCoroutine(TeleportRoutine(newPosition, blockDuration));
+    }
+
+    private IEnumerator TeleportRoutine(Vector3 newPosition, float blockDuration)
+    {
+        movementBlocked = true;
+
         rb.linearVelocity = Vector2.zero;
+        moveInput = Vector2.zero;
+
+        if (playerCollider != null)
+        {
+            playerCollider.enabled = false;
+        }
+
+        rb.position = newPosition;
         transform.position = newPosition;
+
+        yield return new WaitForFixedUpdate();
+
+        rb.linearVelocity = Vector2.zero;
+
+        if (playerCollider != null)
+        {
+            playerCollider.enabled = true;
+        }
+
         teleportBlockedUntil = Time.time + blockDuration;
+
+        yield return new WaitForSeconds(blockDuration);
+
+        movementBlocked = false;
     }
 
 }

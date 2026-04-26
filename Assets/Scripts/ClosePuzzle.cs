@@ -9,7 +9,7 @@ public class ClosePuzzle : MonoBehaviour
     {
         if (puzzleUI != null &&
             puzzleUI.activeSelf &&
-            Keyboard.current.fKey.wasPressedThisFrame)
+            Keyboard.current.tabKey.wasPressedThisFrame)
         {
             Close();
         }
