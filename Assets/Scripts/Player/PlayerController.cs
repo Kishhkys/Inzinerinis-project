@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, ITeleportable
 {
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Audio")]
     public float footstepSpeed = 0.5f;
+    [SerializeField] private float runFootstepSpeed = 0.3f;
     [SerializeField] private float footstepVolume = 0.5f;
 
     [Header("Hide")]
@@ -26,13 +27,14 @@ public class PlayerController : MonoBehaviour
     private Vector2 moveInput;
     private Animator animator;
     private bool playingFootsteps = false;
+    private bool wasRunning = false;
     private float stillNearWallTimer = 0f;
     private bool isHidden = false;
     private float hideBlockedUntil = 0f;
     private float lastDetectedTime = float.NegativeInfinity;
     private Color[] originalSpriteColors;
     private readonly RaycastHit2D[] wallHits = new RaycastHit2D[4];
-
+    [SerializeField] private float teleportBlockedUntil = 2f;
     public bool IsHidden => isHidden;
 
 
@@ -60,9 +62,10 @@ public class PlayerController : MonoBehaviour
         //    StopFootsteps();
         //    return;
         //}
-        
-        
-        if(Keyboard.current.shiftKey.isPressed)
+
+        bool isRunning = Keyboard.current.shiftKey.isPressed;
+
+        if (isRunning)
         {
             rb.linearVelocity = moveInput * runSpeed;
         }
@@ -75,14 +78,20 @@ public class PlayerController : MonoBehaviour
 
         animator.SetBool("isMoving", rb.linearVelocity.magnitude > 0);
 
-        if (rb.linearVelocity.magnitude > 0 && !playingFootsteps)
+        if (rb.linearVelocity.magnitude > 0)
         {
-            StartFootsteps();
+            // Jei pradejo bet ar perjunge tarp run/walk — perkraunam footstepu intervala
+            if (!playingFootsteps || isRunning != wasRunning)
+            {
+                StartFootsteps(isRunning);
+            }
         }
         else if (rb.linearVelocity.magnitude == 0)
         {
             StopFootsteps();
         }
+
+        wasRunning = isRunning;
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -139,7 +148,7 @@ public class PlayerController : MonoBehaviour
 
     private bool IsNearWall()
     {
-        if (playerCollider == null || wallLayerMask == 0)
+        if (playerCollider == null || wallLayerMask == 0 || !Keyboard.current.ctrlKey.isPressed)
         {
             return false;
         }
@@ -199,15 +208,37 @@ public class PlayerController : MonoBehaviour
         CancelInvoke(nameof(PlayFootstep));
     }
 
-    private void StartFootsteps()
+    private void StartFootsteps(bool isRunning)
     {
+        // Pirma sustabdom esama InvokeRepeating, kad nesikartotu su senu intervalu
+        CancelInvoke(nameof(PlayFootstep));
+
         playingFootsteps = true;
-        InvokeRepeating(nameof(PlayFootstep), 0f, footstepSpeed);
+        float interval = isRunning ? runFootstepSpeed : footstepSpeed;
+        InvokeRepeating(nameof(PlayFootstep), 0f, interval);
     }
 
     private void PlayFootstep()
     {
         SoundEffectManager.PlayRandomClip("PlayerFootsteps", footstepVolume);
+    }
+
+    public void Teleport(Vector3 newPosition)
+    {
+        rb.linearVelocity = Vector2.zero;
+        transform.position = newPosition;
+    }
+
+    public bool CanTeleport()
+    {
+        return Time.time >= teleportBlockedUntil;
+    }
+
+    public void Teleport(Vector3 newPosition, float blockDuration = 0.2f)
+    {
+        rb.linearVelocity = Vector2.zero;
+        transform.position = newPosition;
+        teleportBlockedUntil = Time.time + blockDuration;
     }
 
 }
