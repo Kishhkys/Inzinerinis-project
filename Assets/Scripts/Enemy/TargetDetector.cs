@@ -78,6 +78,11 @@ public class TargetDetector : Detector
                 playerController.NotifyDetected();
             }
 
+            if (GetComponentInParent<EnemyAI>() != null)
+            {
+                InteractionDialogueEvents.ZombieSeen(gameObject);
+            }
+
             colliders = new List<Transform> { playerCollider.transform };
             aiData.targets = new List<Transform> { playerCollider.transform };
         }

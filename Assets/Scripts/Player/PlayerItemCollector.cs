@@ -57,6 +57,7 @@ public class PlayerItemCollector : MonoBehaviour
                 {
                     SoundEffectManager.PlayRandomClip("ItemCollect", 1f);
                     item.PickUp();
+                    InteractionDialogueEvents.ItemPickedUp(item);
                     collision.gameObject.SetActive(false);
                     Destroy(collision.gameObject);
                 }

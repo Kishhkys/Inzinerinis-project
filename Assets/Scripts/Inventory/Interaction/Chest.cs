@@ -31,7 +31,11 @@ public class Chest : MonoBehaviour, IInteractable
 
         if (isLocked)
         {
-            if (selectedItem is KeyItem key && key.targetID == requiredKeyID)
+            KeyItem key = selectedItem as KeyItem;
+            bool hasMatchingKey = key != null && key.targetID == requiredKeyID;
+            InteractionDialogueEvents.LockedContainerChecked(hasMatchingKey);
+
+            if (hasMatchingKey)
             {
                 isUnlocking = true;
                 key.UseKey();
