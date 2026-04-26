@@ -916,11 +916,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1445621820782641148, guid: 50bca7def6c4ea44ca59200a15210b72, type: 3}
       propertyPath: m_Size.y
-      value: 1.7627916
+      value: 0.7683306
       objectReference: {fileID: 0}
     - target: {fileID: 1445621820782641148, guid: 50bca7def6c4ea44ca59200a15210b72, type: 3}
       propertyPath: m_Offset.y
-      value: 0.006395817
+      value: -0.4908347
       objectReference: {fileID: 0}
     - target: {fileID: 5458714430734025002, guid: 50bca7def6c4ea44ca59200a15210b72, type: 3}
       propertyPath: m_Name
@@ -1423,6 +1423,15 @@ MonoBehaviour:
   movementThreshold: 0.05
   detectionMemory: 0.2
   damageHideLockDuration: 1
+  flashlightStartsOn: 0
+  flashlightIntensity: 1.8
+  flashlightRange: 4.5
+  flashlightOuterAngle: 55
+  flashlightInnerAngle: 35
+  flashlightColor: {r: 1, g: 0.92, b: 0.72, a: 1}
+  flashlightForwardOffset: 0.28
+  flashlightRightHandOffset: 0.18
+  flashlightBaseOffset: {x: 0, y: -0.05}
   teleportBlockedUntil: 2
 --- !u!212 &161881872
 SpriteRenderer:
@@ -1762,6 +1771,7 @@ RectTransform:
   - {fileID: 852447271}
   - {fileID: 1111191734}
   - {fileID: 410314042}
+  - {fileID: 999095503}
   m_Father: {fileID: 1671563473}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
@@ -1790,7 +1800,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0, g: 0, b: 0, a: 1}
+    m_NormalColor: {r: 0.24705884, g: 0, b: 0, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -2970,6 +2980,14 @@ CompositeCollider2D:
         Y: 120000000
       - X: -70000000
         Y: 120000000
+    - - X: 184375008
+        Y: 123750000
+      - X: 145624992
+        Y: 123750000
+      - X: 145624992
+        Y: 106458328
+      - X: 184375008
+        Y: 106458328
     - - X: 80000000
         Y: 120000000
       - X: 50000000
@@ -3132,6 +3150,10 @@ CompositeCollider2D:
       - {x: -7.0000296, y: 13}
       - {x: -10, y: 12.99997}
       - {x: -9.99997, y: 12}
+    - - {x: 18.437471, y: 10.645833}
+      - {x: 18.437471, y: 12.375}
+      - {x: 14.562499, y: 12.37497}
+      - {x: 14.562529, y: 10.645833}
     - - {x: 7.9999704, y: 11}
       - {x: 7.9999704, y: 12}
       - {x: 5, y: 11.99997}
@@ -3742,6 +3764,16 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
+  - first: {x: 16, y: 11, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 3
+      m_TileSpriteIndex: 3
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
   - first: {x: -14, y: 12, z: 0}
     second:
       serializedVersion: 2
@@ -3840,6 +3872,8 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: 2321832257ae0f343840c38ad5e917bf, type: 2}
   - m_RefCount: 1
     m_Data: {fileID: 11400000, guid: 033d269378a74904fa242b9b8898370b, type: 2}
+  - m_RefCount: 1
+    m_Data: {fileID: 11400000, guid: cb3bb839e427f854da2e718d14c2b01e, type: 2}
   m_TileSpriteArray:
   - m_RefCount: 51
     m_Data: {fileID: 387663092, guid: 367779ea8d0daa14084b69bc48b6ad38, type: 3}
@@ -3847,8 +3881,10 @@ Tilemap:
     m_Data: {fileID: -1144796206, guid: 675aff75670e189418d71e2c23826f0c, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: -883531337, guid: 4d6569b16f1f9134abfd2146f429674e, type: 3}
+  - m_RefCount: 1
+    m_Data: {fileID: -938409509, guid: 675aff75670e189418d71e2c23826f0c, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 53
+  - m_RefCount: 54
     m_Data:
       e00: 1
       e01: 0
@@ -3867,7 +3903,7 @@ Tilemap:
       e32: 0
       e33: 1
   m_TileColorArray:
-  - m_RefCount: 53
+  - m_RefCount: 54
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
@@ -14612,7 +14648,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.24705884, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -15801,6 +15837,81 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 976895308}
   m_CullTransparentMesh: 1
+--- !u!1 &999095502
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 999095503}
+  - component: {fileID: 999095505}
+  - component: {fileID: 999095504}
+  m_Layer: 5
+  m_Name: Sound
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &999095503
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 999095502}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.48519963, y: 0.48519963, z: 0.48519963}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 229451372}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -104.5, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &999095504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 999095502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 17519629467799403, guid: cff4fb4300b3c644cb6aed1000aa611c, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &999095505
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 999095502}
+  m_CullTransparentMesh: 1
 --- !u!1 &1020537435
 GameObject:
   m_ObjectHideFlags: 0
@@ -16153,7 +16264,6 @@ MonoBehaviour:
   brokenLightSprite: {fileID: 1182972774, guid: d9dc0ec251ab4cd44a40a743e40b4c97, type: 3}
   repairedLightSprite: {fileID: -1663339632015488759, guid: d9dc0ec251ab4cd44a40a743e40b4c97, type: 3}
   lightChangeDelay: 6
-  loadNextSceneOnEnter: 1
   nextSceneName: MainMenu
   levelCompleteDelay: 5
   levelCompleteScreen: {fileID: 1232842056}
@@ -18260,7 +18370,7 @@ MonoBehaviour:
   m_Intensity: 0.1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 000000004718d631ed723c35
+  m_ApplyToSortingLayers: 000000004718d631ed723c3595a407ae
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -18878,7 +18988,7 @@ Transform:
   m_GameObject: {fileID: 1680582987}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.8490505, y: -1.38441, z: 0}
+  m_LocalPosition: {x: 4.08873, y: -1.45593, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
