@@ -54,6 +54,7 @@ public class Enemy : MonoBehaviour
                 Vector2 hitPoint = (Vector2)playerCollider.transform.position + Random.insideUnitCircle * 0.3f;
                 CameraShakeManager.instance.CameraShake(impulseSource);
                 playerHealth.UpdateHealth(-attackDamage, hitPoint);
+                InteractionDialogueEvents.PlayerDamagedBy(gameObject);
             }
         }
     }

@@ -1,7 +1,9 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, ITeleportable
 {
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
@@ -9,6 +11,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Audio")]
     public float footstepSpeed = 0.5f;
+    [SerializeField] private float runFootstepSpeed = 0.3f;
     [SerializeField] private float footstepVolume = 0.5f;
 
     [Header("Hide")]
@@ -20,19 +23,36 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float detectionMemory = 0.2f;
     [SerializeField] private float damageHideLockDuration = 1f;
 
+    [Header("Flashlight")]
+    [SerializeField] private bool flashlightStartsOn = false;
+    [SerializeField] private float flashlightIntensity = 1.8f;
+    [SerializeField] private float flashlightRange = 4.5f;
+    [SerializeField] private float flashlightOuterAngle = 55f;
+    [SerializeField] private float flashlightInnerAngle = 35f;
+    [SerializeField] private Color flashlightColor = new Color(1f, 0.92f, 0.72f, 1f);
+    [SerializeField] private float flashlightForwardOffset = 0.28f;
+    [SerializeField] private float flashlightRightHandOffset = 0.18f;
+    [SerializeField] private Vector2 flashlightBaseOffset = new Vector2(0f, -0.05f);
+
     private Rigidbody2D rb;
     private Collider2D playerCollider;
     private SpriteRenderer[] spriteRenderers;
     private Vector2 moveInput;
     private Animator animator;
     private bool playingFootsteps = false;
+    private bool wasRunning = false;
     private float stillNearWallTimer = 0f;
     private bool isHidden = false;
     private float hideBlockedUntil = 0f;
     private float lastDetectedTime = float.NegativeInfinity;
     private Color[] originalSpriteColors;
     private readonly RaycastHit2D[] wallHits = new RaycastHit2D[4];
-
+    private Light2D flashlight;
+    private Transform flashlightTransform;
+    private bool flashlightOn;
+    private Vector2 lastFacingDirection = Vector2.down;
+    [SerializeField] private float teleportBlockedUntil = 2f;
+    private bool movementBlocked = false;
     public bool IsHidden => isHidden;
 
 
@@ -48,6 +68,9 @@ public class PlayerController : MonoBehaviour
         {
             originalSpriteColors[i] = spriteRenderers[i].color;
         }
+
+        CreateFlashlight();
+        SetFlashlight(flashlightStartsOn);
     }
 
     // Update is called once per frame
@@ -60,9 +83,21 @@ public class PlayerController : MonoBehaviour
         //    StopFootsteps();
         //    return;
         //}
-        
-        
-        if(Keyboard.current.shiftKey.isPressed)
+        if (movementBlocked)
+        {
+            rb.linearVelocity = Vector2.zero;
+            return;
+        }
+
+        Keyboard keyboard = Keyboard.current;
+        bool isRunning = keyboard != null && keyboard.shiftKey.isPressed;
+
+        if (keyboard != null && keyboard.fKey.wasPressedThisFrame)
+        {
+            ToggleFlashlight();
+        }
+
+        if (isRunning)
         {
             rb.linearVelocity = moveInput * runSpeed;
         }
@@ -75,14 +110,20 @@ public class PlayerController : MonoBehaviour
 
         animator.SetBool("isMoving", rb.linearVelocity.magnitude > 0);
 
-        if (rb.linearVelocity.magnitude > 0 && !playingFootsteps)
+        if (rb.linearVelocity.magnitude > 0)
         {
-            StartFootsteps();
+            // Jei pradejo bet ar perjunge tarp run/walk — perkraunam footstepu intervala
+            if (!playingFootsteps || isRunning != wasRunning)
+            {
+                StartFootsteps(isRunning);
+            }
         }
         else if (rb.linearVelocity.magnitude == 0)
         {
             StopFootsteps();
         }
+
+        wasRunning = isRunning;
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -100,6 +141,65 @@ public class PlayerController : MonoBehaviour
         moveInput = context.ReadValue<Vector2>();
         animator.SetFloat("inputX", moveInput.x);
         animator.SetFloat("inputY", moveInput.y);
+
+        if (moveInput.sqrMagnitude > 0.01f)
+        {
+            lastFacingDirection = moveInput.normalized;
+            UpdateFlashlightTransform();
+        }
+    }
+
+    private void CreateFlashlight()
+    {
+        GameObject flashlightObject = new GameObject("Player Flashlight");
+        flashlightObject.transform.SetParent(transform, false);
+
+        flashlightTransform = flashlightObject.transform;
+        flashlight = flashlightObject.AddComponent<Light2D>();
+        flashlight.lightType = Light2D.LightType.Point;
+        flashlight.intensity = flashlightIntensity;
+        flashlight.color = flashlightColor;
+        flashlight.pointLightOuterRadius = flashlightRange;
+        flashlight.pointLightInnerRadius = 0f;
+        flashlight.pointLightOuterAngle = flashlightOuterAngle;
+        flashlight.pointLightInnerAngle = flashlightInnerAngle;
+        flashlight.falloffIntensity = 0.65f;
+        flashlight.shadowsEnabled = true;
+        flashlight.shadowIntensity = 0.55f;
+        flashlight.shadowSoftness = 0.35f;
+
+        UpdateFlashlightTransform();
+    }
+
+    private void ToggleFlashlight()
+    {
+        SetFlashlight(!flashlightOn);
+    }
+
+    private void SetFlashlight(bool enabled)
+    {
+        flashlightOn = enabled;
+
+        if (flashlight != null)
+        {
+            flashlight.enabled = flashlightOn;
+        }
+    }
+
+    private void UpdateFlashlightTransform()
+    {
+        if (flashlightTransform == null)
+        {
+            return;
+        }
+
+        Vector2 direction = lastFacingDirection.sqrMagnitude > 0.01f ? lastFacingDirection.normalized : Vector2.down;
+        Vector2 rightHandDirection = new Vector2(direction.y, -direction.x);
+        Vector2 offset = flashlightBaseOffset + direction * flashlightForwardOffset + rightHandDirection * flashlightRightHandOffset;
+
+        flashlightTransform.localPosition = new Vector3(offset.x, offset.y, 0f);
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+        flashlightTransform.localRotation = Quaternion.Euler(0f, 0f, angle);
     }
 
     private void UpdateHideState()
@@ -139,7 +239,8 @@ public class PlayerController : MonoBehaviour
 
     private bool IsNearWall()
     {
-        if (playerCollider == null || wallLayerMask == 0)
+        Keyboard keyboard = Keyboard.current;
+        if (playerCollider == null || wallLayerMask == 0 || keyboard == null || !keyboard.ctrlKey.isPressed)
         {
             return false;
         }
@@ -199,10 +300,14 @@ public class PlayerController : MonoBehaviour
         CancelInvoke(nameof(PlayFootstep));
     }
 
-    private void StartFootsteps()
+    private void StartFootsteps(bool isRunning)
     {
+        // Pirma sustabdom esama InvokeRepeating, kad nesikartotu su senu intervalu
+        CancelInvoke(nameof(PlayFootstep));
+
         playingFootsteps = true;
-        InvokeRepeating(nameof(PlayFootstep), 0f, footstepSpeed);
+        float interval = isRunning ? runFootstepSpeed : footstepSpeed;
+        InvokeRepeating(nameof(PlayFootstep), 0f, interval);
     }
 
     private void PlayFootstep()
@@ -210,4 +315,52 @@ public class PlayerController : MonoBehaviour
         SoundEffectManager.PlayRandomClip("PlayerFootsteps", footstepVolume);
     }
 
+    public void Teleport(Vector3 newPosition)
+    {
+        Teleport(newPosition, 0.2f);
+    }
+
+    public bool CanTeleport()
+    {
+        return Time.time >= teleportBlockedUntil;
+    }
+
+    public void Teleport(Vector3 newPosition, float blockDuration = 0.2f)
+    {
+        StartCoroutine(TeleportRoutine(newPosition, blockDuration));
+    }
+
+    private IEnumerator TeleportRoutine(Vector3 newPosition, float blockDuration)
+    {
+        movementBlocked = true;
+
+        rb.linearVelocity = Vector2.zero;
+        moveInput = Vector2.zero;
+
+        if (playerCollider != null)
+        {
+            playerCollider.enabled = false;
+        }
+
+        rb.position = newPosition;
+        transform.position = newPosition;
+
+        yield return new WaitForFixedUpdate();
+
+        rb.linearVelocity = Vector2.zero;
+
+        if (playerCollider != null)
+        {
+            playerCollider.enabled = true;
+        }
+
+        teleportBlockedUntil = Time.time + blockDuration;
+
+        yield return new WaitForSeconds(blockDuration);
+
+        movementBlocked = false;
+    }
+
 }
+
+
