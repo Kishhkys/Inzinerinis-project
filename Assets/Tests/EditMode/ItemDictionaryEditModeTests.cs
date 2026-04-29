@@ -23,7 +23,7 @@ public class ItemDictionaryEditModeTests
     }
 
     [Test]
-    public void Awake_AssignsIdsAndBuildsLookupDictionary()
+    public void AssignsItemIdsWhenDictionaryStarts()
     {
         Item firstItem = CreateItem("First Item");
         Item secondItem = CreateItem("Second Item");
@@ -38,7 +38,7 @@ public class ItemDictionaryEditModeTests
     }
 
     [Test]
-    public void GetItemPrefab_ReturnsNullAndLogsWarning_WhenItemIdIsMissing()
+    public void WarnsWhenItemIdIsMissing()
     {
         ItemDictionary dictionary = CreateDictionary(CreateItem("Only Item"));
         InvokeAwake(dictionary);

@@ -25,7 +25,7 @@ public class PauseMenuPlayModeTests
     }
 
     [UnityTest]
-    public IEnumerator Start_HidesPausePanelAndResetsTimeScale()
+    public IEnumerator StartsWithPauseMenuHidden()
     {
         Time.timeScale = 0f;
 
@@ -39,7 +39,7 @@ public class PauseMenuPlayModeTests
     }
 
     [UnityTest]
-    public IEnumerator PauseAndResume_TogglePanelVisibilityAndTimeScale()
+    public IEnumerator PauseAndResumeUpdateMenuAndTime()
     {
         PauseMenu pauseMenu = CreatePauseMenu();
 

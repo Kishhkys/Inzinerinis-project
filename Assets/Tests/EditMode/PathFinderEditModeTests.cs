@@ -20,7 +20,7 @@ public class PathFinderEditModeTests
     }
 
     [Test]
-    public void FindPath_ReturnsOrderedPath_WhenNodesAreConnected()
+    public void FindsPathThroughConnectedNodes()
     {
         PathNode start = CreateNode("Start", new Vector2(0f, 0f));
         PathNode middle = CreateNode("Middle", new Vector2(1f, 0f));
@@ -38,7 +38,7 @@ public class PathFinderEditModeTests
     }
 
     [Test]
-    public void FindPath_ReturnsNull_WhenTargetCannotBeReached()
+    public void ReturnsNoPathForUnreachableTarget()
     {
         PathNode start = CreateNode("Start", Vector2.zero);
         PathNode connected = CreateNode("Connected", Vector2.right);
@@ -53,13 +53,18 @@ public class PathFinderEditModeTests
         Assert.That(path, Is.Null);
     }
 
-    [Test]
-    public void FindPath_ReturnsSingleNode_WhenStartAndTargetResolveToSameNode()
+    [TestCase(4.1f, 4f, 3.9f, 4f)]
+    [TestCase(3.7f, 4.2f, 4.3f, 3.8f)]
+    public void ReturnsSingleNodeWhenStartAndTargetAreTheSame(
+        float startX,
+        float startY,
+        float targetX,
+        float targetY)
     {
         PathNode onlyNode = CreateNode("OnlyNode", new Vector2(4f, 4f));
         PathFinder pathFinder = CreatePathFinder(onlyNode);
 
-        List<PathNode> path = pathFinder.FindPath(new Vector2(4.1f, 4f), new Vector2(3.9f, 4f));
+        List<PathNode> path = pathFinder.FindPath(new Vector2(startX, startY), new Vector2(targetX, targetY));
 
         Assert.That(path, Is.Not.Null);
         Assert.That(path.Count, Is.EqualTo(1));

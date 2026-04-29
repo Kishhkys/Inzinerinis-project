@@ -42,6 +42,7 @@ Covered behaviors:
 - path is found when graph nodes are connected
 - `null` is returned when the target node is unreachable
 - a single-node path is returned when start and target resolve to the same node
+- parameterized start and target positions are checked with NUnit `TestCase`
 
 Reason for selection:
 
@@ -97,13 +98,46 @@ File: `Assets/Tests/PlayMode/InventoryIntegrationPlayModeTests.cs`
 
 Covered behaviors:
 
-- items are added to the first available inventory slots
-- selecting a slot enables the visual selection state
-- using the selected item calls the item logic and clears the slot
+- `InventoryController` creates the configured number of UI slots from a slot prefab
+- the first slot is selected on startup and receives the active slot sprite
+- item prefabs are added to the first available slots
+- item ID and name data are copied from the source prefab to the runtime inventory item
+- using the selected item calls the item logic
+- removing the selected item clears only that selected slot
+- adding another item fails and logs a message when all slots are full
 
 Reason for selection:
 
-This test verifies interaction between `InventoryManager`, `InventorySlot`, UI images, and `ItemSO`.
+This test verifies interaction between `InventoryController`, `Slot`, UI images, TextMesh Pro slot labels, and `Item` prefabs. It was updated after the inventory scripts changed from the older ScriptableObject-based inventory path to the newer prefab/slot-based controller used by current gameplay interactions.
+
+### 6. Player health tests
+
+File: `Assets/Tests/PlayMode/PlayerHealthPlayModeTests.cs`
+
+Covered behaviors:
+
+- `Start` initializes current health and health bar values
+- healing cannot raise health above maximum health
+- fatal damage disables the player controller, sprite renderer, collider, inventory panel, and popup panel
+- respawn restores health, UI panels, renderer, collider, and start position
+
+Reason for selection:
+
+`PlayerHealth` is a central gameplay component. These tests cover both normal state updates and a higher-risk death/respawn workflow that affects several connected components.
+
+### 7. Item pickup popup tests
+
+File: `Assets/Tests/PlayMode/ItemPickupUIControllerPlayModeTests.cs`
+
+Covered behaviors:
+
+- the pickup UI controller assigns its singleton instance
+- pickup popups display the expected item name and icon
+- the oldest popup is removed when the configured popup limit is exceeded
+
+Reason for selection:
+
+The pickup popup is a small but visible UI integration point. These tests verify the interaction between `ItemPickupUIController`, generated popup prefabs, TextMesh Pro text, and UI image components.
 
 ## Mocks, Stubs, and Drivers
 
@@ -111,12 +145,18 @@ The assignment requested research and usage of testing doubles. The created test
 
 - Stub steering behaviour:
   `ContextSolverEditModeTests` uses a fake `SteeringBehaviour` that returns predefined danger and interest arrays.
-- Fake consumable item:
-  `InventoryIntegrationPlayModeTests` uses a custom `ItemSO` subclass to record whether `Use` was called.
+- Fake inventory item:
+  `InventoryIntegrationPlayModeTests` uses a custom `Item` subclass to record whether `UseItem` was called.
+- Generated UI prefabs:
+  `InventoryIntegrationPlayModeTests` and `ItemPickupUIControllerPlayModeTests` create lightweight slot and popup prefabs during setup instead of depending on scene assets.
 - Test driver setup:
   The tests create temporary `GameObject` instances and wire required components manually to drive the system under test.
 
 These doubles reduce dependency on scenes, prefabs, and player input, making the tests stable and repeatable.
+
+## Parameterized Tests
+
+The assignment requested research and usage of parameterized tests. `PathFinderEditModeTests` uses NUnit `TestCase` data for the single-node path scenario, so the same expected behavior is checked against multiple start and target positions without duplicating the test body.
 
 ## Additional Improvements Made
 
@@ -159,23 +199,27 @@ For full course submission, Unity Code Coverage can be enabled in Package Manage
 
 ## Execution Status
 
-The automated test suite was prepared in the project, but command-line execution could not be completed in the current environment because Unity batch mode reported that no valid headless editor license was available.
+The automated test suite was updated and Unity successfully recompiled the changed Play Mode test assembly after adding the missing `Unity.TextMeshPro` reference to `Assets/Tests/PlayMode/InzinerinisProject.PlayModeTests.asmdef`.
 
-Because of that, the next step is to open the project in Unity Editor and run:
+Command-line test execution was attempted with Unity `6000.3.6f1`, but no XML test result was produced from batch mode in this environment. The first run was blocked by Unity's scene backup recovery prompt caused by `Assets/Scenes/SampleScene.unity.backup`. After temporarily moving that backup out of `Assets`, Unity compiled the tests successfully. Later batch test runner attempts failed before execution because the Unity Package Manager local server did not connect within 30 seconds.
+
+The tests were also run from the active Unity Editor session. The generated result file at `C:/Users/Martynas/AppData/LocalLow/DefaultCompany/Ward13/TestResults.xml` reported the Edit Mode suite as passed: 8 total, 8 passed, 0 failed. The newly added Play Mode tests for `PlayerHealth` and `ItemPickupUIController` should be run from the Play Mode tab after Unity imports the new files.
+
+The next verification step is to open the project in the Unity Editor and run:
 
 - Edit Mode tests from `Window -> General -> Test Runner`
 - Play Mode tests from the same Test Runner window
 
-If the course requires screenshots or a formal pass/fail report, those should be captured after running the tests locally in the licensed editor session.
+If the course requires screenshots or a formal pass/fail report, capture those after the tests run inside the normal editor session. Unity Code Coverage can also be enabled before that run if coverage evidence is required.
 
 ## Recommended Next Tests
 
 The next useful tests for this project would be:
 
-- `PlayerHealth` death and respawn behavior
 - loot pickup and event flow
 - `EnemyAI` state transitions between patrol, chase, wait, and investigate
-- UI controller tests for inventory hotbar and item pickup popups
+- locked interaction flows for `Door`, `Chest`, `Drain`, and `ElevatorPanel`
+- drag-and-drop item movement in `ItemDragHandler`
 
 ## Conclusion
 

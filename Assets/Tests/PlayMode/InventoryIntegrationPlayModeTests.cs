@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
+using TMPro;
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UI;
@@ -26,89 +27,134 @@ public class InventoryIntegrationPlayModeTests
     }
 
     [UnityTest]
-    public IEnumerator AddItem_PlacesItemInFirstEmptySlot_AndUseConsumesSelectedItem()
+    public IEnumerator AddsItemsToOpenSlotsAndUsesSelectedItem()
     {
-        InventoryManager inventoryManager = CreateInventoryManager(out InventorySlot firstSlot, out InventorySlot secondSlot, out GameObject player);
-        TestConsumableItem firstItem = ScriptableObject.CreateInstance<TestConsumableItem>();
-        TestConsumableItem secondItem = ScriptableObject.CreateInstance<TestConsumableItem>();
-        createdObjects.Add(firstItem);
-        createdObjects.Add(secondItem);
+        InventoryController inventoryController = CreateInventoryController(out GameObject inventoryPanel);
+        TestInventoryItem firstItemPrefab = CreateItemPrefab("First item", 7);
+        TestInventoryItem secondItemPrefab = CreateItemPrefab("Second item", 8);
 
         yield return null;
 
-        inventoryManager.AddItem(firstItem);
-        inventoryManager.AddItem(secondItem);
+        Assert.That(inventoryPanel.transform.childCount, Is.EqualTo(2));
 
-        Assert.That(firstSlot.itemSO, Is.EqualTo(firstItem));
-        Assert.That(secondSlot.itemSO, Is.EqualTo(secondItem));
-        Assert.That(firstSlot.itemImage.gameObject.activeSelf, Is.True);
-        Assert.That(secondSlot.itemImage.gameObject.activeSelf, Is.True);
+        Slot firstSlot = inventoryPanel.transform.GetChild(0).GetComponent<Slot>();
+        Slot secondSlot = inventoryPanel.transform.GetChild(1).GetComponent<Slot>();
 
-        inventoryManager.SelectSlot(firstSlot);
-        Assert.That(firstSlot.selectionHighlight.gameObject.activeSelf, Is.True);
-        Assert.That(secondSlot.selectionHighlight.gameObject.activeSelf, Is.False);
+        Assert.That(firstSlot.GetComponent<Image>().sprite, Is.EqualTo(firstSlot.activeSprite));
+        Assert.That(secondSlot.GetComponent<Image>().sprite, Is.EqualTo(secondSlot.regularSprite));
 
-        InvokeUseSelectedItem(inventoryManager);
+        Assert.That(inventoryController.AddItem(firstItemPrefab.gameObject), Is.True);
+        Assert.That(inventoryController.AddItem(secondItemPrefab.gameObject), Is.True);
 
-        Assert.That(firstItem.UseCount, Is.EqualTo(1));
-        Assert.That(firstItem.LastUser, Is.EqualTo(player));
-        Assert.That(firstSlot.itemSO, Is.Null);
-        Assert.That(firstSlot.itemImage.gameObject.activeSelf, Is.False);
-        Assert.That(secondSlot.itemSO, Is.EqualTo(secondItem));
+        TestInventoryItem firstRuntimeItem = firstSlot.currentItem.GetComponent<TestInventoryItem>();
+        TestInventoryItem secondRuntimeItem = secondSlot.currentItem.GetComponent<TestInventoryItem>();
+
+        Assert.That(firstRuntimeItem.ID, Is.EqualTo(firstItemPrefab.ID));
+        Assert.That(firstRuntimeItem.Name, Is.EqualTo(firstItemPrefab.Name));
+        Assert.That(secondRuntimeItem.ID, Is.EqualTo(secondItemPrefab.ID));
+        Assert.That(inventoryController.GetSelectedItem(), Is.EqualTo(firstRuntimeItem));
+
+        inventoryController.UseSelectedItem();
+
+        Assert.That(firstRuntimeItem.UseCount, Is.EqualTo(1));
+
+        inventoryController.RemoveSelectedItem();
+        yield return null;
+
+        Assert.That(firstSlot.currentItem, Is.Null);
+        Assert.That(secondSlot.currentItem, Is.EqualTo(secondRuntimeItem.gameObject));
     }
 
-    private InventoryManager CreateInventoryManager(out InventorySlot firstSlot, out InventorySlot secondSlot, out GameObject player)
+    [UnityTest]
+    public IEnumerator RefusesItemsWhenInventoryIsFull()
     {
-        GameObject managerObject = new("InventoryManager");
-        createdObjects.Add(managerObject);
+        InventoryController inventoryController = CreateInventoryController(out _);
+        TestInventoryItem firstItemPrefab = CreateItemPrefab("First item", 1);
+        TestInventoryItem secondItemPrefab = CreateItemPrefab("Second item", 2);
+        TestInventoryItem overflowItemPrefab = CreateItemPrefab("Overflow item", 3);
 
-        InventoryManager inventoryManager = managerObject.AddComponent<InventoryManager>();
-        player = new GameObject("Player");
-        createdObjects.Add(player);
+        yield return null;
 
-        firstSlot = CreateSlot("Slot1");
-        secondSlot = CreateSlot("Slot2");
-        inventoryManager.itemSlots = new[] { firstSlot, secondSlot };
+        Assert.That(inventoryController.AddItem(firstItemPrefab.gameObject), Is.True);
+        Assert.That(inventoryController.AddItem(secondItemPrefab.gameObject), Is.True);
 
-        FieldInfo playerField = typeof(InventoryManager).GetField("player", BindingFlags.Instance | BindingFlags.NonPublic);
-        playerField.SetValue(inventoryManager, player);
-        return inventoryManager;
+        LogAssert.Expect(LogType.Log, "Inventory is full");
+        Assert.That(inventoryController.AddItem(overflowItemPrefab.gameObject), Is.False);
     }
 
-    private InventorySlot CreateSlot(string name)
+    private InventoryController CreateInventoryController(out GameObject inventoryPanel)
     {
-        GameObject slotObject = new(name);
-        createdObjects.Add(slotObject);
+        GameObject controllerObject = new("InventoryController");
+        controllerObject.SetActive(false);
+        createdObjects.Add(controllerObject);
 
-        InventorySlot slot = slotObject.AddComponent<InventorySlot>();
-        slot.itemImage = CreateImageObject($"{name}_ItemImage").GetComponent<Image>();
-        slot.selectionHighlight = CreateImageObject($"{name}_Selection").GetComponent<Image>();
-        slot.selectionHighlight.gameObject.SetActive(false);
-        return slot;
+        inventoryPanel = new GameObject("InventoryPanel", typeof(RectTransform));
+        createdObjects.Add(inventoryPanel);
+
+        InventoryController inventoryController = controllerObject.AddComponent<InventoryController>();
+        inventoryController.inventoryPanel = inventoryPanel;
+        inventoryController.slotPrefab = CreateSlotPrefab();
+
+        FieldInfo slotCountField = typeof(InventoryController).GetField("slotCount", BindingFlags.Instance | BindingFlags.NonPublic);
+        slotCountField.SetValue(inventoryController, 2);
+
+        controllerObject.SetActive(true);
+        inventoryController.enabled = false;
+        return inventoryController;
     }
 
-    private GameObject CreateImageObject(string name)
+    private GameObject CreateSlotPrefab()
     {
-        GameObject imageObject = new(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-        createdObjects.Add(imageObject);
-        return imageObject;
+        GameObject slotPrefab = new("SlotPrefab", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Slot));
+        createdObjects.Add(slotPrefab);
+
+        Slot slot = slotPrefab.GetComponent<Slot>();
+        slot.slotNum = CreateSlotNumber(slotPrefab.transform);
+        slot.regularSprite = CreateSprite(Color.gray);
+        slot.activeSprite = CreateSprite(Color.green);
+        slotPrefab.GetComponent<Image>().sprite = slot.regularSprite;
+
+        return slotPrefab;
     }
 
-    private static void InvokeUseSelectedItem(InventoryManager inventoryManager)
+    private TextMeshProUGUI CreateSlotNumber(Transform parent)
     {
-        MethodInfo useSelectedItemMethod = typeof(InventoryManager).GetMethod("UseSelectedItem", BindingFlags.Instance | BindingFlags.NonPublic);
-        useSelectedItemMethod.Invoke(inventoryManager, null);
+        GameObject labelObject = new("SlotNumber", typeof(RectTransform), typeof(TextMeshProUGUI));
+        createdObjects.Add(labelObject);
+        labelObject.transform.SetParent(parent, false);
+        return labelObject.GetComponent<TextMeshProUGUI>();
     }
 
-    private class TestConsumableItem : ItemSO
+    private TestInventoryItem CreateItemPrefab(string itemName, int id)
+    {
+        GameObject itemPrefab = new(itemName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(TestInventoryItem));
+        createdObjects.Add(itemPrefab);
+
+        TestInventoryItem item = itemPrefab.GetComponent<TestInventoryItem>();
+        item.ID = id;
+        item.Name = itemName;
+        return item;
+    }
+
+    private Sprite CreateSprite(Color color)
+    {
+        Texture2D texture = new(1, 1);
+        texture.SetPixel(0, 0, color);
+        texture.Apply();
+        createdObjects.Add(texture);
+
+        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, 1, 1), Vector2.one * 0.5f);
+        createdObjects.Add(sprite);
+        return sprite;
+    }
+
+    private class TestInventoryItem : Item
     {
         public int UseCount { get; private set; }
-        public GameObject LastUser { get; private set; }
 
-        public override void Use(GameObject user)
+        public override void UseItem()
         {
             UseCount++;
-            LastUser = user;
         }
     }
 }

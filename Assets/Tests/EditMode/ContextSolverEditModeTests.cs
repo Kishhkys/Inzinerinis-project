@@ -21,7 +21,7 @@ public class ContextSolverEditModeTests
     }
 
     [Test]
-    public void GetDirectionToMove_NormalizesCombinedInterest()
+    public void BlendsMovementInterestIntoNormalizedDirection()
     {
         ContextSolver solver = CreateSolver();
         AIData aiData = CreateAIData();
@@ -43,7 +43,7 @@ public class ContextSolverEditModeTests
     }
 
     [Test]
-    public void GetDirectionToMove_ReturnsZero_WhenDangerCancelsInterest()
+    public void StopsMovingWhenDangerCancelsInterest()
     {
         ContextSolver solver = CreateSolver();
         AIData aiData = CreateAIData();

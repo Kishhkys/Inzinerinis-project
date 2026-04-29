@@ -1,7 +1,8 @@
 {
   "name": "InzinerinisProject.PlayModeTests",
   "references": [
-    "InzinerinisProject.Runtime"
+    "InzinerinisProject.Runtime",
+    "Unity.TextMeshPro"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
