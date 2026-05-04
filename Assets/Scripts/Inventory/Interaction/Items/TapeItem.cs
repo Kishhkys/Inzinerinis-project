@@ -10,9 +10,9 @@ public class TapeItem : Item
 
     }
 
-    public void UseTape()
+    public void UseTape(Vector3 faceTargetPosition)
     {
-        SoundEffectManager.PlayClip("Elevator", "Tape", 1f, true, 0f, transform.position);
+        SoundEffectManager.PlayClip("Elevator", "Tape", 1f, true, 0f, faceTargetPosition);
     }
 
 }

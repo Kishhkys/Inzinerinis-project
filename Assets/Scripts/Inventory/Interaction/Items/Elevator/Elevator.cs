@@ -8,6 +8,8 @@ public class Elevator : MonoBehaviour, IInteractable
     public bool isRepaired = false;
     public bool isOpened { get; private set; }
 
+    private bool keycardAccepted = false;
+
     [Header("Sprites")]
     public Sprite closedSprite;
     public Sprite openSprite;
@@ -39,6 +41,7 @@ public class Elevator : MonoBehaviour, IInteractable
     private void Start()
     {
         isRepaired = false;
+        keycardAccepted = false;
         isOpened = false;
         isOpening = false;
         levelCompleteStarted = false;
@@ -61,14 +64,56 @@ public class Elevator : MonoBehaviour, IInteractable
 
     public bool CanInteract()
     {
-        return isRepaired && !isOpening && !levelCompleteStarted;
+        return !isOpening && !levelCompleteStarted;
     }
 
     public void Interact()
     {
-        if (!CanInteract()) return;
+        if (!CanInteract())
+        {
+            return;
+        }
 
-        SoundEffectManager.PlayClip("Elevator", "Elevator_button_press", 0.5f, true, 0f, transform.position);
+        if (!isRepaired)
+        {
+            Debug.Log("The elevator panel is still broken.");
+
+            SoundEffectManager.PlayClip(
+                "Elevator",
+                "Elevator_creak",
+                0.5f,
+                true,
+                0f,
+                transform.position
+            );
+
+            return;
+        }
+
+        if (!keycardAccepted)
+        {
+            Debug.Log("A keycard is required.");
+
+            SoundEffectManager.PlayClip(
+                "Door",
+                "Door_locked",
+                0.5f,
+                true,
+                0f,
+                transform.position
+            );
+
+            return;
+        }
+
+        SoundEffectManager.PlayClip(
+            "Elevator",
+            "Elevator_button_press",
+            0.5f,
+            true,
+            0f,
+            transform.position
+        );
 
         if (!isOpened)
         {
@@ -96,13 +141,41 @@ public class Elevator : MonoBehaviour, IInteractable
         }
     }
 
+    public bool IsRepaired()
+    {
+        return isRepaired;
+    }
+
+    public bool IsKeycardAccepted()
+    {
+        return keycardAccepted;
+    }
+
+    public void SetKeycardAccepted(bool accepted)
+    {
+        keycardAccepted = accepted;
+
+        if (keycardAccepted)
+        {
+            Debug.Log("Elevator keycard accepted.");
+        }
+    }
+
     private IEnumerator ChangeLightAfterDelay()
     {
         yield return new WaitForSeconds(lightChangeDelay);
 
         if (elevatorLightRenderer != null && repairedLightSprite != null)
         {
-            SoundEffectManager.PlayClip("Elevator", "Elevator_light_switch", 0.5f, true, 0f, transform.position);
+            SoundEffectManager.PlayClip(
+                "Elevator",
+                "Elevator_light_switch",
+                0.5f,
+                true,
+                0f,
+                transform.position
+            );
+
             elevatorLightRenderer.sprite = repairedLightSprite;
         }
     }
@@ -116,7 +189,14 @@ public class Elevator : MonoBehaviour, IInteractable
             animator.SetBool("setOpened", true);
         }
 
-        SoundEffectManager.PlayClip("Elevator", "Elevator_open", 0.5f, true, 0f, transform.position);
+        SoundEffectManager.PlayClip(
+            "Elevator",
+            "Elevator_open",
+            0.5f,
+            true,
+            0f,
+            transform.position
+        );
 
         yield return new WaitForSeconds(1f);
 

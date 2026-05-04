@@ -90,7 +90,7 @@ public class ElevatorPanel : MonoBehaviour, IInteractable
         }
         else if (selectedItem is TapeItem tape)
         {
-            tape.UseTape();
+            tape.UseTape(transform.position);
         }
         else
         {

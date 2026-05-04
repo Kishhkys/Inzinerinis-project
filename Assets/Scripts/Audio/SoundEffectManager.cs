@@ -37,14 +37,7 @@ public class SoundEffectManager : MonoBehaviour
     }
 
 
-    public static float PlayClip(
-    string groupName,
-    string soundName,
-    float volume = 1f,
-    bool lockMovement = false,
-    float shortenLength = 0f,
-    Vector3? faceTargetPosition = null
-)
+    public static float PlayClip(string groupName, string soundName, float volume = 1f, bool lockMovement = false, float shortenLength = 0f, Vector3? faceTargetPosition = null)
     {
         if (soundEffectLibrary == null || audioSource == null)
         {

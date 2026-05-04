@@ -59,7 +59,7 @@ public class Drain : MonoBehaviour, IInteractable
 
         Debug.Log("Used pliers on drain.");
 
-        SoundEffectManager.PlayClip("Drain", "Drain", 1f, true, 0f, transform.position);
+        SoundEffectManager.PlayClip("Drain", "Drain", 0.2f, true, 0f, transform.position);
         selectedItem.UseItem();
 
         if (removePliersAfterUse)
