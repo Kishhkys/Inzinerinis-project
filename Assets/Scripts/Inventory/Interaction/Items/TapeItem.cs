@@ -12,7 +12,7 @@ public class TapeItem : Item
 
     public void UseTape()
     {
-        SoundEffectManager.PlayClip("Elevator", "Tape");
+        SoundEffectManager.PlayClip("Elevator", "Tape", 1f, true, 0f, transform.position);
     }
 
 }

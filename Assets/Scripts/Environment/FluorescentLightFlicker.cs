@@ -58,6 +58,11 @@ public class FluorescentLightFlicker : MonoBehaviour
 
     private void Update()
     {
+        if (audioSource != null && audioSource.clip == ambientBuzzClip)
+        {
+            audioSource.volume = ambientBuzzVolume * SoundEffectManager.GetVolume();
+        }
+
         stateTimer -= Time.deltaTime;
 
         if (!isFlickering)
@@ -124,7 +129,7 @@ public class FluorescentLightFlicker : MonoBehaviour
 
         audioSource.loop = true;
         audioSource.clip = ambientBuzzClip;
-        audioSource.volume = ambientBuzzVolume;
+        audioSource.volume = ambientBuzzVolume * SoundEffectManager.GetVolume();    
         audioSource.Play();
     }
 
@@ -138,7 +143,7 @@ public class FluorescentLightFlicker : MonoBehaviour
         AudioClip clip = flickerClips[Random.Range(0, flickerClips.Length)];
         if (clip != null)
         {
-            audioSource.PlayOneShot(clip, flickerClipVolume);
+            audioSource.PlayOneShot(clip, flickerClipVolume * SoundEffectManager.GetVolume());
         }
     }
 }

@@ -86,7 +86,7 @@ public class ElevatorPanel : MonoBehaviour, IInteractable
     {
         if (selectedItem is KeyItem key)
         {
-            key.UseKey();
+            key.UseKey(transform.position);
         }
         else if (selectedItem is TapeItem tape)
         {
@@ -100,7 +100,7 @@ public class ElevatorPanel : MonoBehaviour, IInteractable
 
     private void PlayWrongSound()
     {
-        SoundEffectManager.PlayClip("Elevator", "Elevator_creak", 0.5f);
+        SoundEffectManager.PlayClip("Elevator", "Elevator_creak", 0.5f, true, 0f, transform.position);
     }
 
     private void RepairElevator()

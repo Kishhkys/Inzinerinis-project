@@ -30,7 +30,7 @@ public class Boxes : MonoBehaviour, IInteractable
 
     private void OpenBox()
     {
-        SoundEffectManager.PlayClip("Elevator", "Cardboard_box", 2f);
+        SoundEffectManager.PlayClip("Elevator", "Cardboard_box", 2f, true, 1f, transform.position);
         isOpened = true;
         StartCoroutine(SpawnItemAfterDelay());
     }

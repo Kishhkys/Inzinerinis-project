@@ -68,7 +68,7 @@ public class Elevator : MonoBehaviour, IInteractable
     {
         if (!CanInteract()) return;
 
-        SoundEffectManager.PlayClip("Elevator", "Elevator_button_press", 0.5f);
+        SoundEffectManager.PlayClip("Elevator", "Elevator_button_press", 0.5f, true, 0f, transform.position);
 
         if (!isOpened)
         {
@@ -102,7 +102,7 @@ public class Elevator : MonoBehaviour, IInteractable
 
         if (elevatorLightRenderer != null && repairedLightSprite != null)
         {
-            SoundEffectManager.PlayClip("Elevator", "Elevator_light_switch", 0.5f);
+            SoundEffectManager.PlayClip("Elevator", "Elevator_light_switch", 0.5f, true, 0f, transform.position);
             elevatorLightRenderer.sprite = repairedLightSprite;
         }
     }
@@ -116,7 +116,7 @@ public class Elevator : MonoBehaviour, IInteractable
             animator.SetBool("setOpened", true);
         }
 
-        SoundEffectManager.PlayClip("Elevator", "Elevator_open", 0.5f);
+        SoundEffectManager.PlayClip("Elevator", "Elevator_open", 0.5f, true, 0f, transform.position);
 
         yield return new WaitForSeconds(1f);
 
