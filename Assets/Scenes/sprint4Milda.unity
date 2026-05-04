@@ -4874,7 +4874,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.012765527, y: -0.38296682}
+  m_Offset: {x: 0.048428774, y: -0.7803571}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -4884,7 +4884,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.53901124, y: 1.4326004}
+  m_Size: {x: 0.7122328, y: 2.2273812}
   m_EdgeRadius: 0
 --- !u!1 &601741096
 GameObject:
@@ -5063,7 +5063,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!95 &628317101
 Animator:
   serializedVersion: 7
@@ -16517,7 +16517,7 @@ MonoBehaviour:
   elevatorLightRenderer: {fileID: 1497300383}
   brokenLightSprite: {fileID: 1182972774, guid: d9dc0ec251ab4cd44a40a743e40b4c97, type: 3}
   repairedLightSprite: {fileID: -1663339632015488759, guid: d9dc0ec251ab4cd44a40a743e40b4c97, type: 3}
-  lightChangeDelay: 6
+  lightChangeDelay: 0
   nextSceneName: MainMenu
   levelCompleteDelay: 5
   levelCompleteScreen: {fileID: 1232842056}
@@ -16551,11 +16551,11 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.14399612, y: -0.15793705}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -16565,7 +16565,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.6875, y: 2}
+  m_Size: {x: 1.2551776, y: 2.315874}
   m_EdgeRadius: 0
 --- !u!1 &1071630705
 GameObject:
@@ -16903,7 +16903,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.7
+  m_Radius: 0.8
 --- !u!1001 &1166653434
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19244,7 +19244,7 @@ Transform:
   m_GameObject: {fileID: 1680582987}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.3710618, y: -1.4675701, z: 0}
+  m_LocalPosition: {x: 3.379715, y: -1.46754, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

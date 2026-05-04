@@ -7,7 +7,7 @@ public class CardReader : MonoBehaviour, IInteractable
     [SerializeField] private Elevator elevator;
 
     [Header("Required Item")]
-    [SerializeField] private int requiredKeycardID;
+    [SerializeField] private int requiredKeycardID = 7;
 
     [Header("Settings")]
     [SerializeField] private bool removeKeycardAfterUse = false;
@@ -22,17 +22,14 @@ public class CardReader : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        Debug.Log("CardReader interacted.");
-
         if (!CanInteract())
         {
-            Debug.Log("CardReader cannot interact right now.");
             return;
         }
 
         if (elevator == null)
         {
-            Debug.LogWarning("CardReader: Elevator is not assigned in Inspector.");
+            Debug.LogWarning("CardReader: Elevator is not assigned.");
             return;
         }
 
@@ -63,67 +60,36 @@ public class CardReader : MonoBehaviour, IInteractable
 
         Item selectedItem = inventory.GetSelectedItem();
 
-        if (selectedItem == null)
-        {
-            Debug.Log("CardReader: No selected item. A keycard is required.");
 
-            float duration = SoundEffectManager.PlayClip(
-                "Door",
-                "Door_locked",
-                0.5f,
-                true,
-                0f,
-                transform.position
-            );
-
-            StartCoroutine(BlockInteractionFor(duration));
-            return;
-        }
-
-        Debug.Log("CardReader selected item: " + selectedItem.name + " ID: " + selectedItem.ID);
-        Debug.Log("CardReader required keycard ID: " + requiredKeycardID);
-
-        if (selectedItem.ID != requiredKeycardID)
-        {
-            Debug.Log("CardReader: Wrong item. Need keycard.");
-
-            float duration = SoundEffectManager.PlayClip(
-                "Door",
-                "Door_locked",
-                0.5f,
-                true,
-                0f,
-                transform.position
-            );
-
-            StartCoroutine(BlockInteractionFor(duration));
-            return;
-        }
-
-        StartCoroutine(UseKeycard(inventory));
+        StartCoroutine(UseKeycard(inventory, selectedItem));
     }
 
-    private IEnumerator UseKeycard(InventoryController inventory)
+    private IEnumerator UseKeycard(InventoryController inventory, Item selectedItem)
     {
         isUsing = true;
 
-        float duration = SoundEffectManager.PlayClip(
-            "Keycard",
-            "Keycard_use",
-            1f,
-            true,
-            0f,
-            transform.position
-        );
+        float duration;
+
+        if (selectedItem is KeycardItem keycard)
+        {
+            duration = keycard.UseKeycard(transform.position);
+        }
+        else
+        {
+            duration = SoundEffectManager.PlayClip(
+                "Keycard",
+                "Keycard_use",
+                1f,
+                true,
+                0f,
+                transform.position
+            );
+        }
 
         yield return new WaitForSeconds(duration);
 
         isAccepted = true;
-
-        if (elevator != null)
-        {
-            elevator.SetKeycardAccepted(true);
-        }
+        elevator.SetKeycardAccepted(true);
 
         if (removeKeycardAfterUse)
         {

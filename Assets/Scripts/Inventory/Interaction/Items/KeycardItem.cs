@@ -4,12 +4,12 @@ public class KeycardItem : Item
 {
     public override void UseItem()
     {
-        SoundEffectManager.PlayClip("Keycard", "Keycard_use", 1f, true);
+
     }
 
-    public void UseKeycard(Vector3 faceTargetPosition)
+    public float UseKeycard(Vector3 faceTargetPosition)
     {
-        SoundEffectManager.PlayClip(
+        return SoundEffectManager.PlayClip(
             "Keycard",
             "Keycard_use",
             1f,
