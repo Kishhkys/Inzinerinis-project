@@ -10,9 +10,9 @@ public class KeyItem : Item
 
     }
 
-    public void UseKey()
+    public void UseKey(Vector3 faceTargetPosition)
     {
-        SoundEffectManager.PlayClip("Key", "Keys_unlock");
+        SoundEffectManager.PlayClip("Key", "Keys_unlock", 1f, true, 0f, faceTargetPosition);
     }
 
     public override void PickUp(string group = null, string sound = null)

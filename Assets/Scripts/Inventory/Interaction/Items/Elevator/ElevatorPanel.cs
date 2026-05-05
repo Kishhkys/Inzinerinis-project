@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,15 +15,19 @@ public class ElevatorPanel : MonoBehaviour, IInteractable
 
     private int currentItemIndex = 0;
     private bool isRepaired = false;
+    private bool isUsingItem = false;
 
     public bool CanInteract()
     {
-        return !isRepaired;
+        return !isRepaired && !isUsingItem;
     }
 
     public void Interact()
     {
-        if (isRepaired) return;
+        if (!CanInteract())
+        {
+            return;
+        }
 
         InventoryController inventory = FindFirstObjectByType<InventoryController>();
 
@@ -63,12 +68,21 @@ public class ElevatorPanel : MonoBehaviour, IInteractable
 
         Debug.Log("Used item: " + selectedItem.name);
 
-        PlayCorrectItemSound(selectedItem);
+        StartCoroutine(UseCorrectItemRoutine(inventory, selectedItem));
+    }
+
+    private IEnumerator UseCorrectItemRoutine(InventoryController inventory, Item selectedItem)
+    {
+        isUsingItem = true;
+
+        float duration = PlayCorrectItemSound(selectedItem);
 
         if (removeItemsAfterRepair)
         {
             inventory.RemoveSelectedItem();
         }
+
+        yield return new WaitForSeconds(duration);
 
         currentItemIndex++;
 
@@ -79,33 +93,54 @@ public class ElevatorPanel : MonoBehaviour, IInteractable
         else
         {
             Debug.Log("Next required item ID: " + requiredItemIDs[currentItemIndex]);
+            isUsingItem = false;
         }
     }
 
-    private void PlayCorrectItemSound(Item selectedItem)
+    private float PlayCorrectItemSound(Item selectedItem)
     {
         if (selectedItem is KeyItem key)
         {
-            key.UseKey();
+            key.UseKey(transform.position);
+            return 1f;
         }
-        else if (selectedItem is TapeItem tape)
+
+        if (selectedItem is TapeItem tape)
         {
-            tape.UseTape();
+            return tape.UseTape(transform.position);
         }
-        else
-        {
-            selectedItem.UseItem();
-        }
+
+        selectedItem.UseItem();
+        return 1f;
     }
 
     private void PlayWrongSound()
     {
-        SoundEffectManager.PlayClip("Elevator", "Elevator_creak", 0.5f);
+        float duration = SoundEffectManager.PlayClip(
+            "Elevator",
+            "Elevator_creak",
+            0.5f,
+            true,
+            0f,
+            transform.position
+        );
+
+        StartCoroutine(BlockInteractionFor(duration));
+    }
+
+    private IEnumerator BlockInteractionFor(float duration)
+    {
+        isUsingItem = true;
+
+        yield return new WaitForSeconds(duration);
+
+        isUsingItem = false;
     }
 
     private void RepairElevator()
     {
         isRepaired = true;
+        isUsingItem = false;
 
         Debug.Log("Elevator repaired");
 

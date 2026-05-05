@@ -8,6 +8,8 @@ public class Elevator : MonoBehaviour, IInteractable
     public bool isRepaired = false;
     public bool isOpened { get; private set; }
 
+    private bool keycardAccepted = false;
+
     [Header("Sprites")]
     public Sprite closedSprite;
     public Sprite openSprite;
@@ -16,7 +18,7 @@ public class Elevator : MonoBehaviour, IInteractable
     public SpriteRenderer elevatorLightRenderer;
     public Sprite brokenLightSprite;
     public Sprite repairedLightSprite;
-    public float lightChangeDelay = 2f;
+    public float lightChangeDelay = 0.2f;
 
     [Header("Level Complete")]
     public string nextSceneName;
@@ -29,6 +31,7 @@ public class Elevator : MonoBehaviour, IInteractable
 
     private bool isOpening = false;
     private bool levelCompleteStarted = false;
+    private bool isBusy = false;
 
     private void Awake()
     {
@@ -39,9 +42,11 @@ public class Elevator : MonoBehaviour, IInteractable
     private void Start()
     {
         isRepaired = false;
+        keycardAccepted = false;
         isOpened = false;
         isOpening = false;
         levelCompleteStarted = false;
+        isBusy = false;
 
         if (spriteRenderer != null && closedSprite != null)
         {
@@ -61,18 +66,62 @@ public class Elevator : MonoBehaviour, IInteractable
 
     public bool CanInteract()
     {
-        return isRepaired && !isOpening && !levelCompleteStarted;
+        return !isOpening && !levelCompleteStarted && !isBusy;
     }
 
     public void Interact()
     {
-        if (!CanInteract()) return;
+        if (!CanInteract())
+        {
+            return;
+        }
 
-        SoundEffectManager.PlayClip("Elevator", "Elevator_button_press", 0.5f);
+        if (!isRepaired)
+        {
+            Debug.Log("The elevator panel is still broken.");
+
+            float duration = SoundEffectManager.PlayClip(
+                "Elevator",
+                "Elevator_creak",
+                0.5f,
+                true,
+                0f,
+                transform.position
+            );
+
+            StartCoroutine(BlockInteractionFor(duration));
+            return;
+        }
+
+        if (!keycardAccepted)
+        {
+            Debug.Log("Use the keycard on the card reader first.");
+
+            float duration = SoundEffectManager.PlayClip(
+                "Door",
+                "Door_locked",
+                0.5f,
+                true,
+                0f,
+                transform.position
+            );
+
+            StartCoroutine(BlockInteractionFor(duration));
+            return;
+        }
+
+        float buttonDuration = SoundEffectManager.PlayClip(
+            "Elevator",
+            "Elevator_button_press",
+            0.5f,
+            true,
+            0f,
+            transform.position
+        );
 
         if (!isOpened)
         {
-            StartCoroutine(OpenElevator());
+            StartCoroutine(OpenElevator(buttonDuration));
             return;
         }
 
@@ -96,27 +145,64 @@ public class Elevator : MonoBehaviour, IInteractable
         }
     }
 
+    public bool IsRepaired()
+    {
+        return isRepaired;
+    }
+
+    public bool IsKeycardAccepted()
+    {
+        return keycardAccepted;
+    }
+
+    public void SetKeycardAccepted(bool accepted)
+    {
+        keycardAccepted = accepted;
+
+        if (keycardAccepted)
+        {
+            Debug.Log("Elevator keycard accepted.");
+        }
+    }
+
     private IEnumerator ChangeLightAfterDelay()
     {
         yield return new WaitForSeconds(lightChangeDelay);
 
         if (elevatorLightRenderer != null && repairedLightSprite != null)
         {
-            SoundEffectManager.PlayClip("Elevator", "Elevator_light_switch", 0.5f);
+            SoundEffectManager.PlayClip(
+                "Elevator",
+                "Elevator_light_switch",
+                0.5f,
+                true,
+                0f,
+                transform.position
+            );
+
             elevatorLightRenderer.sprite = repairedLightSprite;
         }
     }
 
-    private IEnumerator OpenElevator()
+    private IEnumerator OpenElevator(float buttonDuration)
     {
         isOpening = true;
+
+        yield return new WaitForSeconds(buttonDuration);
 
         if (animator != null)
         {
             animator.SetBool("setOpened", true);
         }
 
-        SoundEffectManager.PlayClip("Elevator", "Elevator_open", 0.5f);
+        SoundEffectManager.PlayClip(
+            "Elevator",
+            "Elevator_open",
+            0.5f,
+            true,
+            0f,
+            transform.position
+        );
 
         yield return new WaitForSeconds(1f);
 
@@ -154,5 +240,14 @@ public class Elevator : MonoBehaviour, IInteractable
         {
             Debug.Log("Next scene name is empty!");
         }
+    }
+
+    private IEnumerator BlockInteractionFor(float duration)
+    {
+        isBusy = true;
+
+        yield return new WaitForSeconds(duration);
+
+        isBusy = false;
     }
 }

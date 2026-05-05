@@ -38,13 +38,13 @@ public class Chest : MonoBehaviour, IInteractable
             if (hasMatchingKey)
             {
                 isUnlocking = true;
-                key.UseKey();
+                key.UseKey(transform.position);
                 inventory.RemoveSelectedItem();
                 StartCoroutine(UnlockAndOpenChest());
             }
             else
             {
-                SoundEffectManager.PlayClip("Chest", "Chest_locked", 0.5f);
+                SoundEffectManager.PlayClip("Chest", "Chest_locked", 0.5f, true, 0f, transform.position);
             }
 
             return;
@@ -65,7 +65,7 @@ public class Chest : MonoBehaviour, IInteractable
     {
         SetOpened(true);
         isUnlocking = false;
-        SoundEffectManager.PlayClip("Chest", "Chest_open", 1f);
+        SoundEffectManager.PlayClip("Chest", "Chest_open", 1f, true, 0f, transform.position);
 
         if (itemPrefab)
         {

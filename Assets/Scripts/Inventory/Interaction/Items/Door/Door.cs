@@ -1,7 +1,5 @@
-using UnityEngine;
-
 using System.Collections;
-using UnityEngine.InputSystem;
+using UnityEngine;
 
 public class Door : MonoBehaviour, IInteractable
 {
@@ -50,10 +48,16 @@ public class Door : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if (!CanInteract()) return;
+        if (!CanInteract())
+        {
+            return;
+        }
 
         InventoryController inventory = FindFirstObjectByType<InventoryController>();
-        if (inventory == null) return;
+        if (inventory == null)
+        {
+            return;
+        }
 
         Item selectedItem = inventory.GetSelectedItem();
 
@@ -61,18 +65,28 @@ public class Door : MonoBehaviour, IInteractable
         {
             KeyItem key = selectedItem as KeyItem;
             bool hasMatchingKey = key != null && key.targetID == requiredKeyID;
+
             InteractionDialogueEvents.LockedDoorChecked(hasMatchingKey);
 
             if (hasMatchingKey)
             {
                 isUnlocking = true;
-                key.UseKey();
+                key.UseKey(transform.position);
                 inventory.RemoveSelectedItem();
                 StartCoroutine(UnlockAndOpenDoor());
             }
             else
             {
-                SoundEffectManager.PlayClip("Door", "Door_locked", 0.5f);
+                float duration = SoundEffectManager.PlayClip(
+                    "Door",
+                    "Door_locked",
+                    0.5f,
+                    true,
+                    0f,
+                    transform.position
+                );
+
+                StartCoroutine(BlockInteractionFor(duration));
             }
 
             return;
@@ -91,21 +105,31 @@ public class Door : MonoBehaviour, IInteractable
         }
 
         yield return new WaitForSeconds(3f);
+
         yield return StartCoroutine(OpenAndTeleport());
     }
 
     private IEnumerator OpenAndTeleport()
     {
+        isUnlocking = true;
+
         SetOpened(true);
-        isUnlocking = false;
 
         if (animator != null)
         {
             animator.SetBool("setOpened", true);
         }
 
-        SoundEffectManager.PlayClip("Door", "Door_open", 0.5f);
+        float duration = SoundEffectManager.PlayClip(
+            "Door",
+            "Door_open",
+            0.5f,
+            true,
+            0f,
+            transform.position
+        );
 
+        yield return new WaitForSeconds(duration);
         yield return new WaitForSeconds(teleportDelay);
 
         PlayerController player = FindFirstObjectByType<PlayerController>();
@@ -113,6 +137,17 @@ public class Door : MonoBehaviour, IInteractable
         {
             player.Teleport(teleportPoint.position, 0.2f);
         }
+
+        isUnlocking = false;
+    }
+
+    private IEnumerator BlockInteractionFor(float duration)
+    {
+        isUnlocking = true;
+
+        yield return new WaitForSeconds(duration);
+
+        isUnlocking = false;
     }
 
     public void SetOpened(bool opened)
@@ -129,5 +164,4 @@ public class Door : MonoBehaviour, IInteractable
     {
         return !isLocked;
     }
-
 }

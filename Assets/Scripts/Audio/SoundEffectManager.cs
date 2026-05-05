@@ -36,14 +36,47 @@ public class SoundEffectManager : MonoBehaviour
         }
     }
 
-    public static void PlayClip(string groupName, string soundName, float volume = 1f)
+
+    public static float PlayClip(string groupName, string soundName, float volume = 1f, bool lockMovement = false, float shortenLength = 0f, Vector3? faceTargetPosition = null)
     {
+        if (soundEffectLibrary == null || audioSource == null)
+        {
+            Debug.LogWarning("SoundEffectManager is missing AudioSource or SoundEffectLibrary.");
+            return 0f;
+        }
+
         AudioClip audioClip = soundEffectLibrary.GetClip(groupName, soundName);
+
         if (audioClip != null)
         {
             audioSource.PlayOneShot(audioClip, volume * sfxVolume);
+
+            float duration = Mathf.Max(0f, audioClip.length - shortenLength);
+
+            if (lockMovement && duration > 0f)
+            {
+                PlayerController playerMovement = Object.FindFirstObjectByType<PlayerController>();
+
+                if (playerMovement != null)
+                {
+                    if (faceTargetPosition.HasValue)
+                    {
+                        playerMovement.LockMovementFor(duration, faceTargetPosition.Value);
+                    }
+                    else
+                    {
+                        playerMovement.LockMovementFor(duration);
+                    }
+                }
+            }
+
+            return duration;
         }
+
+        Debug.LogWarning($"Sound clip not found: {groupName}/{soundName}");
+        return 0f;
     }
+
 
     private void Start()
     {
@@ -56,8 +89,16 @@ public class SoundEffectManager : MonoBehaviour
         sfxVolume = volume;
     }
 
+    public static float GetVolume()
+    {
+        return sfxVolume;
+    }
+
     public void OnValueChanged()
     {
-        sfxVolume = sfxSlider.value;
+         if (sfxSlider != null)
+        {
+            SetVolume(sfxSlider.value);
+        }
     }
 }

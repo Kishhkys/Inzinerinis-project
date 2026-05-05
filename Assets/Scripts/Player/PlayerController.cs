@@ -53,6 +53,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
     private Vector2 lastFacingDirection = Vector2.down;
     [SerializeField] private float teleportBlockedUntil = 2f;
     private bool movementBlocked = false;
+    private bool isLocked = false;
     public bool IsHidden => isHidden;
 
 
@@ -128,14 +129,25 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
     public void Move(InputAction.CallbackContext context)
     {
-        //if (PauseController.isGamePaused) return;
+        if (isLocked || movementBlocked)
+        {
+            moveInput = Vector2.zero;
+
+            if (animator != null)
+            {
+                animator.SetBool("isMoving", false);
+                animator.SetFloat("inputX", 0f);
+                animator.SetFloat("inputY", 0f);
+            }
+
+            return;
+        }
 
         if (context.canceled)
         {
             animator.SetBool("isMoving", false);
             animator.SetFloat("LastInputX", moveInput.x);
             animator.SetFloat("LastInputY", moveInput.y);
-
         }
 
         moveInput = context.ReadValue<Vector2>();
@@ -359,6 +371,54 @@ public class PlayerController : MonoBehaviour, ITeleportable
         yield return new WaitForSeconds(blockDuration);
 
         movementBlocked = false;
+    }
+
+    public void LockMovementFor(float duration)
+    {
+        StopCoroutine(nameof(MovementLockRoutine));
+        StartCoroutine(MovementLockRoutine(duration));
+    }
+
+    public void LockMovementFor(float duration, Vector3 faceTargetPosition)
+    {
+        FaceTowards(faceTargetPosition);
+
+        StopCoroutine(nameof(MovementLockRoutine));
+        StartCoroutine(MovementLockRoutine(duration));
+    }
+
+    public void FaceTowards(Vector3 targetPosition)
+    {
+        Vector2 direction = targetPosition - transform.position;
+
+        if (direction.sqrMagnitude < 0.01f)
+        {
+            return;
+        }
+
+        direction.Normalize();
+
+        lastFacingDirection = direction;
+        UpdateFlashlightTransform();
+
+        animator.SetFloat("inputX", direction.x);
+        animator.SetFloat("inputY", direction.y);
+        animator.SetFloat("LastInputX", direction.x);
+        animator.SetFloat("LastInputY", direction.y);
+    }
+
+
+    private IEnumerator MovementLockRoutine(float duration)
+    {
+        isLocked = true;
+
+        rb.linearVelocity = Vector2.zero;
+        animator.SetBool("isMoving", false);
+        StopFootsteps();
+
+        yield return new WaitForSeconds(duration);
+
+        isLocked = false;
     }
 
 }

@@ -50,7 +50,7 @@ public class Drawers : MonoBehaviour, IInteractable
             if (hasMatchingKey)
             {
                 isUnlocking = true;
-                key.UseKey();
+                key.UseKey(transform.position);
                 inventory.RemoveSelectedItem();
 
                 isLocked = false;
@@ -58,7 +58,7 @@ public class Drawers : MonoBehaviour, IInteractable
             }
             else
             {
-                SoundEffectManager.PlayClip("Chest", "Chest_locked", 0.5f);
+                SoundEffectManager.PlayClip("Chest", "Chest_locked", 0.5f, true, 0f, transform.position);
             }
 
             return;
@@ -72,7 +72,7 @@ public class Drawers : MonoBehaviour, IInteractable
         isOpened = true;
         isUnlocking = false;
 
-        SoundEffectManager.PlayClip("Drawers", "Drawers_open", 1f);
+        SoundEffectManager.PlayClip("Drawers", "Drawers_open", 1f, true, 0f, transform.position);
 
         StartCoroutine(SpawnItemAfterDelay());
     }
