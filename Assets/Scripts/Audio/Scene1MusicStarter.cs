@@ -1,11 +1,9 @@
 using UnityEngine;
-using System.Collections;
 
 public class Scene1MusicStarter : MonoBehaviour
 {
-    private IEnumerator Start()
+    private void Start()
     {
-        yield return null;
-        AmbientSoundManager.PlayMusic("Ambience", 1f);
+        AmbientSoundManager.FadeInMusic("Ambience", 1f, 1.3f);
     }
 }

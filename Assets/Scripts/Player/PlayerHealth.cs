@@ -71,6 +71,7 @@ public class PlayerHealth : MonoBehaviour
         GetComponent<SpriteRenderer>().enabled = false;
         GetComponent<Collider2D>().enabled = false;
         inventoryPanel.SetActive(false);
+        SoundEffectManager.PlayClip("Health", "Death_Popup", 1f);
         popupPanel.SetActive(false);
         SoundEffectManager.PlayClip("Health", "Player_death", 0.6f);
         if (virtualCamera != null)

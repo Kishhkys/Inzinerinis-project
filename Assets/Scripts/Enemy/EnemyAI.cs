@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -759,17 +760,27 @@ public class EnemyAI : MonoBehaviour
 
             if (queuedStateAfterWait == AIState.Chase)
             {
+                StartCoroutine(PlayStingerThenGrowl());
                 exclamationMark.SetActive(true);
-                SoundEffectManager.PlayClip("Monster", "Monster_growl", 0.5f);
             }
-
             else
+            {
                 exclamationMark.SetActive(false);
+            }
         }
         else
         {
             exclamationMark.SetActive(false);
         }
+    }
+
+    private IEnumerator PlayStingerThenGrowl()
+    {
+        SoundEffectManager.PlayClip("Monster", "Stinger", 0.4f);
+
+        yield return new WaitForSeconds(1f);
+
+        SoundEffectManager.PlayClip("Monster", "Monster_growl", 0.5f);
     }
 
 }

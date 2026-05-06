@@ -8,13 +8,12 @@ public class MainMenuController : MonoBehaviour
 
     private void Awake()
     {
-        AmbientSoundManager.PlayMusic("Menu");
+        AmbientSoundManager.PlayMusic("Menu", 0.5f);
     }
 
     public void PlayGame()
     {
         if (isTransitioning) return;
-
         StartCoroutine(PlayGameRoutine());
     }
 
@@ -22,7 +21,7 @@ public class MainMenuController : MonoBehaviour
     {
         isTransitioning = true;
 
-        SoundEffectManager.PlayClip("Menu", "Menu_click", 0.4f);
+        SoundEffectManager.PlayClip("Menu", "Menu_click", 0.7f);
 
         AmbientSoundManager.FadeOutMusic(1f);
 
@@ -34,7 +33,6 @@ public class MainMenuController : MonoBehaviour
     public void QuitGame()
     {
         if (isTransitioning) return;
-
         StartCoroutine(QuitGameRoutine());
     }
 
@@ -42,7 +40,7 @@ public class MainMenuController : MonoBehaviour
     {
         isTransitioning = true;
 
-        SoundEffectManager.PlayClip("Menu", "Menu_click", 0.4f);
+        SoundEffectManager.PlayClip("Menu", "Menu_click", 0.7f);
 
         AmbientSoundManager.FadeOutMusic(1f);
 
