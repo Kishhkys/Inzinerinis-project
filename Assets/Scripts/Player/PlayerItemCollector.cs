@@ -12,41 +12,6 @@ public class PlayerItemCollector : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //if (collision.CompareTag("Item"))
-        //{
-        //    Item item = collision.GetComponent<Item>();
-        //    if (item != null)
-        //    {
-
-        //        bool itemAdded = inventoryController.AddItem(collision.gameObject);
-
-        //        if (itemAdded)
-        //        {
-        //            Debug.Log("Trig");
-        //            SoundEffectManager.Play("ItemCollect", 1f);
-        //            item.PickUp();
-        //            Destroy(collision.gameObject);
-        //        }
-        //    }
-        //}
-
-        //if (collision.CompareTag("Item"))
-        //{
-        //    Item item = collision.GetComponent<Item>();
-        //    if (item != null)
-        //    {
-        //        Debug.Log($"Trying to add: {item.Name}, ID: {item.ID}");
-        //        bool itemAdded = inventoryController.AddItem(collision.gameObject);
-        //        Debug.Log($"Item added: {itemAdded}");
-        //        if (itemAdded)
-        //        {
-        //            SoundEffectManager.Play("ItemCollect", 1f);
-        //            item.PickUp();
-        //            Destroy(collision.gameObject);
-        //        }
-        //    }
-        //}
-
         if (collision.CompareTag("Item"))
         {
             Item item = collision.GetComponent<Item>();
@@ -55,7 +20,7 @@ public class PlayerItemCollector : MonoBehaviour
                 bool itemAdded = inventoryController.AddItem(collision.gameObject);
                 if (itemAdded)
                 {
-                    SoundEffectManager.PlayRandomClip("ItemCollect", 1f);
+                    SoundEffectManager.PlayRandomClip("ItemCollect", 0.7f);
                     item.PickUp();
                     InteractionDialogueEvents.ItemPickedUp(item);
                     collision.gameObject.SetActive(false);
@@ -64,10 +29,5 @@ public class PlayerItemCollector : MonoBehaviour
             }
         }
     }
-
-        void Update()
-        {
-
-        }
-    }
+}
 

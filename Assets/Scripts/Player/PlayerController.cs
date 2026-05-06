@@ -353,7 +353,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
         {
             playerCollider.enabled = false;
         }
-
+        SoundEffectManager.PlayClip("Door", "Teleport", 1f);
         rb.position = newPosition;
         transform.position = newPosition;
 

@@ -7,6 +7,7 @@ public class SoundEffectManager : MonoBehaviour
 
     private static AudioSource audioSource;
     private static SoundEffectLibrary soundEffectLibrary;
+
     [SerializeField] private Slider sfxSlider;
 
     private static float sfxVolume = 1f;
@@ -16,8 +17,10 @@ public class SoundEffectManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+
             audioSource = GetComponent<AudioSource>();
             soundEffectLibrary = GetComponent<SoundEffectLibrary>();
+
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -26,18 +29,53 @@ public class SoundEffectManager : MonoBehaviour
         }
     }
 
-    public static void PlayRandomClip(string soundName, float volume = 1f)
+    private void OnDestroy()
     {
-        AudioClip audioClip = soundEffectLibrary.GetRandomClip(soundName);
-        if (audioClip != null)
+        if (instance == this)
         {
- 
-            audioSource.PlayOneShot(audioClip, volume * sfxVolume);
+            instance = null;
+            audioSource = null;
+            soundEffectLibrary = null;
         }
     }
 
+    private void Start()
+    {
+        if (sfxSlider != null)
+        {
+            sfxSlider.value = sfxVolume;
+            sfxSlider.onValueChanged.AddListener(delegate { OnValueChanged(); });
+        }
+    }
 
-    public static float PlayClip(string groupName, string soundName, float volume = 1f, bool lockMovement = false, float shortenLength = 0f, Vector3? faceTargetPosition = null)
+    public static void PlayRandomClip(string soundName, float volume = 1f)
+    {
+        if (soundEffectLibrary == null || audioSource == null)
+        {
+            Debug.LogWarning("SoundEffectManager is missing AudioSource or SoundEffectLibrary.");
+            return;
+        }
+
+        AudioClip audioClip = soundEffectLibrary.GetRandomClip(soundName);
+
+        if (audioClip != null)
+        {
+            audioSource.PlayOneShot(audioClip, volume * sfxVolume);
+        }
+        else
+        {
+            Debug.LogWarning("Random sound clip not found: " + soundName);
+        }
+    }
+
+    public static float PlayClip(
+        string groupName,
+        string soundName,
+        float volume = 1f,
+        bool lockMovement = false,
+        float shortenLength = 0f,
+        Vector3? faceTargetPosition = null
+    )
     {
         if (soundEffectLibrary == null || audioSource == null)
         {
@@ -73,17 +111,10 @@ public class SoundEffectManager : MonoBehaviour
             return duration;
         }
 
-        Debug.LogWarning($"Sound clip not found: {groupName}/{soundName}");
+        Debug.LogWarning("Sound clip not found: " + groupName + "/" + soundName);
         return 0f;
     }
 
-
-    private void Start()
-    {
-        sfxSlider.onValueChanged.AddListener(delegate { OnValueChanged(); });
-    }
-
- 
     public static void SetVolume(float volume)
     {
         sfxVolume = volume;
@@ -96,7 +127,7 @@ public class SoundEffectManager : MonoBehaviour
 
     public void OnValueChanged()
     {
-         if (sfxSlider != null)
+        if (sfxSlider != null)
         {
             SetVolume(sfxSlider.value);
         }

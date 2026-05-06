@@ -80,7 +80,7 @@ public class Door : MonoBehaviour, IInteractable
                 float duration = SoundEffectManager.PlayClip(
                     "Door",
                     "Door_locked",
-                    0.5f,
+                    0.3f,
                     true,
                     0f,
                     transform.position
@@ -123,7 +123,7 @@ public class Door : MonoBehaviour, IInteractable
         float duration = SoundEffectManager.PlayClip(
             "Door",
             "Door_open",
-            0.5f,
+            0.3f,
             true,
             0f,
             transform.position
