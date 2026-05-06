@@ -227,7 +227,7 @@ public class Elevator : MonoBehaviour, IInteractable
         }
 
         Time.timeScale = 0f;
-        SoundEffectManager.PlayClip("Menu", "Level_complete", 0.5f);
+        SoundEffectManager.PlayClip("Menu", "Level_complete", 0.2f);
         yield return new WaitForSecondsRealtime(levelCompleteDelay);
 
         Time.timeScale = 1f;
