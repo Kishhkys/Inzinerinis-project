@@ -53,6 +53,91 @@ public class PathFinderEditModeTests
         Assert.That(path, Is.Null);
     }
 
+    [Test]
+    public void ReturnsNoPathWhenNoNodesAreConfigured()
+    {
+        PathFinder pathFinder = CreatePathFinder();
+
+        List<PathNode> path = pathFinder.FindPath(Vector2.zero, Vector2.one);
+
+        Assert.That(path, Is.Null);
+    }
+
+    [Test]
+    public void IgnoresNullNodesAndNullNeighbours()
+    {
+        PathNode start = CreateNode("Start", Vector2.zero);
+        PathNode target = CreateNode("Target", Vector2.right);
+        start.neighbours.Add(null);
+        ConnectBidirectional(start, target);
+
+        PathFinder pathFinder = CreatePathFinder(start, null, target);
+
+        List<PathNode> path = pathFinder.FindPath(Vector2.zero, Vector2.right);
+
+        CollectionAssert.AreEqual(new[] { start, target }, path);
+    }
+
+    [Test]
+    public void CanFindPathWithoutLineOfSightStartFiltering()
+    {
+        PathNode start = CreateNode("Start", Vector2.zero);
+        PathNode target = CreateNode("Target", Vector2.right);
+        ConnectBidirectional(start, target);
+
+        PathFinder pathFinder = CreatePathFinder(start, target);
+        SetPrivateField(pathFinder, "requireLineOfSightToStartNode", false);
+
+        List<PathNode> path = pathFinder.FindPath(Vector2.zero, Vector2.right);
+
+        CollectionAssert.AreEqual(new[] { start, target }, path);
+    }
+
+    [Test]
+    public void SkipsAlreadyOpenNeighbourWhenNewPathIsNotBetter()
+    {
+        PathNode start = CreateNode("Start", new Vector2(0f, 0f));
+        PathNode middle = CreateNode("Middle", new Vector2(1f, 0f));
+        PathNode alreadyOpen = CreateNode("AlreadyOpen", new Vector2(2f, 0f));
+        PathNode target = CreateNode("Target", new Vector2(1f, 1f));
+
+        start.neighbours.Add(alreadyOpen);
+        start.neighbours.Add(middle);
+        middle.neighbours.Add(alreadyOpen);
+        middle.neighbours.Add(target);
+        alreadyOpen.neighbours.Add(target);
+
+        PathFinder pathFinder = CreatePathFinder(start, middle, alreadyOpen, target);
+
+        List<PathNode> path = pathFinder.FindPath(Vector2.zero, target.transform.position);
+
+        CollectionAssert.AreEqual(new[] { start, middle, target }, path);
+    }
+
+    [Test]
+    public void FallsBackToClosestNodeWhenLineOfSightIsBlocked()
+    {
+        PathNode start = CreateNode("Start", Vector2.right * 2f);
+        PathNode target = CreateNode("Target", Vector2.right * 3f);
+        ConnectBidirectional(start, target);
+
+        GameObject wall = new("Wall");
+        createdObjects.Add(wall);
+        wall.layer = LayerMask.NameToLayer("Ignore Raycast");
+        BoxCollider2D collider = wall.AddComponent<BoxCollider2D>();
+        collider.size = new Vector2(0.2f, 5f);
+        wall.transform.position = Vector2.right;
+        Physics2D.SyncTransforms();
+
+        PathFinder pathFinder = CreatePathFinder(start, target);
+        LayerMask obstacleMask = LayerMask.GetMask("Ignore Raycast");
+        SetPrivateField(pathFinder, "obstacleMask", obstacleMask);
+
+        List<PathNode> path = pathFinder.FindPath(Vector2.zero, target.transform.position);
+
+        CollectionAssert.AreEqual(new[] { start, target }, path);
+    }
+
     [TestCase(4.1f, 4f, 3.9f, 4f)]
     [TestCase(3.7f, 4.2f, 4.3f, 3.8f)]
     public void ReturnsSingleNodeWhenStartAndTargetAreTheSame(
@@ -80,6 +165,12 @@ public class PathFinderEditModeTests
         FieldInfo allNodesField = typeof(PathFinder).GetField("allNodes", BindingFlags.Instance | BindingFlags.NonPublic);
         allNodesField.SetValue(pathFinder, nodes.ToList());
         return pathFinder;
+    }
+
+    private static void SetPrivateField<T>(PathFinder pathFinder, string fieldName, T value)
+    {
+        FieldInfo field = typeof(PathFinder).GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
+        field.SetValue(pathFinder, value);
     }
 
     private PathNode CreateNode(string name, Vector2 position)

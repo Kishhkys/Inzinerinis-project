@@ -33,6 +33,8 @@ public class PathFinder : MonoBehaviour
 
         foreach (var node in allNodes)
         {
+            if (node == null) continue;
+
             gScore[node] = float.PositiveInfinity;
             fScore[node] = float.PositiveInfinity;
         }
