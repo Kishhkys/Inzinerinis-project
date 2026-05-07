@@ -1702,7 +1702,7 @@ Transform:
   m_GameObject: {fileID: 156726810}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.6000004, y: -1.0799999, z: 0}
+  m_LocalPosition: {x: 0.18999958, y: -1.9200001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1806,7 +1806,7 @@ Transform:
   m_GameObject: {fileID: 161881865}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.36, y: 0.3, z: 0}
+  m_LocalPosition: {x: -8.77, y: -0.54, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5457,7 +5457,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!95 &628317101
 Animator:
   serializedVersion: 7
@@ -16876,7 +16876,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1022377618}
   - component: {fileID: 1022377619}
-  m_Layer: 10
+  m_Layer: 8
   m_Name: BloodDeco1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20589,7 +20589,7 @@ Transform:
   m_GameObject: {fileID: 1680582987}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.895855, y: -1.45889, z: 0}
+  m_LocalPosition: {x: 3.895855, y: -1.45888, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -21071,7 +21071,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1776426772}
   - component: {fileID: 1776426773}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Highlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21409,7 +21409,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1853540309}
   - component: {fileID: 1853540310}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BloodDeco2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26758,7 +26758,7 @@ GameObject:
   - component: {fileID: 2145255235}
   - component: {fileID: 2145255234}
   - component: {fileID: 2145255233}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: InteractiveWall
   m_TagString: Interactable
   m_Icon: {fileID: 0}

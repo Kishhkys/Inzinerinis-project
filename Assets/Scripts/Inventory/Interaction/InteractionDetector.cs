@@ -4,17 +4,30 @@ using UnityEngine.InputSystem;
 
 public class InteractionDetector : MonoBehaviour
 {
+    public static bool HasInteractableInRange { get; private set; }
+
     public static bool IsInteractBusy { get; private set; }
     public static bool IsCapturingInteractSounds { get; private set; }
 
+    public static bool ShouldBlockInventoryUse
+    {
+        get
+        {
+            return HasInteractableInRange
+                || IsInteractBusy
+                || Time.frameCount == lastInteractFrame;
+        }
+    }
+
     private static InteractionDetector activeDetector;
+    private static int lastInteractFrame = -1;
 
     private IInteractable interactableInRange = null;
 
     [Header("Interaction UI")]
     public GameObject interactionIcon;
 
-    [Header("Fallback Cooldown")]
+    [Header("Fallback Lock")]
     [SerializeField] private float minimumInteractLock = 0.15f;
 
     private bool isOnCooldown = false;
@@ -24,6 +37,8 @@ public class InteractionDetector : MonoBehaviour
     void Start()
     {
         SetInteractPrompt(false);
+
+        HasInteractableInRange = false;
         IsInteractBusy = false;
         IsCapturingInteractSounds = false;
     }
@@ -35,6 +50,8 @@ public class InteractionDetector : MonoBehaviour
         if (isOnCooldown) return;
         if (interactableInRange == null) return;
 
+        lastInteractFrame = Time.frameCount;
+
         IInteractable currentInteractable = interactableInRange;
 
         BeginInteractSoundCapture(this);
@@ -43,13 +60,12 @@ public class InteractionDetector : MonoBehaviour
 
         EndInteractSoundCapture();
 
-        // Jeigu interact nepaleido jokio PlayClip, vis tiek trumpai užrakinam,
-        // kad hide tekstas nešokt? t? pat? frame.
         LockInteractBusy(minimumInteractLock);
 
         if (!currentInteractable.CanInteract())
         {
             interactableInRange = null;
+            HasInteractableInRange = false;
             SetInteractPrompt(false);
         }
     }
@@ -75,7 +91,7 @@ public class InteractionDetector : MonoBehaviour
         activeDetector.LockInteractBusy(duration);
     }
 
-    public void LockInteractBusy(float duration)
+    private void LockInteractBusy(float duration)
     {
         float targetTime = Time.time + Mathf.Max(duration, minimumInteractLock);
 
@@ -109,6 +125,7 @@ public class InteractionDetector : MonoBehaviour
 
         if (interactableInRange != null && interactableInRange.CanInteract())
         {
+            HasInteractableInRange = true;
             SetInteractPrompt(true);
         }
     }
@@ -118,6 +135,7 @@ public class InteractionDetector : MonoBehaviour
         if (collision.TryGetComponent(out IInteractable interactable) && interactable.CanInteract())
         {
             interactableInRange = interactable;
+            HasInteractableInRange = true;
 
             if (!isOnCooldown)
             {
@@ -131,6 +149,7 @@ public class InteractionDetector : MonoBehaviour
         if (collision.TryGetComponent(out IInteractable interactable) && interactable == interactableInRange)
         {
             interactableInRange = null;
+            HasInteractableInRange = false;
             SetInteractPrompt(false);
         }
     }
@@ -138,6 +157,8 @@ public class InteractionDetector : MonoBehaviour
     private void OnDisable()
     {
         interactableInRange = null;
+        HasInteractableInRange = false;
+
         SetInteractPrompt(false);
 
         isOnCooldown = false;
@@ -154,6 +175,8 @@ public class InteractionDetector : MonoBehaviour
             StopCoroutine(busyCoroutine);
             busyCoroutine = null;
         }
+
+        busyUntilTime = 0f;
     }
 
     private void SetInteractPrompt(bool active)
