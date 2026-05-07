@@ -6,13 +6,14 @@ public class EnemyMover : MonoBehaviour, ITeleportable
     {
         None,
         MonsterFootsteps,
-        MouseFootsteps
+        MouseSounds
     }
 
     private Rigidbody2D rb2d;
     private Animator animator;
     private AudioSource enemyAudioSource;
 
+    [Header("Movement")]
     [SerializeField] private float maxSpeed = 2f;
     [SerializeField] private float acceleration = 50f;
     [SerializeField] private float deacceleration = 100f;
@@ -21,18 +22,17 @@ public class EnemyMover : MonoBehaviour, ITeleportable
     private Vector2 oldMovementInput;
     public Vector2 MovementInput { get; set; }
 
-    private bool playingFootsteps = false;
-
     [Header("Footsteps")]
+    [SerializeField] private FootstepSound footstepSound = FootstepSound.None;
     [SerializeField] private float footstepSpeed = 0.5f;
     [SerializeField] private float footstepVolume = 0.5f;
-    [SerializeField] private FootstepSound footstepSound;
 
     [Header("2D Distance Audio")]
-    [SerializeField] private Transform listenerTarget; // ?ia ?d?k Player
+    [SerializeField] private Transform listenerTarget;
     [SerializeField] private float minDistance = 1f;
     [SerializeField] private float maxDistance = 8f;
 
+    private bool playingFootsteps = false;
     private float teleportBlockedUntil = 0f;
 
     private void Awake()
@@ -47,7 +47,9 @@ public class EnemyMover : MonoBehaviour, ITeleportable
         }
 
         enemyAudioSource.playOnAwake = false;
-        enemyAudioSource.spatialBlend = 0f; // 2D garsas, volume valdysim patys
+        enemyAudioSource.loop = false;
+
+        enemyAudioSource.spatialBlend = 0f;
     }
 
     private void Start()
@@ -70,17 +72,23 @@ public class EnemyMover : MonoBehaviour, ITeleportable
             oldMovementInput = MovementInput;
             currentSpeed += acceleration * maxSpeed * Time.deltaTime;
 
-            animator.SetBool("isWalking", true);
-            animator.SetFloat("InputX", MovementInput.x);
-            animator.SetFloat("InputY", MovementInput.y);
+            if (animator != null)
+            {
+                animator.SetBool("isWalking", true);
+                animator.SetFloat("InputX", MovementInput.x);
+                animator.SetFloat("InputY", MovementInput.y);
+            }
         }
         else
         {
             currentSpeed -= deacceleration * maxSpeed * Time.deltaTime;
 
-            animator.SetBool("isWalking", false);
-            animator.SetFloat("LastInputX", oldMovementInput.x);
-            animator.SetFloat("LastInputY", oldMovementInput.y);
+            if (animator != null)
+            {
+                animator.SetBool("isWalking", false);
+                animator.SetFloat("LastInputX", oldMovementInput.x);
+                animator.SetFloat("LastInputY", oldMovementInput.y);
+            }
         }
 
         currentSpeed = Mathf.Clamp(currentSpeed, 0f, maxSpeed);
@@ -94,6 +102,8 @@ public class EnemyMover : MonoBehaviour, ITeleportable
         {
             StopFootsteps();
         }
+
+        UpdateLoopVolume();
     }
 
     public bool CanTeleport()
@@ -106,27 +116,79 @@ public class EnemyMover : MonoBehaviour, ITeleportable
         MovementInput = Vector2.zero;
         oldMovementInput = Vector2.zero;
         currentSpeed = 0f;
-        rb2d.linearVelocity = Vector2.zero;
 
+        rb2d.linearVelocity = Vector2.zero;
         transform.position = newPosition;
+
         teleportBlockedUntil = Time.time + blockDuration;
     }
 
     private void StartFootsteps()
     {
+        if (footstepSound == FootstepSound.None)
+        {
+            return;
+        }
+
         playingFootsteps = true;
-        InvokeRepeating(nameof(PlayFootstep), 0.05f, footstepSpeed);
+
+        if (footstepSound == FootstepSound.MouseSounds)
+        {
+            StartMouseSoundsLoop();
+        }
+        else
+        {
+            InvokeRepeating(nameof(PlayFootstep), 0.05f, footstepSpeed);
+        }
     }
 
     private void StopFootsteps()
     {
         playingFootsteps = false;
+
         CancelInvoke(nameof(PlayFootstep));
+
+        if (enemyAudioSource != null)
+        {
+            enemyAudioSource.Stop();
+            enemyAudioSource.loop = false;
+            enemyAudioSource.clip = null;
+        }
+    }
+
+    private void StartMouseSoundsLoop()
+    {
+        if (enemyAudioSource == null)
+        {
+            Debug.LogWarning("Enemy AudioSource missing on: " + gameObject.name);
+            return;
+        }
+
+        AudioClip clip = SoundEffectManager.GetRandomClip("MouseSounds");
+
+        if (clip == null)
+        {
+            return;
+        }
+
+        enemyAudioSource.clip = clip;
+        enemyAudioSource.loop = true;
+        enemyAudioSource.volume = GetFinalFootstepVolume();
+        enemyAudioSource.Play();
     }
 
     private void PlayFootstep()
     {
-        if (footstepSound == FootstepSound.None) return;
+        if (footstepSound == FootstepSound.None)
+        {
+            return;
+        }
+
+        if (enemyAudioSource == null)
+        {
+            Debug.LogWarning("Enemy AudioSource missing on: " + gameObject.name);
+            return;
+        }
 
         AudioClip clip = SoundEffectManager.GetRandomClip(footstepSound.ToString());
 
@@ -136,16 +198,33 @@ public class EnemyMover : MonoBehaviour, ITeleportable
             return;
         }
 
-        float distanceMultiplier = GetDistanceVolumeMultiplier();
+        float finalVolume = GetFinalFootstepVolume();
 
-        if (distanceMultiplier <= 0f)
+        if (finalVolume <= 0f)
         {
             return;
         }
 
-        float finalVolume = footstepVolume * distanceMultiplier * SoundEffectManager.GetVolume();
-
         enemyAudioSource.PlayOneShot(clip, finalVolume);
+    }
+
+    private void UpdateLoopVolume()
+    {
+        if (enemyAudioSource == null)
+        {
+            return;
+        }
+
+        if (enemyAudioSource.loop && enemyAudioSource.isPlaying)
+        {
+            enemyAudioSource.volume = GetFinalFootstepVolume();
+        }
+    }
+
+    private float GetFinalFootstepVolume()
+    {
+        float distanceMultiplier = GetDistanceVolumeMultiplier();
+        return footstepVolume * distanceMultiplier * SoundEffectManager.GetVolume();
     }
 
     private float GetDistanceVolumeMultiplier()
@@ -168,5 +247,10 @@ public class EnemyMover : MonoBehaviour, ITeleportable
         }
 
         return 1f - ((distance - minDistance) / (maxDistance - minDistance));
+    }
+
+    private void OnDisable()
+    {
+        StopFootsteps();
     }
 }

@@ -12,6 +12,13 @@ public class InteractiveWall : MonoBehaviour, IInteractable
         {
             puzzleUI.SetActive(true);
             Time.timeScale = 0f;
+
+            if (ActionPromptBox.Instance != null)
+            {
+                ActionPromptBox.Instance.SetInteractPrompt(false);
+                ActionPromptBox.Instance.SetHidePrompt(false);
+                ActionPromptBox.Instance.SetClosePrompt(true);
+            }
         }
     }
 

@@ -58,12 +58,12 @@ public class PauseMenu : MonoBehaviour
         if (playerAnimator != null)
             playerAnimator.enabled = true;
 
-        SoundEffectManager.PlayClip("Menu", "Menu_click", 0.5f);
+        SoundEffectManager.PlayClip("Menu", "Menu_click", 0.7f);
     }
 
     public void QuitGame()
     {
-        SoundEffectManager.PlayClip("Menu", "Menu_click", 0.5f);
+        SoundEffectManager.PlayClip("Menu", "Menu_click", 0.7f);
 
         Time.timeScale = 1f;
 

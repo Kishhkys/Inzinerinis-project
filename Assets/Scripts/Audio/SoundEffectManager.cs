@@ -102,6 +102,8 @@ public class SoundEffectManager : MonoBehaviour
 
             float duration = Mathf.Max(0f, audioClip.length - shortenLength);
 
+            InteractionDetector.RegisterInteractSoundDuration(duration);
+
             if (lockMovement && duration > 0f)
             {
                 PlayerController playerMovement = Object.FindFirstObjectByType<PlayerController>();

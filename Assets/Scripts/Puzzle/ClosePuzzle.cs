@@ -9,6 +9,7 @@ public class ClosePuzzle : MonoBehaviour
     {
         if (puzzleUI != null &&
             puzzleUI.activeSelf &&
+            Keyboard.current != null &&
             Keyboard.current.tabKey.wasPressedThisFrame)
         {
             Close();
@@ -17,7 +18,16 @@ public class ClosePuzzle : MonoBehaviour
 
     public void Close()
     {
-        puzzleUI.SetActive(false);
+        if (puzzleUI != null)
+        {
+            puzzleUI.SetActive(false);
+        }
+
         Time.timeScale = 1f;
+
+        if (ActionPromptBox.Instance != null)
+        {
+            ActionPromptBox.Instance.SetClosePrompt(false);
+        }
     }
 }
