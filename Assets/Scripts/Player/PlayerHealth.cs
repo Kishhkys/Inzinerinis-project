@@ -1,41 +1,101 @@
-//using UnityEditorInternal;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Cinemachine;
-using System;
+using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
     private float health = 0f;
+
+    [Header("Health")]
     [SerializeField] private float maxHealth = 100f;
-    [SerializeField] private float respawnDelay = 5f;
     [SerializeField] private Slider healthBar;
+
+    [Header("Death")]
+    [SerializeField] private float respawnDelay = 5f;
     [SerializeField] private GameObject deathScreen;
+
+    [Header("Death Loading")]
+    [SerializeField] private GameObject respawnLoadingPanel;
+    [SerializeField] private float audioFadeInTime = 1f;
+    [SerializeField] private float audioFadeOutTime = 1f;
+    [SerializeField] private float blackScreenDelay = 1f;
+
+    [Header("Death Visual")]
+    [SerializeField] private SpriteRenderer playerSpriteRenderer;
+    [SerializeField] private Animator playerAnimator;
+    [SerializeField] private Sprite deathBloodSprite;
+
+    [Header("Effects")]
     [SerializeField] private GameObject bloodPrefab;
+
+    [Header("References")]
     [SerializeField] private CinemachineCamera virtualCamera;
     public GameObject inventoryPanel;
     public GameObject popupPanel;
 
-    private Vector2 startPosition;
+    private bool isDead = false;
 
-    void Start()
+    private void Start()
     {
+        InteractionDialogueManager.UnblockDialogue();
+
+        AudioListener.volume = 0f;
+        StartCoroutine(FadeAudioListenerVolume(0f, 1f, audioFadeInTime));
+
+        if (playerSpriteRenderer == null)
+        {
+            playerSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        }
+
+        if (playerAnimator == null)
+        {
+            playerAnimator = GetComponentInChildren<Animator>();
+        }
+
         health = maxHealth;
-        startPosition = transform.position;
+
         if (healthBar != null)
         {
             healthBar.maxValue = maxHealth;
             healthBar.value = maxHealth;
         }
+
+        if (deathScreen != null)
+        {
+            deathScreen.SetActive(false);
+        }
+
+        if (respawnLoadingPanel != null)
+        {
+            respawnLoadingPanel.SetActive(false);
+        }
+
+        if (inventoryPanel != null)
+        {
+            inventoryPanel.SetActive(true);
+        }
+
+        if (popupPanel != null)
+        {
+            popupPanel.SetActive(true);
+        }
     }
 
     public void UpdateHealth(float mod, Vector2 hitPosition = default)
     {
-        if (health <= 0) return;
+        if (isDead)
+        {
+            return;
+        }
+
         health += mod;
+
         if (mod < 0)
         {
             PlayerController playerController = GetComponent<PlayerController>();
+
             if (playerController != null)
             {
                 playerController.NotifyDamaged();
@@ -46,69 +106,147 @@ public class PlayerHealth : MonoBehaviour
 
             if (bloodPrefab != null)
             {
-                Vector2 spawnPos = hitPosition == default ? (Vector2)transform.position : hitPosition;
+                Vector2 spawnPos = hitPosition == default
+                    ? (Vector2)transform.position
+                    : hitPosition;
+
                 GameObject blood = Instantiate(bloodPrefab, spawnPos, Quaternion.identity);
+
+                SpriteRenderer bloodRenderer = blood.GetComponent<SpriteRenderer>();
+
+                if (bloodRenderer != null)
+                {
+                    bloodRenderer.sortingLayerName = "Decor";
+                }
+
                 Destroy(blood, 0.5f);
             }
         }
 
-        if (health > maxHealth) health = maxHealth;
-        else if (health <= 0f)
+        health = Mathf.Clamp(health, 0f, maxHealth);
+
+        if (healthBar != null)
         {
-            health = 0f;
+            healthBar.value = health;
+        }
+
+        Debug.Log($"Health: {health}");
+
+        if (health <= 0f)
+        {
             Die();
         }
-        if (healthBar != null) healthBar.value = health;
-        Debug.Log($"Health: {health}");
     }
-
 
     private void Die()
     {
-        GetComponent<PlayerController>().StopFootsteps();
-        GetComponent<PlayerController>().enabled = false;
-        GetComponent<PlayerController>().enabled = false;
-        GetComponent<SpriteRenderer>().enabled = false;
-        GetComponent<Collider2D>().enabled = false;
-        inventoryPanel.SetActive(false);
+        if (isDead)
+        {
+            return;
+        }
+
+        isDead = true;
+
+        PlayerController playerController = GetComponent<PlayerController>();
+
+        if (playerController != null)
+        {
+            playerController.StopFootsteps();
+            playerController.enabled = false;
+        }
+
+        if (playerAnimator != null)
+        {
+            playerAnimator.enabled = false;
+        }
+
+        if (playerSpriteRenderer != null && deathBloodSprite != null)
+        {
+            playerSpriteRenderer.enabled = true;
+            playerSpriteRenderer.sprite = deathBloodSprite;
+
+            playerSpriteRenderer.sortingLayerName = "Player";
+            playerSpriteRenderer.sortingOrder = 1;
+        }
+
+        Collider2D playerCollider = GetComponent<Collider2D>();
+
+        if (playerCollider != null)
+        {
+            playerCollider.enabled = false;
+        }
+
+        if (inventoryPanel != null)
+        {
+            inventoryPanel.SetActive(false);
+        }
+
+        if (popupPanel != null)
+        {
+            popupPanel.SetActive(false);
+        }
+
+        InteractionDialogueManager.BlockDialogue();
+
         SoundEffectManager.PlayClip("Health", "Death_Popup", 1f);
-        popupPanel.SetActive(false);
         SoundEffectManager.PlayClip("Health", "Player_death", 0.6f);
+
         if (virtualCamera != null)
         {
             virtualCamera.Follow = null;
             virtualCamera.LookAt = null;
         }
-        if (deathScreen != null) deathScreen.SetActive(true);
-        Invoke(nameof(Respawn), respawnDelay);
-    }
 
-    private void Respawn()
-    {
-        health = maxHealth;
-        transform.position = startPosition;
-        if (virtualCamera != null)
+        if (deathScreen != null)
         {
-            virtualCamera.Follow = transform;
-            virtualCamera.LookAt = transform;
+            deathScreen.SetActive(true);
         }
-        GetComponent<PlayerController>().enabled = true;
-        GetComponent<SpriteRenderer>().enabled = true;
-        GetComponent<Collider2D>().enabled = true;
-        if (healthBar != null) healthBar.value = health;
-        if (deathScreen != null) deathScreen.SetActive(false);
-        inventoryPanel.SetActive(true);
-        popupPanel.SetActive(true);
-        ResetEnemies();
+
+        StartCoroutine(RestartSceneAfterDelay());
     }
 
-    private void ResetEnemies()
+    private IEnumerator RestartSceneAfterDelay()
     {
-        Enemy[] enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
-        foreach (Enemy enemy in enemies)
+        yield return new WaitForSecondsRealtime(respawnDelay);
+
+        yield return StartCoroutine(FadeAudioListenerVolume(
+            AudioListener.volume,
+            0f,
+            audioFadeOutTime
+        ));
+
+        if (respawnLoadingPanel != null)
         {
-            enemy.ResetToStart();
+            respawnLoadingPanel.SetActive(true);
+
         }
+
+        yield return null;
+        yield return new WaitForEndOfFrame();
+
+        yield return new WaitForSecondsRealtime(blackScreenDelay);
+
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    private IEnumerator FadeAudioListenerVolume(float from, float to, float duration)
+    {
+        if (duration <= 0f)
+        {
+            AudioListener.volume = to;
+            yield break;
+        }
+
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.unscaledDeltaTime;
+            AudioListener.volume = Mathf.Lerp(from, to, timer / duration);
+            yield return null;
+        }
+
+        AudioListener.volume = to;
+    }
 }

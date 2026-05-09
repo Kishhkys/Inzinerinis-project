@@ -173,4 +173,12 @@ public class SoundEffectManager : MonoBehaviour
             volumeIcon.sprite = volumeOnSprite;
         }
     }
+
+    public static void StopAllSounds()
+    {
+        if (audioSource != null)
+        {
+            audioSource.Stop();
+        }
+    }   
 }
