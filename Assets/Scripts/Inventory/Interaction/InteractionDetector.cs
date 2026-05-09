@@ -4,66 +4,43 @@ using UnityEngine.InputSystem;
 
 public class InteractionDetector : MonoBehaviour
 {
-    //private IInteractable interactableInRange = null;
-    //public GameObject interactionIcon;
+    public static bool HasInteractableInRange { get; private set; }
 
-    //void Start()
-    //{
-    //    interactionIcon.SetActive(false);
-    //}
+    public static bool IsInteractBusy { get; private set; }
+    public static bool IsCapturingInteractSounds { get; private set; }
 
-    //public void OnInteract(InputAction.CallbackContext context)
-    //{
-    //    //if (context.performed)
-    //    //{
-    //    //    interactableInRange?.Interact();
-    //    //    if (!interactableInRange.CanInteract())
-    //    //    {
-    //    //        interactionIcon?.SetActive(false);
-    //    //    }
-    //    //}
+    public static bool ShouldBlockInventoryUse
+    {
+        get
+        {
+            return HasInteractableInRange
+                || IsInteractBusy
+                || Time.frameCount == lastInteractFrame;
+        }
+    }
 
-    //    if (!context.performed) return;
-    //    if (interactableInRange == null) return;
-
-    //    IInteractable currentInteractable = interactableInRange;
-    //    currentInteractable.Interact();
-
-    //    if (!currentInteractable.CanInteract())
-    //    {
-    //        interactableInRange = null;
-    //        interactionIcon?.SetActive(false);
-    //    }
-    //}
-
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if(collision.TryGetComponent(out IInteractable interactable) && interactable.CanInteract())
-    //    {
-    //        interactableInRange = interactable;
-    //        interactionIcon.SetActive(true);
-    //    }
-    //}
-
-    //private void OnTriggerExit2D(Collider2D collision)
-    //{
-    //    if (collision.TryGetComponent(out IInteractable interactable) && interactable == interactableInRange)
-    //    {
-    //        interactableInRange = null;
-    //        interactionIcon.SetActive(false);
-    //    }
-    //}
+    private static InteractionDetector activeDetector;
+    private static int lastInteractFrame = -1;
 
     private IInteractable interactableInRange = null;
+
+    [Header("Interaction UI")]
     public GameObject interactionIcon;
 
-    [Header("Interaction Cooldown")]
-    public float interactCooldown = 1f;
+    [Header("Fallback Lock")]
+    [SerializeField] private float minimumInteractLock = 0.15f;
+
     private bool isOnCooldown = false;
+    private Coroutine busyCoroutine;
+    private float busyUntilTime = 0f;
 
     void Start()
     {
-        interactionIcon.SetActive(false);
+        SetInteractPrompt(false);
+
+        HasInteractableInRange = false;
+        IsInteractBusy = false;
+        IsCapturingInteractSounds = false;
     }
 
     public void OnInteract(InputAction.CallbackContext context)
@@ -73,30 +50,83 @@ public class InteractionDetector : MonoBehaviour
         if (isOnCooldown) return;
         if (interactableInRange == null) return;
 
+        lastInteractFrame = Time.frameCount;
+
         IInteractable currentInteractable = interactableInRange;
+
+        BeginInteractSoundCapture(this);
+
         currentInteractable.Interact();
 
-        StartCoroutine(InteractionCooldown());
+        EndInteractSoundCapture();
+
+        LockInteractBusy(minimumInteractLock);
 
         if (!currentInteractable.CanInteract())
         {
             interactableInRange = null;
-            interactionIcon?.SetActive(false);
+            HasInteractableInRange = false;
+            SetInteractPrompt(false);
         }
     }
 
-    private IEnumerator InteractionCooldown()
+    private static void BeginInteractSoundCapture(InteractionDetector detector)
+    {
+        activeDetector = detector;
+        IsCapturingInteractSounds = true;
+    }
+
+    private static void EndInteractSoundCapture()
+    {
+        IsCapturingInteractSounds = false;
+        activeDetector = null;
+    }
+
+    public static void RegisterInteractSoundDuration(float duration)
+    {
+        if (!IsCapturingInteractSounds) return;
+        if (activeDetector == null) return;
+        if (duration <= 0f) return;
+
+        activeDetector.LockInteractBusy(duration);
+    }
+
+    private void LockInteractBusy(float duration)
+    {
+        float targetTime = Time.time + Mathf.Max(duration, minimumInteractLock);
+
+        if (targetTime > busyUntilTime)
+        {
+            busyUntilTime = targetTime;
+        }
+
+        if (busyCoroutine == null)
+        {
+            busyCoroutine = StartCoroutine(InteractBusyRoutine());
+        }
+    }
+
+    private IEnumerator InteractBusyRoutine()
     {
         isOnCooldown = true;
-        interactionIcon?.SetActive(false);
+        IsInteractBusy = true;
 
-        yield return new WaitForSeconds(interactCooldown);
+        SetInteractPrompt(false);
+
+        while (Time.time < busyUntilTime)
+        {
+            yield return null;
+        }
 
         isOnCooldown = false;
+        IsInteractBusy = false;
+        busyCoroutine = null;
+        busyUntilTime = 0f;
 
         if (interactableInRange != null && interactableInRange.CanInteract())
         {
-            interactionIcon?.SetActive(true);
+            HasInteractableInRange = true;
+            SetInteractPrompt(true);
         }
     }
 
@@ -105,10 +135,11 @@ public class InteractionDetector : MonoBehaviour
         if (collision.TryGetComponent(out IInteractable interactable) && interactable.CanInteract())
         {
             interactableInRange = interactable;
+            HasInteractableInRange = true;
 
             if (!isOnCooldown)
             {
-                interactionIcon.SetActive(true);
+                SetInteractPrompt(true);
             }
         }
     }
@@ -118,7 +149,46 @@ public class InteractionDetector : MonoBehaviour
         if (collision.TryGetComponent(out IInteractable interactable) && interactable == interactableInRange)
         {
             interactableInRange = null;
-            interactionIcon.SetActive(false);
+            HasInteractableInRange = false;
+            SetInteractPrompt(false);
+        }
+    }
+
+    private void OnDisable()
+    {
+        interactableInRange = null;
+        HasInteractableInRange = false;
+
+        SetInteractPrompt(false);
+
+        isOnCooldown = false;
+        IsInteractBusy = false;
+        IsCapturingInteractSounds = false;
+
+        if (activeDetector == this)
+        {
+            activeDetector = null;
+        }
+
+        if (busyCoroutine != null)
+        {
+            StopCoroutine(busyCoroutine);
+            busyCoroutine = null;
+        }
+
+        busyUntilTime = 0f;
+    }
+
+    private void SetInteractPrompt(bool active)
+    {
+        if (interactionIcon != null)
+        {
+            interactionIcon.SetActive(active);
+        }
+
+        if (ActionPromptBox.Instance != null)
+        {
+            ActionPromptBox.Instance.SetInteractPrompt(active);
         }
     }
 }

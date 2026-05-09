@@ -11,7 +11,6 @@ public class ObstacleAvoidanceBehaviour : SteeringBehaviour
     [SerializeField]
     private bool showGizmo = true;
 
-    //gizmo parameters
     float[] dangersResultTemp = null;
 
     public override (float[] danger, float[] interest) GetSteering(float[] danger, float[] interest, AIData aiData)
@@ -22,7 +21,7 @@ public class ObstacleAvoidanceBehaviour : SteeringBehaviour
                 = obstacleCollider.ClosestPoint(transform.position) - (Vector2)transform.position;
             float distanceToObstacle = directionToObstacle.magnitude;
 
-            //calculate weight based on the distance Enemy<--->Obstacle
+
             float weight
                 = distanceToObstacle <= agentColliderSize
                 ? 1
@@ -30,14 +29,12 @@ public class ObstacleAvoidanceBehaviour : SteeringBehaviour
 
             Vector2 directionToObstacleNormalized = directionToObstacle.normalized;
 
-            //Add obstacle parameters to the danger array
             for (int i = 0; i < Directions.eightDirections.Count; i++)
             {
                 float result = Vector2.Dot(directionToObstacleNormalized, Directions.eightDirections[i]);
 
                 float valueToPutIn = result * weight;
 
-                //override value only if it is higher than the current one stored in the danger array
                 if (valueToPutIn > danger[i])
                 {
                     danger[i] = valueToPutIn;

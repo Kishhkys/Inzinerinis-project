@@ -1,16 +1,52 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class MainMenuController : MonoBehaviour
 {
+    private bool isTransitioning = false;
+
+    private void Awake()
+    {
+        AmbientSoundManager.PlayMusic("Menu", 0.5f);
+    }
+
     public void PlayGame()
     {
-        SceneManager.LoadScene("sprint4Milda");
+        if (isTransitioning) return;
+        StartCoroutine(PlayGameRoutine());
+    }
+
+    private IEnumerator PlayGameRoutine()
+    {
+        isTransitioning = true;
+
+        SoundEffectManager.PlayClip("Menu", "Menu_click", 0.7f);
+
+        AmbientSoundManager.FadeOutMusic(1f);
+
+        yield return new WaitForSeconds(1f);
+
+        SceneManager.LoadScene("Scene1");
     }
 
     public void QuitGame()
     {
-        Application.Quit();
+        if (isTransitioning) return;
+        StartCoroutine(QuitGameRoutine());
+    }
+
+    private IEnumerator QuitGameRoutine()
+    {
+        isTransitioning = true;
+
+        SoundEffectManager.PlayClip("Menu", "Menu_click", 0.7f);
+
+        AmbientSoundManager.FadeOutMusic(1f);
+
+        yield return new WaitForSeconds(1f);
+
         Debug.Log("Quit called");
+        Application.Quit();
     }
 }

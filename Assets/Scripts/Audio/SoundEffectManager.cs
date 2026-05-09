@@ -7,37 +7,86 @@ public class SoundEffectManager : MonoBehaviour
 
     private static AudioSource audioSource;
     private static SoundEffectLibrary soundEffectLibrary;
+
     [SerializeField] private Slider sfxSlider;
+
+    [Header("Volume Icon")]
+    [SerializeField] private Image volumeIcon;
+    [SerializeField] private Sprite volumeOnSprite;
+    [SerializeField] private Sprite volumeOffSprite;
 
     private static float sfxVolume = 1f;
 
     private void Awake()
     {
-        if (instance == null)
+        instance = this;
+
+        audioSource = GetComponent<AudioSource>();
+        soundEffectLibrary = GetComponent<SoundEffectLibrary>();
+    }
+
+    private void OnDestroy()
+    {
+        if (instance == this)
         {
-            instance = this;
-            audioSource = GetComponent<AudioSource>();
-            soundEffectLibrary = GetComponent<SoundEffectLibrary>();
-            DontDestroyOnLoad(gameObject);
+            instance = null;
+            audioSource = null;
+            soundEffectLibrary = null;
         }
-        else
+    }
+
+    private void Start()
+    {
+        if (sfxSlider != null)
         {
-            Destroy(gameObject);
+            sfxSlider.minValue = 0f;
+            sfxSlider.maxValue = 1f;
+            sfxSlider.SetValueWithoutNotify(sfxVolume);
+            sfxSlider.onValueChanged.AddListener(delegate { OnValueChanged(); });
         }
+
+        UpdateVolumeIcon();
     }
 
     public static void PlayRandomClip(string soundName, float volume = 1f)
     {
+        if (soundEffectLibrary == null || audioSource == null)
+        {
+            Debug.LogWarning("SoundEffectManager is missing AudioSource or SoundEffectLibrary.");
+            return;
+        }
+
         AudioClip audioClip = soundEffectLibrary.GetRandomClip(soundName);
+
         if (audioClip != null)
         {
- 
             audioSource.PlayOneShot(audioClip, volume * sfxVolume);
+        }
+        else
+        {
+            Debug.LogWarning("Random sound clip not found: " + soundName);
         }
     }
 
+    public static AudioClip GetRandomClip(string soundName)
+    {
+        if (soundEffectLibrary == null)
+        {
+            Debug.LogWarning("SoundEffectLibrary is missing.");
+            return null;
+        }
 
-    public static float PlayClip(string groupName, string soundName, float volume = 1f, bool lockMovement = false, float shortenLength = 0f, Vector3? faceTargetPosition = null)
+        return soundEffectLibrary.GetRandomClip(soundName);
+    }
+
+    public static float PlayClip(
+        string groupName,
+        string soundName,
+        float volume = 1f,
+        bool lockMovement = false,
+        float shortenLength = 0f,
+        Vector3? faceTargetPosition = null
+    )
     {
         if (soundEffectLibrary == null || audioSource == null)
         {
@@ -52,6 +101,8 @@ public class SoundEffectManager : MonoBehaviour
             audioSource.PlayOneShot(audioClip, volume * sfxVolume);
 
             float duration = Mathf.Max(0f, audioClip.length - shortenLength);
+
+            InteractionDetector.RegisterInteractSoundDuration(duration);
 
             if (lockMovement && duration > 0f)
             {
@@ -73,20 +124,19 @@ public class SoundEffectManager : MonoBehaviour
             return duration;
         }
 
-        Debug.LogWarning($"Sound clip not found: {groupName}/{soundName}");
+        Debug.LogWarning("Sound clip not found: " + groupName + "/" + soundName);
         return 0f;
     }
 
-
-    private void Start()
-    {
-        sfxSlider.onValueChanged.AddListener(delegate { OnValueChanged(); });
-    }
-
- 
     public static void SetVolume(float volume)
     {
-        sfxVolume = volume;
+        sfxVolume = Mathf.Clamp01(volume);
+
+        if (instance != null)
+        {
+            instance.UpdateVolumeIcon();
+            instance.UpdateSliderWithoutEvent();
+        }
     }
 
     public static float GetVolume()
@@ -96,9 +146,31 @@ public class SoundEffectManager : MonoBehaviour
 
     public void OnValueChanged()
     {
-         if (sfxSlider != null)
+        if (sfxSlider != null)
         {
             SetVolume(sfxSlider.value);
+        }
+    }
+
+    private void UpdateSliderWithoutEvent()
+    {
+        if (sfxSlider != null)
+        {
+            sfxSlider.SetValueWithoutNotify(sfxVolume);
+        }
+    }
+
+    private void UpdateVolumeIcon()
+    {
+        if (volumeIcon == null) return;
+
+        if (sfxVolume <= 0f)
+        {
+            volumeIcon.sprite = volumeOffSprite;
+        }
+        else
+        {
+            volumeIcon.sprite = volumeOnSprite;
         }
     }
 }

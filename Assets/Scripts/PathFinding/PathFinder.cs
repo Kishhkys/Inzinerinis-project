@@ -7,10 +7,8 @@ public class PathFinder : MonoBehaviour
     [SerializeField] private List<PathNode> allNodes = new List<PathNode>();
 
     [Header("Line of Sight")]
-    [Tooltip("Sluoksniai kurie laikomi sienomis tarp pozicijos ir node")]
     [SerializeField] private LayerMask obstacleMask;
 
-    [Tooltip("Jei true — start node turi buti pasiekiamas tiesia linija (be sienu)")]
     [SerializeField] private bool requireLineOfSightToStartNode = true;
 
     public List<PathNode> FindPath(Vector2 startPos, Vector2 targetPos)
@@ -89,9 +87,6 @@ public class PathFinder : MonoBehaviour
         return path;
     }
 
-    /// <summary>
-    /// Klasikinis artimiausias node — neziuri ar yra sienos.
-    /// </summary>
     private PathNode GetClosestNode(Vector2 position)
     {
         PathNode bestNode = null;
@@ -112,11 +107,7 @@ public class PathFinder : MonoBehaviour
         return bestNode;
     }
 
-    /// <summary>
-    /// Surenka visus node'us, isrikiuoja juos pagal atstuma,
-    /// ir grazina pirma kuris yra pasiekiamas tiesia linija (be sienu tarp).
-    /// Jei nei vienas nepasiekiamas — grazina paprasciausia artimiausia kaip fallback.
-    /// </summary>
+
     private PathNode GetClosestReachableNode(Vector2 position)
     {
         var sortedNodes = allNodes
@@ -132,13 +123,10 @@ public class PathFinder : MonoBehaviour
             }
         }
 
-        // Fallback — niekas nepasiekiamas, grazinam pat? artimiausi?
         return sortedNodes.FirstOrDefault();
     }
 
-    /// <summary>
-    /// Patikrina ar tarp dvieju tasku nera sienos.
-    /// </summary>
+
     private bool HasLineOfSight(Vector2 from, Vector2 to)
     {
         Vector2 direction = to - from;
