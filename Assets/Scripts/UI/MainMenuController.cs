@@ -4,11 +4,20 @@ using System.Collections;
 
 public class MainMenuController : MonoBehaviour
 {
+    [Header("Loading")]
+    [SerializeField] private GameObject loadingPanel;
+    [SerializeField] private float loadingDelay = 1f;
+
     private bool isTransitioning = false;
 
     private void Awake()
     {
         AmbientSoundManager.PlayMusic("Menu", 0.5f);
+
+        if (loadingPanel != null)
+        {
+            loadingPanel.SetActive(false);
+        }
     }
 
     public void PlayGame()
@@ -25,7 +34,17 @@ public class MainMenuController : MonoBehaviour
 
         AmbientSoundManager.FadeOutMusic(1f);
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSecondsRealtime(0.3f);
+
+        if (loadingPanel != null)
+        {
+            loadingPanel.SetActive(true);
+        }
+
+        yield return null;
+        yield return new WaitForEndOfFrame();
+
+        yield return new WaitForSecondsRealtime(loadingDelay);
 
         SceneManager.LoadScene("Scene1");
     }
@@ -44,7 +63,7 @@ public class MainMenuController : MonoBehaviour
 
         AmbientSoundManager.FadeOutMusic(1f);
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSecondsRealtime(1f);
 
         Debug.Log("Quit called");
         Application.Quit();
