@@ -276,7 +276,7 @@ public class PauseMenu : MonoBehaviour
         textComponent.text = text;
         textComponent.alignment = TextAlignmentOptions.Center;
         textComponent.fontSize = fontSize;
-        textComponent.enableWordWrapping = false;
+        textComponent.textWrappingMode = TextWrappingModes.NoWrap;
         textComponent.color = menuTextColor;
 
         if (menuFont != null)

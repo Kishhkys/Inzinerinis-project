@@ -33,6 +33,11 @@ public class PlayerController : MonoBehaviour, ITeleportable
     [SerializeField] private float flashlightForwardOffset = 0.28f;
     [SerializeField] private float flashlightRightHandOffset = 0.18f;
     [SerializeField] private Vector2 flashlightBaseOffset = new Vector2(0f, -0.05f);
+    [SerializeField] private Sprite flashlightOffHandSprite;
+    [SerializeField] private Sprite flashlightOnHandSprite;
+    [SerializeField] private float flashlightSpriteDirectionOffset = 135f;
+    [SerializeField] private int flashlightSpriteSortingOrder = 3;
+    [SerializeField] private Vector2 flashlightRightFacingSpritePosition = new Vector2(0.08f, -0.2f);
 
     private Rigidbody2D rb;
     private Collider2D playerCollider;
@@ -53,6 +58,10 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
     private Light2D flashlight;
     private Transform flashlightTransform;
+    private Transform flashlightSpriteTransform;
+    private SpriteRenderer flashlightSpriteRenderer;
+    private Sprite loadedFlashlightOffSprite;
+    private Sprite loadedFlashlightOnSprite;
     private bool flashlightOn;
     private Vector2 lastFacingDirection = Vector2.down;
 
@@ -69,6 +78,8 @@ public class PlayerController : MonoBehaviour, ITeleportable
         playerCollider = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
 
+        CreateFlashlight();
+
         spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
         originalSpriteColors = new Color[spriteRenderers.Length];
 
@@ -82,7 +93,6 @@ public class PlayerController : MonoBehaviour, ITeleportable
             ActionPromptBox.Instance.SetHidePrompt(false);
         }
 
-        CreateFlashlight();
         SetFlashlight(flashlightStartsOn);
     }
 
@@ -114,6 +124,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
         UpdateHideState();
         UpdateHidePrompt();
+        UpdateFlashlightTransform();
 
         animator.SetBool("isMoving", rb.linearVelocity.magnitude > 0);
 
@@ -309,7 +320,29 @@ public class PlayerController : MonoBehaviour, ITeleportable
         flashlight.shadowIntensity = 0.55f;
         flashlight.shadowSoftness = 0.35f;
 
+        CreateFlashlightSprite();
         UpdateFlashlightTransform();
+    }
+
+    private void CreateFlashlightSprite()
+    {
+        loadedFlashlightOffSprite = flashlightOffHandSprite != null ? flashlightOffHandSprite : Resources.Load<Sprite>("PlayerFlashlightOff");
+        loadedFlashlightOnSprite = flashlightOnHandSprite != null ? flashlightOnHandSprite : Resources.Load<Sprite>("PlayerFlashlightOn");
+
+        if (loadedFlashlightOffSprite == null || loadedFlashlightOnSprite == null)
+        {
+            Debug.LogWarning("Player flashlight sprite is missing.");
+            return;
+        }
+
+        GameObject spriteObject = new GameObject("Player Flashlight Sprite");
+        spriteObject.transform.SetParent(transform, false);
+
+        flashlightSpriteTransform = spriteObject.transform;
+        flashlightSpriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
+        flashlightSpriteRenderer.sprite = loadedFlashlightOffSprite;
+        flashlightSpriteRenderer.sortingLayerName = "Player";
+        flashlightSpriteRenderer.sortingOrder = flashlightSpriteSortingOrder;
     }
 
     private void ToggleFlashlight()
@@ -324,6 +357,12 @@ public class PlayerController : MonoBehaviour, ITeleportable
         if (flashlight != null)
         {
             flashlight.enabled = flashlightOn;
+        }
+
+        if (flashlightSpriteRenderer != null)
+        {
+            flashlightSpriteRenderer.sprite = flashlightOn ? loadedFlashlightOnSprite : loadedFlashlightOffSprite;
+            flashlightSpriteRenderer.enabled = ShouldShowFlashlightSprite();
         }
     }
 
@@ -347,8 +386,44 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
         flashlightTransform.localPosition = new Vector3(offset.x, offset.y, 0f);
 
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
-        flashlightTransform.localRotation = Quaternion.Euler(0f, 0f, angle);
+        float directionAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        flashlightTransform.localRotation = Quaternion.Euler(0f, 0f, directionAngle - 90f);
+
+        if (flashlightSpriteTransform != null)
+        {
+            Vector2 spriteOffset = GetFlashlightSpritePosition(direction, offset);
+            flashlightSpriteTransform.localPosition = new Vector3(spriteOffset.x, spriteOffset.y, 0f);
+            flashlightSpriteTransform.localRotation = Quaternion.Euler(0f, 0f, directionAngle + flashlightSpriteDirectionOffset);
+
+            if (flashlightSpriteRenderer != null)
+            {
+                flashlightSpriteRenderer.enabled = ShouldShowFlashlightSprite();
+            }
+        }
+    }
+
+    private Vector2 GetFlashlightSpritePosition(Vector2 direction, Vector2 fallbackPosition)
+    {
+        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y) && direction.x > 0f)
+        {
+            return flashlightRightFacingSpritePosition;
+        }
+
+        return fallbackPosition;
+    }
+
+    private bool ShouldShowFlashlightSprite()
+    {
+        Vector2 direction = lastFacingDirection.sqrMagnitude > 0.01f
+            ? lastFacingDirection.normalized
+            : Vector2.down;
+
+        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+        {
+            return direction.x > 0f;
+        }
+
+        return direction.y <= 0f;
     }
 
     private void OnDisable()

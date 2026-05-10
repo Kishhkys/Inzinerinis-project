@@ -230,7 +230,7 @@ public class InteractionDialogueManager : MonoBehaviour
 
         dialogueText = textObject.AddComponent<TextMeshProUGUI>();
         dialogueText.alignment = TextAlignmentOptions.Center;
-        dialogueText.enableWordWrapping = true;
+        dialogueText.textWrappingMode = TextWrappingModes.Normal;
         dialogueText.fontSize = 22f;
         dialogueText.color = new Color(0.96f, 0.94f, 0.86f, 1f);
         dialogueText.outlineColor = new Color(0f, 0f, 0f, 0.9f);
