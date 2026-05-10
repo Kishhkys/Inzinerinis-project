@@ -170,6 +170,7 @@ public class AmbientSoundManager : MonoBehaviour
         if (Instance != null)
         {
             Instance.UpdateVolumeIcon();
+            Instance.UpdateSliderWithoutEvent();
         }
     }
 
@@ -197,6 +198,14 @@ public class AmbientSoundManager : MonoBehaviour
         else
         {
             volumeIcon.sprite = volumeOnSprite;
+        }
+    }
+
+    private void UpdateSliderWithoutEvent()
+    {
+        if (sfxSlider != null)
+        {
+            sfxSlider.SetValueWithoutNotify(sliderValue);
         }
     }
 
