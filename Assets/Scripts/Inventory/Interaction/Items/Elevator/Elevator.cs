@@ -78,7 +78,7 @@ public class Elevator : MonoBehaviour, IInteractable
 
         if (!isRepaired)
         {
-            Debug.Log("The elevator panel is still broken.");
+            InteractionDialogueEvents.ElevatorChecked(false, keycardAccepted, isOpened);
 
             float duration = SoundEffectManager.PlayClip(
                 "Elevator",
@@ -95,7 +95,7 @@ public class Elevator : MonoBehaviour, IInteractable
 
         if (!keycardAccepted)
         {
-            Debug.Log("Use the keycard on the card reader first.");
+            InteractionDialogueEvents.ElevatorChecked(true, false, isOpened);
 
             float duration = SoundEffectManager.PlayClip(
                 "Door",
@@ -214,7 +214,7 @@ public class Elevator : MonoBehaviour, IInteractable
             spriteRenderer.sprite = openSprite;
         }
 
-        Debug.Log("Elevator opened. Interact again to finish level.");
+        InteractionDialogueEvents.ElevatorOpened();
     }
 
     private IEnumerator LevelCompleteRoutine()

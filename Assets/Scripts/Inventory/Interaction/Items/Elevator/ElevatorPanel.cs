@@ -40,7 +40,7 @@ public class ElevatorPanel : MonoBehaviour, IInteractable
 
         if (selectedItem == null)
         {
-            Debug.Log("Choose correct item");
+            InteractionDialogueEvents.ElevatorPanelChecked(false, false, false);
             PlayWrongSound();
             return;
         }
@@ -58,15 +58,16 @@ public class ElevatorPanel : MonoBehaviour, IInteractable
         }
 
         int neededID = requiredItemIDs[currentItemIndex];
+        bool willCompleteRepair = currentItemIndex >= requiredItemIDs.Count - 1;
 
         if (selectedItem.ID != neededID)
         {
-            Debug.Log("Wrong item. Need item ID: " + neededID);
+            InteractionDialogueEvents.ElevatorPanelChecked(true, false, false);
             PlayWrongSound();
             return;
         }
 
-        Debug.Log("Used item: " + selectedItem.name);
+        InteractionDialogueEvents.ElevatorPanelChecked(true, true, willCompleteRepair);
 
         StartCoroutine(UseCorrectItemRoutine(inventory, selectedItem));
     }
@@ -92,7 +93,6 @@ public class ElevatorPanel : MonoBehaviour, IInteractable
         }
         else
         {
-            Debug.Log("Next required item ID: " + requiredItemIDs[currentItemIndex]);
             isUsingItem = false;
         }
     }
@@ -141,8 +141,6 @@ public class ElevatorPanel : MonoBehaviour, IInteractable
     {
         isRepaired = true;
         isUsingItem = false;
-
-        Debug.Log("Elevator repaired");
 
         if (elevator != null)
         {

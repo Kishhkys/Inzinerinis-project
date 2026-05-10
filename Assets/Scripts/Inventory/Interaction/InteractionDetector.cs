@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,6 +24,7 @@ public class InteractionDetector : MonoBehaviour
     private static int lastInteractFrame = -1;
 
     private IInteractable interactableInRange = null;
+    private readonly List<IInteractable> interactablesInRange = new();
 
     [Header("Interaction UI")]
     public GameObject interactionIcon;
@@ -64,9 +66,8 @@ public class InteractionDetector : MonoBehaviour
 
         if (!currentInteractable.CanInteract())
         {
-            interactableInRange = null;
-            HasInteractableInRange = false;
-            SetInteractPrompt(false);
+            interactablesInRange.Remove(currentInteractable);
+            RefreshInteractableInRange();
         }
     }
 
@@ -134,8 +135,12 @@ public class InteractionDetector : MonoBehaviour
     {
         if (collision.TryGetComponent(out IInteractable interactable) && interactable.CanInteract())
         {
-            interactableInRange = interactable;
-            HasInteractableInRange = true;
+            if (!interactablesInRange.Contains(interactable))
+            {
+                interactablesInRange.Add(interactable);
+            }
+
+            RefreshInteractableInRange();
 
             if (!isOnCooldown)
             {
@@ -146,16 +151,16 @@ public class InteractionDetector : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.TryGetComponent(out IInteractable interactable) && interactable == interactableInRange)
+        if (collision.TryGetComponent(out IInteractable interactable))
         {
-            interactableInRange = null;
-            HasInteractableInRange = false;
-            SetInteractPrompt(false);
+            interactablesInRange.Remove(interactable);
+            RefreshInteractableInRange();
         }
     }
 
     private void OnDisable()
     {
+        interactablesInRange.Clear();
         interactableInRange = null;
         HasInteractableInRange = false;
 
@@ -190,5 +195,23 @@ public class InteractionDetector : MonoBehaviour
         {
             ActionPromptBox.Instance.SetInteractPrompt(active);
         }
+    }
+
+    private void RefreshInteractableInRange()
+    {
+        for (int i = interactablesInRange.Count - 1; i >= 0; i--)
+        {
+            IInteractable interactable = interactablesInRange[i];
+
+            if (interactable == null || !interactable.CanInteract())
+            {
+                interactablesInRange.RemoveAt(i);
+            }
+        }
+
+        interactableInRange = interactablesInRange.Count > 0 ? interactablesInRange[interactablesInRange.Count - 1] : null;
+        HasInteractableInRange = interactableInRange != null;
+
+        SetInteractPrompt(HasInteractableInRange && !isOnCooldown);
     }
 }

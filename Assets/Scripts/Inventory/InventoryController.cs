@@ -156,7 +156,7 @@ public class InventoryController : MonoBehaviour
             }
         }
 
-        Debug.Log("Inventory is full");
+        InteractionDialogueEvents.InventoryFullChecked();
         return false;
     }
 }

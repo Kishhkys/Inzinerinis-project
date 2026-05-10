@@ -35,7 +35,7 @@ public class CardReader : MonoBehaviour, IInteractable
 
         if (!elevator.IsRepaired())
         {
-            Debug.Log("The card reader has no power. Restore the elevator panel first.");
+            InteractionDialogueEvents.CardReaderChecked(false, false);
 
             float duration = SoundEffectManager.PlayClip(
                 "Elevator",
@@ -59,9 +59,27 @@ public class CardReader : MonoBehaviour, IInteractable
         }
 
         Item selectedItem = inventory.GetSelectedItem();
+        bool hasCorrectKeycard = selectedItem is KeycardItem && selectedItem.ID == requiredKeycardID;
 
+        InteractionDialogueEvents.CardReaderChecked(true, hasCorrectKeycard);
 
-        StartCoroutine(UseKeycard(inventory, selectedItem));
+        if (hasCorrectKeycard)
+        {
+            StartCoroutine(UseKeycard(inventory, selectedItem));
+        }
+        else
+        {
+            float duration = SoundEffectManager.PlayClip(
+                "Keycard",
+                "Keycard_use",
+                1f,
+                true,
+                0f,
+                transform.position
+            );
+
+            StartCoroutine(BlockInteractionFor(duration));
+        }
     }
 
     private IEnumerator UseKeycard(InventoryController inventory, Item selectedItem)
