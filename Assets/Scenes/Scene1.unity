@@ -1123,7 +1123,7 @@ PrefabInstance:
     - target: {fileID: 4076860045689697194, guid: 50bca7def6c4ea44ca59200a15210b72, type: 3}
       propertyPath: itemPrefab
       value: 
-      objectReference: {fileID: 185485224761447016, guid: 5c6ed842ea3741a42acdf240d21c9dc9, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 5458714430734025002, guid: 50bca7def6c4ea44ca59200a15210b72, type: 3}
       propertyPath: m_Name
       value: DrawersFile
@@ -20727,7 +20727,7 @@ Transform:
   m_GameObject: {fileID: 1680582987}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.0144634, y: -1.34084, z: 0}
+  m_LocalPosition: {x: 3.5966473, y: -1.36679, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
