@@ -160,6 +160,7 @@ public class PlayerHealth : MonoBehaviour
             playerAnimator.enabled = false;
         }
 
+
         if (playerSpriteRenderer != null && deathBloodSprite != null)
         {
             playerSpriteRenderer.enabled = true;
@@ -204,6 +205,7 @@ public class PlayerHealth : MonoBehaviour
 
         StartCoroutine(RestartSceneAfterDelay());
     }
+
 
     private IEnumerator RestartSceneAfterDelay()
     {
