@@ -98,6 +98,11 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
     void Update()
     {
+        if (rb == null)
+        {
+            return;
+        }
+
         if (movementBlocked)
         {
             rb.linearVelocity = Vector2.zero;
@@ -126,7 +131,10 @@ public class PlayerController : MonoBehaviour, ITeleportable
         UpdateHidePrompt();
         UpdateFlashlightTransform();
 
-        animator.SetBool("isMoving", rb.linearVelocity.magnitude > 0);
+        if (animator != null)
+        {
+            animator.SetBool("isMoving", rb.linearVelocity.magnitude > 0);
+        }
 
         if (rb.linearVelocity.magnitude > 0)
         {
@@ -161,15 +169,21 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
         if (context.canceled)
         {
-            animator.SetBool("isMoving", false);
-            animator.SetFloat("LastInputX", moveInput.x);
-            animator.SetFloat("LastInputY", moveInput.y);
+            if (animator != null)
+            {
+                animator.SetBool("isMoving", false);
+                animator.SetFloat("LastInputX", moveInput.x);
+                animator.SetFloat("LastInputY", moveInput.y);
+            }
         }
 
         moveInput = context.ReadValue<Vector2>();
 
-        animator.SetFloat("inputX", moveInput.x);
-        animator.SetFloat("inputY", moveInput.y);
+        if (animator != null)
+        {
+            animator.SetFloat("inputX", moveInput.x);
+            animator.SetFloat("inputY", moveInput.y);
+        }
 
         if (moveInput.sqrMagnitude > 0.01f)
         {
@@ -180,7 +194,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
     private void UpdateHidePrompt()
     {
-        if (ActionPromptBox.Instance == null)
+        if (ActionPromptBox.Instance == null || rb == null)
         {
             return;
         }
@@ -204,6 +218,11 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
     private void UpdateHideState()
     {
+        if (rb == null)
+        {
+            return;
+        }
+
         bool isMoving = rb.linearVelocity.sqrMagnitude > movementThreshold * movementThreshold;
         bool canHideWithCtrl = IsNearWall();
         bool recentlyDetected = Time.time - lastDetectedTime <= detectionMemory;
@@ -476,6 +495,13 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
     private IEnumerator TeleportRoutine(Vector3 newPosition, float blockDuration)
     {
+        if (rb == null)
+        {
+            transform.position = newPosition;
+            teleportBlockedUntil = Time.time + blockDuration;
+            yield break;
+        }
+
         movementBlocked = true;
 
         rb.linearVelocity = Vector2.zero;
@@ -535,20 +561,31 @@ public class PlayerController : MonoBehaviour, ITeleportable
         lastFacingDirection = direction;
         UpdateFlashlightTransform();
 
-        animator.SetFloat("inputX", direction.x);
-        animator.SetFloat("inputY", direction.y);
-        animator.SetFloat("LastInputX", direction.x);
-        animator.SetFloat("LastInputY", direction.y);
+        if (animator != null)
+        {
+            animator.SetFloat("inputX", direction.x);
+            animator.SetFloat("inputY", direction.y);
+            animator.SetFloat("LastInputX", direction.x);
+            animator.SetFloat("LastInputY", direction.y);
+        }
     }
 
     private IEnumerator MovementLockRoutine(float duration)
     {
         isLocked = true;
 
-        rb.linearVelocity = Vector2.zero;
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
+
         moveInput = Vector2.zero;
 
-        animator.SetBool("isMoving", false);
+        if (animator != null)
+        {
+            animator.SetBool("isMoving", false);
+        }
+
         StopFootsteps();
 
         yield return new WaitForSeconds(duration);

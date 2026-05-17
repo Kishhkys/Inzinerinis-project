@@ -5,6 +5,8 @@ using UnityEngine.Events;
 
 public class EnemyAI : MonoBehaviour
 {
+    private static readonly List<SteeringBehaviour> EmptyBehaviours = new List<SteeringBehaviour>();
+
     private enum AIState
     {
         Patrol,
@@ -81,6 +83,11 @@ public class EnemyAI : MonoBehaviour
 
     private void PerformDetection()
     {
+        if (detectors == null)
+        {
+            return;
+        }
+
         foreach (Detector detector in detectors)
         {
             if (detector != null)
@@ -92,6 +99,11 @@ public class EnemyAI : MonoBehaviour
 
     private void Update()
     {
+        if (aiData == null || movementDirectionSolver == null)
+        {
+            return;
+        }
+
         bool rawSeesPlayer = aiData.targets != null && aiData.targets.Count > 0;
 
         bool hasLineOfSight = false;
@@ -216,13 +228,16 @@ public class EnemyAI : MonoBehaviour
                     patrolStuckCount = 0;
                 }
 
-                foreach (SteeringBehaviour b in patrolBehaviours)
+                if (patrolBehaviours != null)
                 {
-                    PatrolBehaviour patrol = b as PatrolBehaviour;
-
-                    if (patrol != null)
+                    foreach (SteeringBehaviour b in patrolBehaviours)
                     {
-                        patrol.ForceRepath();
+                        PatrolBehaviour patrol = b as PatrolBehaviour;
+
+                        if (patrol != null)
+                        {
+                            patrol.ForceRepath();
+                        }
                     }
                 }
             }
@@ -371,18 +386,18 @@ public class EnemyAI : MonoBehaviour
         switch (currentState)
         {
             case AIState.Chase:
-                return chaseBehaviours;
+                return chaseBehaviours ?? EmptyBehaviours;
 
             case AIState.Investigate:
-                return investigateBehaviours;
+                return investigateBehaviours ?? EmptyBehaviours;
 
             case AIState.Attack:
             case AIState.Wait:
-                return new List<SteeringBehaviour>();
+                return EmptyBehaviours;
 
             case AIState.Patrol:
             default:
-                return patrolBehaviours;
+                return patrolBehaviours ?? EmptyBehaviours;
         }
     }
 

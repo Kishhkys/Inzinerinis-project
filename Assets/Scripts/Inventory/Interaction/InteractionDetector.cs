@@ -58,9 +58,14 @@ public class InteractionDetector : MonoBehaviour
 
         BeginInteractSoundCapture(this);
 
-        currentInteractable.Interact();
-
-        EndInteractSoundCapture();
+        try
+        {
+            currentInteractable.Interact();
+        }
+        finally
+        {
+            EndInteractSoundCapture();
+        }
 
         LockInteractBusy(minimumInteractLock);
 
