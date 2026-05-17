@@ -111,31 +111,48 @@ public class PlayerController : MonoBehaviour, ITeleportable
         }
 
         Keyboard keyboard = Keyboard.current;
-        bool isRunning = keyboard != null && keyboard.shiftKey.isPressed;
+        bool isRunning = IsRunPressed(keyboard);
 
+        HandleFlashlightInput(keyboard);
+        ApplyMovement(isRunning);
+        UpdateHideState();
+        UpdateHidePrompt();
+        UpdateFlashlightTransform();
+        UpdateAnimatorMovement();
+        UpdateFootsteps(isRunning);
+
+        wasRunning = isRunning;
+    }
+
+    private bool IsRunPressed(Keyboard keyboard)
+    {
+        return keyboard != null && keyboard.shiftKey.isPressed;
+    }
+
+    private void HandleFlashlightInput(Keyboard keyboard)
+    {
         if (keyboard != null && keyboard.fKey.wasPressedThisFrame)
         {
             ToggleFlashlight();
         }
+    }
 
-        if (isRunning)
-        {
-            rb.linearVelocity = moveInput * runSpeed;
-        }
-        else
-        {
-            rb.linearVelocity = moveInput * moveSpeed;
-        }
+    private void ApplyMovement(bool isRunning)
+    {
+        float speed = isRunning ? runSpeed : moveSpeed;
+        rb.linearVelocity = moveInput * speed;
+    }
 
-        UpdateHideState();
-        UpdateHidePrompt();
-        UpdateFlashlightTransform();
-
+    private void UpdateAnimatorMovement()
+    {
         if (animator != null)
         {
             animator.SetBool("isMoving", rb.linearVelocity.magnitude > 0);
         }
+    }
 
+    private void UpdateFootsteps(bool isRunning)
+    {
         if (rb.linearVelocity.magnitude > 0)
         {
             if (!playingFootsteps || isRunning != wasRunning)
@@ -147,8 +164,6 @@ public class PlayerController : MonoBehaviour, ITeleportable
         {
             StopFootsteps();
         }
-
-        wasRunning = isRunning;
     }
 
     public void Move(InputAction.CallbackContext context)

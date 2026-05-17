@@ -104,17 +104,27 @@ public class EnemyAI : MonoBehaviour
             return;
         }
 
-        bool rawSeesPlayer = aiData.targets != null && aiData.targets.Count > 0;
-
-        bool hasLineOfSight = false;
-
-        if (rawSeesPlayer)
-        {
-            hasLineOfSight = CanSeeTarget(aiData.targets[0]);
-        }
-
+        bool rawSeesPlayer = HasDetectedTarget();
+        bool hasLineOfSight = rawSeesPlayer && CanSeeTarget(aiData.targets[0]);
         bool seesPlayer = rawSeesPlayer && hasLineOfSight && Time.time >= ignorePlayerUntil;
 
+        UpdateTargetMemory(rawSeesPlayer, hasLineOfSight);
+        HandleTransitions(seesPlayer);
+        UpdateMovementInput();
+        UpdateLookDirection(seesPlayer);
+        HandleAttack(seesPlayer);
+        OnMovementInput?.Invoke(movementInput);
+        CheckIfStuck(rawSeesPlayer && hasLineOfSight);
+        LogState();
+    }
+
+    private bool HasDetectedTarget()
+    {
+        return aiData.targets != null && aiData.targets.Count > 0;
+    }
+
+    private void UpdateTargetMemory(bool rawSeesPlayer, bool hasLineOfSight)
+    {
         if (rawSeesPlayer && hasLineOfSight)
         {
             aiData.currentTarget = aiData.targets[0];
@@ -124,17 +134,21 @@ public class EnemyAI : MonoBehaviour
                 aiData.lastSeenPosition = aiData.currentTarget.position;
                 aiData.hasLastSeenPosition = true;
             }
-        }
-        else
-        {
-            aiData.currentTarget = null;
+
+            return;
         }
 
-        HandleTransitions(seesPlayer);
+        aiData.currentTarget = null;
+    }
 
+    private void UpdateMovementInput()
+    {
         List<SteeringBehaviour> activeBehaviours = GetActiveBehaviours();
         movementInput = movementDirectionSolver.GetDirectionToMove(activeBehaviours, aiData);
+    }
 
+    private void UpdateLookDirection(bool seesPlayer)
+    {
         Transform lookTarget = GetLookTarget(seesPlayer);
 
         if (lookTarget != null)
@@ -145,13 +159,10 @@ public class EnemyAI : MonoBehaviour
         {
             OnPointerInput?.Invoke(aiData.lastSeenPosition);
         }
+    }
 
-        HandleAttack(seesPlayer);
-
-        OnMovementInput?.Invoke(movementInput);
-
-        CheckIfStuck(rawSeesPlayer && hasLineOfSight);
-
+    private void LogState()
+    {
         Debug.Log($"State: {currentState} | MoveInput: {movementInput} | PatrolIdx: {aiData.currentPatrolIndex} | StuckCount: {patrolStuckCount}");
     }
 
