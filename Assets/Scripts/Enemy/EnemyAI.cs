@@ -52,9 +52,9 @@ public class EnemyAI : MonoBehaviour
     [Header("UI")]
     [SerializeField] private GameObject exclamationMark;
 
-    public UnityEvent OnAttackPressed;
-    public UnityEvent<Vector2> OnMovementInput;
-    public UnityEvent<Vector2> OnPointerInput;
+    [SerializeField] private UnityEvent OnAttackPressed;
+    [SerializeField] private UnityEvent<Vector2> OnMovementInput;
+    [SerializeField] private UnityEvent<Vector2> OnPointerInput;
 
     private Vector2 lastStuckCheckPosition;
     private float stuckCheckTimer;

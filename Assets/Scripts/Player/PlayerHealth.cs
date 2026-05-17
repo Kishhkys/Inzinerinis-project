@@ -32,8 +32,8 @@ public class PlayerHealth : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private CinemachineCamera virtualCamera;
-    public GameObject inventoryPanel;
-    public GameObject popupPanel;
+    [SerializeField] private GameObject inventoryPanel;
+    [SerializeField] private GameObject popupPanel;
 
     private bool isDead = false;
 

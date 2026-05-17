@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
     [SerializeField] private float runSpeed = 1.5f;
 
     [Header("Audio")]
-    public float footstepSpeed = 0.5f;
+    [SerializeField] private float footstepSpeed = 0.5f;
     [SerializeField] private float runFootstepSpeed = 0.3f;
     [SerializeField] private float footstepVolume = 0.5f;
 

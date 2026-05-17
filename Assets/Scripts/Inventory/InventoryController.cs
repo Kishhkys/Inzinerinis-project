@@ -6,12 +6,12 @@ public class InventoryController : MonoBehaviour
 {
     private ItemDictionary itemDictionary;
 
-    public GameObject inventoryPanel;
-    public GameObject slotPrefab;
+    [SerializeField] private GameObject inventoryPanel;
+    [SerializeField] private GameObject slotPrefab;
 
     [SerializeField] private int slotCount = 9;
 
-    public GameObject[] itemPrefabs;
+    [SerializeField] private GameObject[] itemPrefabs;
 
     private Key[] inventoryKeys;
     private int selectedSlotIndex = 0;

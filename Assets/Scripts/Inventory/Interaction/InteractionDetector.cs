@@ -27,7 +27,7 @@ public class InteractionDetector : MonoBehaviour
     private readonly List<IInteractable> interactablesInRange = new();
 
     [Header("Interaction UI")]
-    public GameObject interactionIcon;
+    [SerializeField] private GameObject interactionIcon;
 
     [Header("Fallback Lock")]
     [SerializeField] private float minimumInteractLock = 0.15f;
