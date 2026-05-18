@@ -18,7 +18,6 @@ public class KeyItem : Item
     public override void PickUp(string group = null, string sound = null)
     {
         base.PickUp("Key", "Keys_pick_up");
-        Debug.Log("Picked up key for target: " + targetID);
     }
 
 }

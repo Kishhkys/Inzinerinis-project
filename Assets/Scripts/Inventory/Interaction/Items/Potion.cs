@@ -12,7 +12,6 @@ public class Potion : Item
             SoundEffectManager.PlayClip("Potion", "Potion_drink", 1f, true, 0f, transform.position);
             player.UpdateHealth(healAmount);
             InteractionDialogueEvents.PotionDrunk();
-            Debug.Log($"Healed {healAmount}");
 
             InventoryController inv = FindFirstObjectByType<InventoryController>();
             inv.RemoveSelectedItem();

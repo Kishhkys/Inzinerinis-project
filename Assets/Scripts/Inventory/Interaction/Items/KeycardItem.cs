@@ -22,6 +22,5 @@ public class KeycardItem : Item
     public override void PickUp(string group = null, string sound = null)
     {
         base.PickUp();
-        Debug.Log("Picked up keycard.");
     }
 }

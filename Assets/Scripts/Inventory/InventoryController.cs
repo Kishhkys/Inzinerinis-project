@@ -83,7 +83,6 @@ public class InventoryController : MonoBehaviour
     void SelectSlot(int index)
     {
         selectedSlotIndex = index;
-        Debug.Log($"slot selected {index}");
         UpdateSlotVisuals();
     }
 

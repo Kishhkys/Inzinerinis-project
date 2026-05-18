@@ -20,8 +20,6 @@ public class InteractiveBed : MonoBehaviour, IInteractable
         {
             hiddenKeycard.SetActive(true);
         }
-
-        Debug.Log("You found something under the bed.");
     }
 
     private void Start()

@@ -115,7 +115,6 @@ public class EnemyAI : MonoBehaviour
         HandleAttack(seesPlayer);
         OnMovementInput?.Invoke(movementInput);
         CheckIfStuck(rawSeesPlayer && hasLineOfSight);
-        LogState();
     }
 
     private bool HasDetectedTarget()
@@ -159,11 +158,6 @@ public class EnemyAI : MonoBehaviour
         {
             OnPointerInput?.Invoke(aiData.lastSeenPosition);
         }
-    }
-
-    private void LogState()
-    {
-        Debug.Log($"State: {currentState} | MoveInput: {movementInput} | PatrolIdx: {aiData.currentPatrolIndex} | StuckCount: {patrolStuckCount}");
     }
 
     private bool CanSeeTarget(Transform target)
@@ -221,8 +215,6 @@ public class EnemyAI : MonoBehaviour
 
         if (movedDistance < stuckDistanceThreshold)
         {
-            Debug.Log("Enemy stuck");
-
             stuckGraceUntil = Time.time + stuckRecoveryGracePeriod;
 
             if (currentState == AIState.Patrol)

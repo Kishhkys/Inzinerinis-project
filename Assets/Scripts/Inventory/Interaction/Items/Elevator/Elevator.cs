@@ -158,11 +158,6 @@ public class Elevator : MonoBehaviour, IInteractable
     public void SetKeycardAccepted(bool accepted)
     {
         keycardAccepted = accepted;
-
-        if (keycardAccepted)
-        {
-            Debug.Log("Elevator keycard accepted.");
-        }
     }
 
     private IEnumerator ChangeLightAfterDelay()
@@ -238,7 +233,7 @@ public class Elevator : MonoBehaviour, IInteractable
         }
         else
         {
-            Debug.Log("Next scene name is empty!");
+            Debug.LogWarning("Next scene name is empty.");
         }
     }
 

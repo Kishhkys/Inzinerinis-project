@@ -129,9 +129,6 @@ public class PlayerHealth : MonoBehaviour
         {
             healthBar.value = health;
         }
-
-        Debug.Log($"Health: {health}");
-
         if (health <= 0f)
         {
             Die();

@@ -113,7 +113,6 @@ public class PauseMenu : MonoBehaviour
 
         Time.timeScale = 1f;
 
-        Debug.Log("Quit called");
         Application.Quit();
     }
 
