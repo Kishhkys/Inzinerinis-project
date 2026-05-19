@@ -32,8 +32,8 @@ public class PlayerHealth : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private CinemachineCamera virtualCamera;
-    public GameObject inventoryPanel;
-    public GameObject popupPanel;
+    [SerializeField] private GameObject inventoryPanel;
+    [SerializeField] private GameObject popupPanel;
 
     private bool isDead = false;
 
@@ -129,9 +129,6 @@ public class PlayerHealth : MonoBehaviour
         {
             healthBar.value = health;
         }
-
-        Debug.Log($"Health: {health}");
-
         if (health <= 0f)
         {
             Die();

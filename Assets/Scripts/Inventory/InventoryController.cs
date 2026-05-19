@@ -6,12 +6,12 @@ public class InventoryController : MonoBehaviour
 {
     private ItemDictionary itemDictionary;
 
-    public GameObject inventoryPanel;
-    public GameObject slotPrefab;
+    [SerializeField] private GameObject inventoryPanel;
+    [SerializeField] private GameObject slotPrefab;
 
     [SerializeField] private int slotCount = 9;
 
-    public GameObject[] itemPrefabs;
+    [SerializeField] private GameObject[] itemPrefabs;
 
     private Key[] inventoryKeys;
     private int selectedSlotIndex = 0;
@@ -20,11 +20,27 @@ public class InventoryController : MonoBehaviour
     {
         itemDictionary = FindFirstObjectByType<ItemDictionary>();
 
+        if (inventoryPanel == null || slotPrefab == null)
+        {
+            Debug.LogError("InventoryController is missing inventoryPanel or slotPrefab reference.", this);
+            enabled = false;
+            return;
+        }
+
         inventoryKeys = new Key[slotCount];
 
         for (int i = 0; i < slotCount; i++)
         {
-            Slot slot = Instantiate(slotPrefab, inventoryPanel.transform).GetComponent<Slot>();
+            GameObject slotObject = Instantiate(slotPrefab, inventoryPanel.transform);
+            Slot slot = slotObject.GetComponent<Slot>();
+
+            if (slot == null || slot.slotNum == null)
+            {
+                Debug.LogError("Inventory slot prefab is missing Slot component or slot number text.", slotObject);
+                enabled = false;
+                return;
+            }
+
             slot.slotNum.text = (i + 1).ToString();
 
             inventoryKeys[i] = i < 9 ? (Key)((int)Key.Digit1 + i) : Key.Digit0;
@@ -38,15 +54,22 @@ public class InventoryController : MonoBehaviour
 
     void Update()
     {
+        Keyboard keyboard = Keyboard.current;
+
+        if (keyboard == null || inventoryKeys == null)
+        {
+            return;
+        }
+
         for (int i = 0; i < slotCount; i++)
         {
-            if (Keyboard.current[inventoryKeys[i]].wasPressedThisFrame)
+            if (keyboard[inventoryKeys[i]].wasPressedThisFrame)
             {
                 SelectSlot(i);
             }
         }
 
-        if (Keyboard.current.eKey.wasPressedThisFrame)
+        if (keyboard.eKey.wasPressedThisFrame)
         {
             if (InteractionDetector.ShouldBlockInventoryUse)
             {
@@ -60,16 +83,29 @@ public class InventoryController : MonoBehaviour
     void SelectSlot(int index)
     {
         selectedSlotIndex = index;
-        Debug.Log($"slot selected {index}");
         UpdateSlotVisuals();
     }
 
     void UpdateSlotVisuals()
     {
+        if (inventoryPanel == null)
+        {
+            return;
+        }
+
         for (int i = 0; i < inventoryPanel.transform.childCount; i++)
         {
             Slot slot = inventoryPanel.transform.GetChild(i).GetComponent<Slot>();
+            if (slot == null)
+            {
+                continue;
+            }
+
             Image img = slot.GetComponent<Image>();
+            if (img == null)
+            {
+                continue;
+            }
 
             if (i == selectedSlotIndex)
             {
@@ -89,9 +125,14 @@ public class InventoryController : MonoBehaviour
 
     void UseItemInSlot(int index)
     {
+        if (inventoryPanel == null || index < 0 || index >= inventoryPanel.transform.childCount)
+        {
+            return;
+        }
+
         Slot slot = inventoryPanel.transform.GetChild(index).GetComponent<Slot>();
 
-        if (slot.currentItem != null)
+        if (slot != null && slot.currentItem != null)
         {
             Item item = slot.currentItem.GetComponent<Item>();
 
@@ -104,6 +145,11 @@ public class InventoryController : MonoBehaviour
 
     public Item GetSelectedItem()
     {
+        if (inventoryPanel == null)
+        {
+            return null;
+        }
+
         if (selectedSlotIndex < 0 || selectedSlotIndex >= inventoryPanel.transform.childCount)
         {
             return null;
@@ -111,7 +157,7 @@ public class InventoryController : MonoBehaviour
 
         Slot slot = inventoryPanel.transform.GetChild(selectedSlotIndex).GetComponent<Slot>();
 
-        if (slot.currentItem != null)
+        if (slot != null && slot.currentItem != null)
         {
             return slot.currentItem.GetComponent<Item>();
         }
@@ -121,9 +167,14 @@ public class InventoryController : MonoBehaviour
 
     public void RemoveSelectedItem()
     {
+        if (inventoryPanel == null || selectedSlotIndex < 0 || selectedSlotIndex >= inventoryPanel.transform.childCount)
+        {
+            return;
+        }
+
         Slot slot = inventoryPanel.transform.GetChild(selectedSlotIndex).GetComponent<Slot>();
 
-        if (slot.currentItem != null)
+        if (slot != null && slot.currentItem != null)
         {
             Destroy(slot.currentItem);
             slot.currentItem = null;
@@ -132,6 +183,11 @@ public class InventoryController : MonoBehaviour
 
     public bool AddItem(GameObject itemPrefab)
     {
+        if (inventoryPanel == null || itemPrefab == null)
+        {
+            return false;
+        }
+
         foreach (Transform slotTransform in inventoryPanel.transform)
         {
             Slot slot = slotTransform.GetComponent<Slot>();
@@ -143,7 +199,11 @@ public class InventoryController : MonoBehaviour
                 GameObject newItem = Instantiate(itemPrefab, slot.transform);
                 Item newItemComp = newItem.GetComponent<Item>();
 
-                newItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                RectTransform rectTransform = newItem.GetComponent<RectTransform>();
+                if (rectTransform != null)
+                {
+                    rectTransform.anchoredPosition = Vector2.zero;
+                }
 
                 if (sourceItem != null && newItemComp != null)
                 {

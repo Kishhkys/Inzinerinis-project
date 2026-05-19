@@ -14,9 +14,6 @@ public class FileItem : Item
 
     public override void UseItem()
     {
-        Debug.Log("Opening patient file...");
-        Debug.Log(fileContent);
-
         if (patientFilePopup != null)
         {
             patientFilePopup.ShowFile(fileContent);
@@ -30,7 +27,6 @@ public class FileItem : Item
     public override void PickUp(string group = "File", string sound = "File_pick_up")
     {
         base.PickUp(group, sound);
-        Debug.Log("Patient file collected");
 
         UseItem();
     }

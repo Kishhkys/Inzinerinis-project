@@ -65,7 +65,6 @@ public class MainMenuController : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(1f);
 
-        Debug.Log("Quit called");
         Application.Quit();
     }
 }

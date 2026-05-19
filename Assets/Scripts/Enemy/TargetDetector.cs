@@ -19,7 +19,6 @@ public class TargetDetector : Detector
     //{
     //    //Find out if player is near
     //    Collider2D playerCollider = Physics2D.OverlapCircle(transform.position, targetDetectionRange, playerLayerMask);
-    //    Debug.Log($"OverlapCircle result: {playerCollider}");
     //    if (playerCollider != null)
     //    {
     //        //Check if you see the player

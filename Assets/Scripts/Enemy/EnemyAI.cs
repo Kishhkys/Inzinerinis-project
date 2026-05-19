@@ -5,6 +5,8 @@ using UnityEngine.Events;
 
 public class EnemyAI : MonoBehaviour
 {
+    private static readonly List<SteeringBehaviour> EmptyBehaviours = new List<SteeringBehaviour>();
+
     private enum AIState
     {
         Patrol,
@@ -50,9 +52,9 @@ public class EnemyAI : MonoBehaviour
     [Header("UI")]
     [SerializeField] private GameObject exclamationMark;
 
-    public UnityEvent OnAttackPressed;
-    public UnityEvent<Vector2> OnMovementInput;
-    public UnityEvent<Vector2> OnPointerInput;
+    [SerializeField] private UnityEvent OnAttackPressed;
+    [SerializeField] private UnityEvent<Vector2> OnMovementInput;
+    [SerializeField] private UnityEvent<Vector2> OnPointerInput;
 
     private Vector2 lastStuckCheckPosition;
     private float stuckCheckTimer;
@@ -81,6 +83,11 @@ public class EnemyAI : MonoBehaviour
 
     private void PerformDetection()
     {
+        if (detectors == null)
+        {
+            return;
+        }
+
         foreach (Detector detector in detectors)
         {
             if (detector != null)
@@ -92,17 +99,31 @@ public class EnemyAI : MonoBehaviour
 
     private void Update()
     {
-        bool rawSeesPlayer = aiData.targets != null && aiData.targets.Count > 0;
-
-        bool hasLineOfSight = false;
-
-        if (rawSeesPlayer)
+        if (aiData == null || movementDirectionSolver == null)
         {
-            hasLineOfSight = CanSeeTarget(aiData.targets[0]);
+            return;
         }
 
+        bool rawSeesPlayer = HasDetectedTarget();
+        bool hasLineOfSight = rawSeesPlayer && CanSeeTarget(aiData.targets[0]);
         bool seesPlayer = rawSeesPlayer && hasLineOfSight && Time.time >= ignorePlayerUntil;
 
+        UpdateTargetMemory(rawSeesPlayer, hasLineOfSight);
+        HandleTransitions(seesPlayer);
+        UpdateMovementInput();
+        UpdateLookDirection(seesPlayer);
+        HandleAttack(seesPlayer);
+        OnMovementInput?.Invoke(movementInput);
+        CheckIfStuck(rawSeesPlayer && hasLineOfSight);
+    }
+
+    private bool HasDetectedTarget()
+    {
+        return aiData.targets != null && aiData.targets.Count > 0;
+    }
+
+    private void UpdateTargetMemory(bool rawSeesPlayer, bool hasLineOfSight)
+    {
         if (rawSeesPlayer && hasLineOfSight)
         {
             aiData.currentTarget = aiData.targets[0];
@@ -112,17 +133,21 @@ public class EnemyAI : MonoBehaviour
                 aiData.lastSeenPosition = aiData.currentTarget.position;
                 aiData.hasLastSeenPosition = true;
             }
-        }
-        else
-        {
-            aiData.currentTarget = null;
+
+            return;
         }
 
-        HandleTransitions(seesPlayer);
+        aiData.currentTarget = null;
+    }
 
+    private void UpdateMovementInput()
+    {
         List<SteeringBehaviour> activeBehaviours = GetActiveBehaviours();
         movementInput = movementDirectionSolver.GetDirectionToMove(activeBehaviours, aiData);
+    }
 
+    private void UpdateLookDirection(bool seesPlayer)
+    {
         Transform lookTarget = GetLookTarget(seesPlayer);
 
         if (lookTarget != null)
@@ -133,14 +158,6 @@ public class EnemyAI : MonoBehaviour
         {
             OnPointerInput?.Invoke(aiData.lastSeenPosition);
         }
-
-        HandleAttack(seesPlayer);
-
-        OnMovementInput?.Invoke(movementInput);
-
-        CheckIfStuck(rawSeesPlayer && hasLineOfSight);
-
-        Debug.Log($"State: {currentState} | MoveInput: {movementInput} | PatrolIdx: {aiData.currentPatrolIndex} | StuckCount: {patrolStuckCount}");
     }
 
     private bool CanSeeTarget(Transform target)
@@ -198,8 +215,6 @@ public class EnemyAI : MonoBehaviour
 
         if (movedDistance < stuckDistanceThreshold)
         {
-            Debug.Log("Enemy stuck");
-
             stuckGraceUntil = Time.time + stuckRecoveryGracePeriod;
 
             if (currentState == AIState.Patrol)
@@ -216,13 +231,16 @@ public class EnemyAI : MonoBehaviour
                     patrolStuckCount = 0;
                 }
 
-                foreach (SteeringBehaviour b in patrolBehaviours)
+                if (patrolBehaviours != null)
                 {
-                    PatrolBehaviour patrol = b as PatrolBehaviour;
-
-                    if (patrol != null)
+                    foreach (SteeringBehaviour b in patrolBehaviours)
                     {
-                        patrol.ForceRepath();
+                        PatrolBehaviour patrol = b as PatrolBehaviour;
+
+                        if (patrol != null)
+                        {
+                            patrol.ForceRepath();
+                        }
                     }
                 }
             }
@@ -371,18 +389,18 @@ public class EnemyAI : MonoBehaviour
         switch (currentState)
         {
             case AIState.Chase:
-                return chaseBehaviours;
+                return chaseBehaviours ?? EmptyBehaviours;
 
             case AIState.Investigate:
-                return investigateBehaviours;
+                return investigateBehaviours ?? EmptyBehaviours;
 
             case AIState.Attack:
             case AIState.Wait:
-                return new List<SteeringBehaviour>();
+                return EmptyBehaviours;
 
             case AIState.Patrol:
             default:
-                return patrolBehaviours;
+                return patrolBehaviours ?? EmptyBehaviours;
         }
     }
 

@@ -114,8 +114,6 @@ public class CardReader : MonoBehaviour, IInteractable
             inventory.RemoveSelectedItem();
         }
 
-        Debug.Log("CardReader: Access granted.");
-
         isUsing = false;
     }
 

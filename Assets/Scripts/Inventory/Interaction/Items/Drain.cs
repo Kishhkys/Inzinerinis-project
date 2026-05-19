@@ -35,7 +35,6 @@ public class Drain : MonoBehaviour, IInteractable
         if (selectedItem == null)
         {
             InteractionDialogueEvents.DrainChecked(false);
-            Debug.Log("Need something to pull the key out.");
             SoundEffectManager.PlayClip("Elevator", "Elevator_creak", 0.5f, true, 0f, transform.position);
             return;
         }
@@ -43,7 +42,6 @@ public class Drain : MonoBehaviour, IInteractable
         if (selectedItem.ID != requiredItemID)
         {
             InteractionDialogueEvents.DrainChecked(false);
-            Debug.Log("Wrong item. Need pliers.");
             SoundEffectManager.PlayClip("Elevator", "Elevator_creak", 0.5f, true, 0f, transform.position);
             return;
         }
@@ -56,8 +54,6 @@ public class Drain : MonoBehaviour, IInteractable
     {
         isUsing = true;
         isUsed = true;
-
-        Debug.Log("Used pliers on drain.");
 
         SoundEffectManager.PlayClip("Drain", "Drain", 0.1f, true, 0f, transform.position);
         selectedItem.UseItem();

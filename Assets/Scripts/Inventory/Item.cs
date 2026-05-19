@@ -9,7 +9,6 @@ public class Item : MonoBehaviour
 
     public virtual void UseItem()
     {
-        Debug.Log("Using item" + name);
     }
 
     //public virtual void PickUp()

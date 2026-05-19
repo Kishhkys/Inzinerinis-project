@@ -6,8 +6,6 @@ public class InteractiveWall : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        Debug.Log("WALL INTERACTED");
-
         if (puzzleUI != null)
         {
             puzzleUI.SetActive(true);
