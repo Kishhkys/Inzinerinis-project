@@ -67,6 +67,9 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
     [SerializeField] private float teleportBlockedUntil = 2f;
 
+    private const float MinSqrMagnitude = 0.01f;
+    private const float FlashlightAngleOffset = 90f;
+
     private bool movementBlocked = false;
     private bool isLocked = false;
 
@@ -200,7 +203,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
             animator.SetFloat("inputY", moveInput.y);
         }
 
-        if (moveInput.sqrMagnitude > 0.01f)
+        if (moveInput.sqrMagnitude > MinSqrMagnitude)
         {
             lastFacingDirection = moveInput.normalized;
             UpdateFlashlightTransform();
@@ -407,7 +410,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
             return;
         }
 
-        Vector2 direction = lastFacingDirection.sqrMagnitude > 0.01f
+        Vector2 direction = lastFacingDirection.sqrMagnitude > MinSqrMagnitude
             ? lastFacingDirection.normalized
             : Vector2.down;
 
@@ -421,7 +424,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
         flashlightTransform.localPosition = new Vector3(offset.x, offset.y, 0f);
 
         float directionAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        flashlightTransform.localRotation = Quaternion.Euler(0f, 0f, directionAngle - 90f);
+        flashlightTransform.localRotation = Quaternion.Euler(0f, 0f, directionAngle - FlashlightAngleOffset);
 
         if (flashlightSpriteTransform != null)
         {
@@ -448,7 +451,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
     private bool ShouldShowFlashlightSprite()
     {
-        Vector2 direction = lastFacingDirection.sqrMagnitude > 0.01f
+        Vector2 direction = lastFacingDirection.sqrMagnitude > MinSqrMagnitude
             ? lastFacingDirection.normalized
             : Vector2.down;
 
@@ -566,7 +569,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
     {
         Vector2 direction = targetPosition - transform.position;
 
-        if (direction.sqrMagnitude < 0.01f)
+        if (direction.sqrMagnitude < MinSqrMagnitude)
         {
             return;
         }

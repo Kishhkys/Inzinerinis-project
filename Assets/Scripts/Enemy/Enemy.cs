@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] private float attackDamage = 10f;
     [SerializeField] private float attackRange = 1.5f;
+    [SerializeField] private float hitPointScatterRadius = 0.3f;
     private CinemachineImpulseSource impulseSource;
 
 
@@ -51,7 +52,7 @@ public class Enemy : MonoBehaviour
             PlayerHealth playerHealth = playerCollider.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
-                Vector2 hitPoint = (Vector2)playerCollider.transform.position + Random.insideUnitCircle * 0.3f;
+                Vector2 hitPoint = (Vector2)playerCollider.transform.position + Random.insideUnitCircle * hitPointScatterRadius;
                 CameraShakeManager.instance.CameraShake(impulseSource);
                 playerHealth.UpdateHealth(-attackDamage, hitPoint);
                 InteractionDialogueEvents.PlayerDamagedBy(gameObject);

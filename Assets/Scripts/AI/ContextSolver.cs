@@ -10,6 +10,7 @@ public class ContextSolver : MonoBehaviour
     float[] interestGizmo = new float[0];
     Vector2 resultDirection = Vector2.zero;
     private float rayLength = 2;
+    private const float MinSqrMagnitude = 0.01f;
 
     private void Start()
     {
@@ -39,7 +40,7 @@ public class ContextSolver : MonoBehaviour
             outputDirection += Directions.eightDirections[i] * interest[i];
         }
 
-        if (outputDirection.sqrMagnitude > 0.01f)
+        if (outputDirection.sqrMagnitude > MinSqrMagnitude)
         {
             outputDirection.Normalize();
             resultDirection = outputDirection;
