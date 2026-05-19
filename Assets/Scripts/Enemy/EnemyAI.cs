@@ -42,12 +42,19 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float lostSightDelay = 0.3f;
     [SerializeField] private float investigateWaitDelay = 1.5f;
     [SerializeField] private float chaseReactionDelay = 0.1f;
+    [SerializeField] private float investigateArrivalDistance = 0.4f;
 
     [Header("Stuck Check")]
     [SerializeField] private float stuckCheckInterval = 0.5f;
     [SerializeField] private float stuckDistanceThreshold = 0.08f;
     [SerializeField] private float stuckRecoveryGracePeriod = 1.5f;
     [SerializeField] private int stuckEventsBeforeSkipPatrol = 2;
+    [SerializeField] private float stuckIgnoreDuration = 1.2f;
+    [SerializeField] private float stuckImpulseForce = 2f;
+
+    [Header("Alert Audio")]
+    [SerializeField] private float alertSoundVolume = 0.3f;
+    [SerializeField] private float growlDelay = 1f;
 
     [Header("UI")]
     [SerializeField] private GameObject exclamationMark;
@@ -258,14 +265,14 @@ public class EnemyAI : MonoBehaviour
                     aiData.hasLastSeenPosition = true;
                 }
 
-                ignorePlayerUntil = Time.time + 1.2f;
+                ignorePlayerUntil = Time.time + stuckIgnoreDuration;
 
                 Vector2 randomDir = Random.insideUnitCircle.normalized;
                 Rigidbody2D rb = GetComponent<Rigidbody2D>();
 
                 if (rb != null)
                 {
-                    rb.AddForce(randomDir * 2f, ForceMode2D.Impulse);
+                    rb.AddForce(randomDir * stuckImpulseForce, ForceMode2D.Impulse);
                 }
 
                 ChangeState(AIState.Investigate);
@@ -352,7 +359,7 @@ public class EnemyAI : MonoBehaviour
                     {
                         float distToLastSeen = Vector2.Distance(transform.position, aiData.lastSeenPosition);
 
-                        if (distToLastSeen <= 0.4f)
+                        if (distToLastSeen <= investigateArrivalDistance)
                         {
                             queuedStateAfterWait = AIState.Patrol;
                             ChangeState(AIState.Wait, investigateWaitDelay);
@@ -500,11 +507,11 @@ public class EnemyAI : MonoBehaviour
 
     private IEnumerator PlayStingerThenGrowl()
     {
-        SoundEffectManager.PlayClip("Monster", "Stinger", 0.3f);
+        SoundEffectManager.PlayClip("Monster", "Stinger", alertSoundVolume);
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(growlDelay);
 
-        SoundEffectManager.PlayClip("Monster", "Monster_growl", 0.3f);
+        SoundEffectManager.PlayClip("Monster", "Monster_growl", alertSoundVolume);
 
         alertSoundCoroutine = null;
     }

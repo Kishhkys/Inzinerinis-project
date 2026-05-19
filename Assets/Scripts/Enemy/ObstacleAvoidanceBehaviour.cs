@@ -11,6 +11,7 @@ public class ObstacleAvoidanceBehaviour : SteeringBehaviour
     [SerializeField]
     private bool showGizmo = true;
 
+    private float rayLength = 2f;
     float[] dangersResultTemp = null;
 
     public override (float[] danger, float[] interest) GetSteering(float[] danger, float[] interest, AIData aiData)
@@ -59,7 +60,7 @@ public class ObstacleAvoidanceBehaviour : SteeringBehaviour
                 {
                     Gizmos.DrawRay(
                         transform.position,
-                        Directions.eightDirections[i] * dangersResultTemp[i] * 2
+                        Directions.eightDirections[i] * dangersResultTemp[i] * rayLength
                         );
                 }
             }

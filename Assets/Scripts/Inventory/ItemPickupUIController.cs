@@ -12,6 +12,7 @@ public class ItemPickupUIController : MonoBehaviour
     public GameObject popupPrefab;
     public int maxPopups = 5;
     public float popupDuration = 3f;
+    [SerializeField] private float fadeOutDuration = 1f;
 
     private readonly Queue<GameObject> activePopups = new();
 
@@ -56,10 +57,10 @@ public class ItemPickupUIController : MonoBehaviour
         }
 
         CanvasGroup canvasGroup = popup.GetComponent<CanvasGroup>();
-        for(float timePassed = 0; timePassed < 1f;  timePassed += Time.deltaTime)
+        for(float timePassed = 0; timePassed < fadeOutDuration; timePassed += Time.deltaTime)
         {
             if (popup == null) yield break;
-            canvasGroup.alpha = 1f - timePassed;
+            canvasGroup.alpha = 1f - (timePassed / fadeOutDuration);
             yield return null;
         }
         Destroy(popup);

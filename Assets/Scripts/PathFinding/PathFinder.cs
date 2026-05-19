@@ -127,12 +127,14 @@ public class PathFinder : MonoBehaviour
     }
 
 
+    private const float MinRaycastDistance = 0.01f;
+
     private bool HasLineOfSight(Vector2 from, Vector2 to)
     {
         Vector2 direction = to - from;
         float distance = direction.magnitude;
 
-        if (distance < 0.01f) return true;
+        if (distance < MinRaycastDistance) return true;
 
         RaycastHit2D hit = Physics2D.Raycast(from, direction.normalized, distance, obstacleMask);
         return hit.collider == null;

@@ -29,6 +29,7 @@ public class PlayerHealth : MonoBehaviour
 
     [Header("Effects")]
     [SerializeField] private GameObject bloodPrefab;
+    [SerializeField] private float damageVolumeScale = 10f;
 
     [Header("References")]
     [SerializeField] private CinemachineCamera virtualCamera;
@@ -101,7 +102,7 @@ public class PlayerHealth : MonoBehaviour
                 playerController.NotifyDamaged();
             }
 
-            float volume = Mathf.Clamp01(Mathf.Abs(mod) / 10f);
+            float volume = Mathf.Clamp01(Mathf.Abs(mod) / damageVolumeScale);
             SoundEffectManager.PlayClip("Health", "Hit", volume);
 
             if (bloodPrefab != null)

@@ -15,6 +15,7 @@ public class SeekBehaviour : SteeringBehaviour
     //gizmo parameters
     private Vector2 targetPositionCached;
     private float[] interestsTemp;
+    private float rayLength = 2f;
 
     public override (float[] danger, float[] interest) GetSteering(float[] danger, float[] interest, AIData aiData)
     {
@@ -83,7 +84,7 @@ public class SeekBehaviour : SteeringBehaviour
                 Gizmos.color = Color.green;
                 for (int i = 0; i < interestsTemp.Length; i++)
                 {
-                    Gizmos.DrawRay(transform.position, Directions.eightDirections[i] * interestsTemp[i] * 2);
+                    Gizmos.DrawRay(transform.position, Directions.eightDirections[i] * interestsTemp[i] * rayLength);
                 }
                 if (reachedLastTarget == false)
                 {

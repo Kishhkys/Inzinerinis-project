@@ -9,6 +9,7 @@ public class PatrolBehaviour : SteeringBehaviour
     [Header("Stuck recovery")]
     [SerializeField] private float nodeStuckTimeout = 1.5f;
     [SerializeField] private float repathCooldown = 0.5f;
+    private const float NodeProgressThreshold = 0.02f;
 
     private List<PathNode> currentPath;
     private int currentPathIndex;
@@ -109,7 +110,7 @@ public class PatrolBehaviour : SteeringBehaviour
             }
 
 
-            if (Mathf.Abs(distToNode - lastDistToCurrentNode) < 0.02f)
+            if (Mathf.Abs(distToNode - lastDistToCurrentNode) < NodeProgressThreshold)
             {
                 timeOnCurrentNode += Time.deltaTime;
             }
