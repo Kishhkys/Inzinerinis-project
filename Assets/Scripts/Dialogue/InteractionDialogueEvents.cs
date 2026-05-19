@@ -141,7 +141,14 @@ public static class InteractionDialogueEvents
 
     public static void ZombieSeen(GameObject zombie)
     {
-        ShowOnce("first_zombie_seen", RandomLine(FirstZombieSight));
+        if (zombie == null)
+        {
+            ShowOnce("first_zombie_seen", RandomLine(FirstZombieSight));
+            return;
+        }
+
+        string key = $"first_zombie_seen_{zombie.GetInstanceID()}";
+        ShowOnce(key, RandomLine(FirstZombieSight));
     }
 
     public static void LockedDoorChecked(bool hasMatchingKey)

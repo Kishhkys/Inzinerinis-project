@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class ContextSolver : MonoBehaviour
 {
-    [SerializeField]
-    private bool showGizmos = true;
+    private readonly bool showGizmos = true;
 
     float[] interestGizmo = new float[0];
     Vector2 resultDirection = Vector2.zero;
-    private float rayLength = 2;
+    private readonly float rayLength = 2;
     private const float MinSqrMagnitude = 0.01f;
 
     private void Start()

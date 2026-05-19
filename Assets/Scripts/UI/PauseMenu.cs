@@ -17,7 +17,7 @@ public class PauseMenu : MonoBehaviour
     private Slider settingsSfxSlider;
     private Slider settingsAmbienceSlider;
     private TMP_FontAsset menuFont;
-    private Color menuTextColor = new Color(0.196f, 0.196f, 0.196f, 1f);
+    private Color menuTextColor = new(0.196f, 0.196f, 0.196f, 1f);
 
     void Start()
     {
@@ -240,7 +240,7 @@ public class PauseMenu : MonoBehaviour
 
     private Button CreateButton(string objectName, string label, Transform parent, Vector2 size, Vector2 position, UnityEngine.Events.UnityAction onClick)
     {
-        GameObject buttonObject = new GameObject(objectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
+        GameObject buttonObject = new(objectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
         buttonObject.transform.SetParent(parent, false);
 
         RectTransform rect = buttonObject.GetComponent<RectTransform>();
@@ -262,7 +262,7 @@ public class PauseMenu : MonoBehaviour
 
     private TMP_Text CreateText(string objectName, string text, Transform parent, Vector2 size, Vector2 position, float fontSize)
     {
-        GameObject textObject = new GameObject(objectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+        GameObject textObject = new(objectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
         textObject.transform.SetParent(parent, false);
 
         RectTransform rect = textObject.GetComponent<RectTransform>();
@@ -288,7 +288,7 @@ public class PauseMenu : MonoBehaviour
 
     private Slider CreateSlider(string objectName, Transform parent, Vector2 size, Vector2 position)
     {
-        GameObject sliderObject = new GameObject(objectName, typeof(RectTransform), typeof(Slider));
+        GameObject sliderObject = new(objectName, typeof(RectTransform), typeof(Slider));
         sliderObject.transform.SetParent(parent, false);
 
         RectTransform rect = sliderObject.GetComponent<RectTransform>();
@@ -322,7 +322,7 @@ public class PauseMenu : MonoBehaviour
 
     private Image CreateSliderImage(string objectName, Transform parent, Vector2 anchorMin, Vector2 anchorMax, Color color)
     {
-        GameObject imageObject = new GameObject(objectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        GameObject imageObject = new(objectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         imageObject.transform.SetParent(parent, false);
 
         RectTransform rect = imageObject.GetComponent<RectTransform>();

@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(CanvasGroup))]
 public class PanelBlink : MonoBehaviour
 {
     [SerializeField] private CanvasGroup canvasGroup;
@@ -11,7 +12,7 @@ public class PanelBlink : MonoBehaviour
     {
         if (canvasGroup == null)
         {
-            canvasGroup = GetComponent<CanvasGroup>();
+            TryGetComponent(out canvasGroup);
         }
 
         if (canvasGroup == null)

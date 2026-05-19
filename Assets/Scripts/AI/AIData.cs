@@ -11,7 +11,7 @@ public class AIData : MonoBehaviour
     public Transform currentPatrolTarget;
 
     [Header("Patrol")]
-    public List<Transform> patrolPoints = new List<Transform>();
+    public List<Transform> patrolPoints = new();
     public int currentPatrolIndex = 0;
 
     [Header("Investigation")]
@@ -19,7 +19,7 @@ public class AIData : MonoBehaviour
     public bool hasLastSeenPosition = false;
 
     [Header("Pathfinding")]
-    public List<PathNode> currentPath = new List<PathNode>();
+    public List<PathNode> currentPath = new();
     public int currentPathIndex = 0;
 
 

@@ -9,7 +9,7 @@ public class TeleportTrigger : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (destination == null) return;
-        if (requiredDoor == null || !requiredDoor.isOpened) return;
+        if (requiredDoor == null || !requiredDoor.IsOpened) return;
 
         ITeleportable teleportable = collision.GetComponentInParent<ITeleportable>();
         if (teleportable == null) return;

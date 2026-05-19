@@ -32,7 +32,7 @@ public class InventoryController : MonoBehaviour
         for (int i = 0; i < slotCount; i++)
         {
             GameObject slotObject = Instantiate(slotPrefab, inventoryPanel.transform);
-            Slot slot = slotObject.GetComponent<Slot>();
+            slotObject.TryGetComponent(out Slot slot);
 
             if (slot == null || slot.slotNum == null)
             {
@@ -95,14 +95,12 @@ public class InventoryController : MonoBehaviour
 
         for (int i = 0; i < inventoryPanel.transform.childCount; i++)
         {
-            Slot slot = inventoryPanel.transform.GetChild(i).GetComponent<Slot>();
-            if (slot == null)
+            if (!inventoryPanel.transform.GetChild(i).TryGetComponent(out Slot slot))
             {
                 continue;
             }
 
-            Image img = slot.GetComponent<Image>();
-            if (img == null)
+            if (!slot.TryGetComponent(out Image img))
             {
                 continue;
             }
@@ -130,11 +128,11 @@ public class InventoryController : MonoBehaviour
             return;
         }
 
-        Slot slot = inventoryPanel.transform.GetChild(index).GetComponent<Slot>();
+            inventoryPanel.transform.GetChild(index).TryGetComponent(out Slot slot);
 
-        if (slot != null && slot.currentItem != null)
-        {
-            Item item = slot.currentItem.GetComponent<Item>();
+            if (slot != null && slot.currentItem != null)
+            {
+                slot.currentItem.TryGetComponent(out Item item);
 
             if (item != null)
             {
@@ -155,11 +153,12 @@ public class InventoryController : MonoBehaviour
             return null;
         }
 
-        Slot slot = inventoryPanel.transform.GetChild(selectedSlotIndex).GetComponent<Slot>();
+        inventoryPanel.transform.GetChild(selectedSlotIndex).TryGetComponent(out Slot slot);
 
         if (slot != null && slot.currentItem != null)
         {
-            return slot.currentItem.GetComponent<Item>();
+            slot.currentItem.TryGetComponent(out Item item);
+            return item;
         }
 
         return null;
@@ -172,7 +171,7 @@ public class InventoryController : MonoBehaviour
             return;
         }
 
-        Slot slot = inventoryPanel.transform.GetChild(selectedSlotIndex).GetComponent<Slot>();
+        inventoryPanel.transform.GetChild(selectedSlotIndex).TryGetComponent(out Slot slot);
 
         if (slot != null && slot.currentItem != null)
         {
@@ -190,17 +189,16 @@ public class InventoryController : MonoBehaviour
 
         foreach (Transform slotTransform in inventoryPanel.transform)
         {
-            Slot slot = slotTransform.GetComponent<Slot>();
+            slotTransform.TryGetComponent(out Slot slot);
 
             if (slot != null && slot.currentItem == null)
             {
-                Item sourceItem = itemPrefab.GetComponent<Item>();
+                itemPrefab.TryGetComponent(out Item sourceItem);
 
                 GameObject newItem = Instantiate(itemPrefab, slot.transform);
-                Item newItemComp = newItem.GetComponent<Item>();
+                newItem.TryGetComponent(out Item newItemComp);
 
-                RectTransform rectTransform = newItem.GetComponent<RectTransform>();
-                if (rectTransform != null)
+                if (newItem.TryGetComponent(out RectTransform rectTransform))
                 {
                     rectTransform.anchoredPosition = Vector2.zero;
                 }

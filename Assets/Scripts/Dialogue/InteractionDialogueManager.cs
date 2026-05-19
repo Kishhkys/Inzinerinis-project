@@ -8,8 +8,8 @@ public class InteractionDialogueManager : MonoBehaviour
     public static InteractionDialogueManager Instance { get; private set; }
 
     [SerializeField] private float displayDuration = 3f;
-    [SerializeField] private Vector2 panelSize = new Vector2(300f, 56f);
-    [SerializeField] private Vector3 worldOffset = new Vector3(0f, 1.35f, 0f);
+    [SerializeField] private Vector2 panelSize = new (300f, 56f);
+    [SerializeField] private Vector3 worldOffset = new (0f, 1.35f, 0f);
     [SerializeField] private float worldCanvasScale = 0.01f;
     [SerializeField] private float zombieSightRange = 8f;
 
@@ -28,7 +28,7 @@ public class InteractionDialogueManager : MonoBehaviour
     {
         if (Instance == null)
         {
-            GameObject managerObject = new GameObject("Interaction Dialogue Manager");
+            GameObject managerObject = new ("Interaction Dialogue Manager");
             managerObject.AddComponent<InteractionDialogueManager>();
         }
     }
@@ -55,7 +55,7 @@ public class InteractionDialogueManager : MonoBehaviour
 
         if (Instance == null)
         {
-            GameObject managerObject = new GameObject("Interaction Dialogue Manager");
+            GameObject managerObject = new ("Interaction Dialogue Manager");
             managerObject.AddComponent<InteractionDialogueManager>();
         }
 
@@ -194,7 +194,7 @@ public class InteractionDialogueManager : MonoBehaviour
             return;
         }
 
-        GameObject canvasObject = new GameObject("Interaction Dialogue Canvas");
+        GameObject canvasObject = new ("Interaction Dialogue Canvas");
         canvasObject.transform.SetParent(transform, false);
 
         dialogueCanvas = canvasObject.AddComponent<Canvas>();
@@ -212,7 +212,7 @@ public class InteractionDialogueManager : MonoBehaviour
 
         canvasObject.AddComponent<GraphicRaycaster>();
 
-        GameObject textObject = new GameObject("Dialogue Text");
+        GameObject textObject = new ("Dialogue Text");
         textObject.transform.SetParent(canvasObject.transform, false);
 
         canvasGroup = textObject.AddComponent<CanvasGroup>();

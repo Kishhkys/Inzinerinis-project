@@ -106,10 +106,7 @@ public class InteractionDetector : MonoBehaviour
             busyUntilTime = targetTime;
         }
 
-        if (busyCoroutine == null)
-        {
-            busyCoroutine = StartCoroutine(InteractBusyRoutine());
-        }
+        busyCoroutine ??= StartCoroutine(InteractBusyRoutine());
     }
 
     private IEnumerator InteractBusyRoutine()
@@ -214,7 +211,7 @@ public class InteractionDetector : MonoBehaviour
             }
         }
 
-        interactableInRange = interactablesInRange.Count > 0 ? interactablesInRange[interactablesInRange.Count - 1] : null;
+        interactableInRange = interactablesInRange.Count > 0 ? interactablesInRange[^1] : null;
         HasInteractableInRange = interactableInRange != null;
 
         SetInteractPrompt(HasInteractableInRange && !isOnCooldown);

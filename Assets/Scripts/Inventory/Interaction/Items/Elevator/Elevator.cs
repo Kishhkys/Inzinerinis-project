@@ -2,11 +2,16 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class Elevator : MonoBehaviour, IInteractable
 {
+    private static readonly int SetOpenedHash = Animator.StringToHash("setOpened");
+    private static readonly WaitForSeconds ElevatorOpenDelay = new(1f);
+
     [Header("Elevator State")]
     public bool isRepaired = false;
-    public bool isOpened { get; private set; }
+    public bool IsOpened { get; private set; }
 
     private bool keycardAccepted = false;
 
@@ -35,15 +40,15 @@ public class Elevator : MonoBehaviour, IInteractable
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        TryGetComponent(out animator);
+        TryGetComponent(out spriteRenderer);
     }
 
     private void Start()
     {
         isRepaired = false;
         keycardAccepted = false;
-        isOpened = false;
+        IsOpened = false;
         isOpening = false;
         levelCompleteStarted = false;
         isBusy = false;
@@ -78,7 +83,7 @@ public class Elevator : MonoBehaviour, IInteractable
 
         if (!isRepaired)
         {
-            InteractionDialogueEvents.ElevatorChecked(false, keycardAccepted, isOpened);
+            InteractionDialogueEvents.ElevatorChecked(false, keycardAccepted, IsOpened);
 
             float duration = SoundEffectManager.PlayClip(
                 "Elevator",
@@ -95,7 +100,7 @@ public class Elevator : MonoBehaviour, IInteractable
 
         if (!keycardAccepted)
         {
-            InteractionDialogueEvents.ElevatorChecked(true, false, isOpened);
+            InteractionDialogueEvents.ElevatorChecked(true, false, IsOpened);
 
             float duration = SoundEffectManager.PlayClip(
                 "Door",
@@ -119,7 +124,7 @@ public class Elevator : MonoBehaviour, IInteractable
             transform.position
         );
 
-        if (!isOpened)
+        if (!IsOpened)
         {
             StartCoroutine(OpenElevator(buttonDuration));
             return;
@@ -187,7 +192,7 @@ public class Elevator : MonoBehaviour, IInteractable
 
         if (animator != null)
         {
-            animator.SetBool("setOpened", true);
+            animator.SetBool(SetOpenedHash, true);
         }
 
         SoundEffectManager.PlayClip(
@@ -199,9 +204,9 @@ public class Elevator : MonoBehaviour, IInteractable
             transform.position
         );
 
-        yield return new WaitForSeconds(1f);
+        yield return ElevatorOpenDelay;
 
-        isOpened = true;
+        IsOpened = true;
         isOpening = false;
 
         if (spriteRenderer != null && openSprite != null)

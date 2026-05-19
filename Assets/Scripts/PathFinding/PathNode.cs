@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PathNode : MonoBehaviour
 {
-    public List<PathNode> neighbours = new List<PathNode>();
+    public List<PathNode> neighbours = new();
 
     private void OnDrawGizmos()
     {

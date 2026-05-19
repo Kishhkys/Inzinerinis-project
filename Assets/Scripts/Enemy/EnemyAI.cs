@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class EnemyAI : MonoBehaviour
 {
-    private static readonly List<SteeringBehaviour> EmptyBehaviours = new List<SteeringBehaviour>();
+    private static readonly List<SteeringBehaviour> EmptyBehaviours = new();
 
     private enum AIState
     {
@@ -77,7 +78,13 @@ public class EnemyAI : MonoBehaviour
 
     private float ignorePlayerUntil = 0f;
 
+    private Rigidbody2D rb;
     private Coroutine alertSoundCoroutine;
+
+    private void Awake()
+    {
+        TryGetComponent(out rb);
+    }
 
     private void Start()
     {
@@ -268,8 +275,6 @@ public class EnemyAI : MonoBehaviour
                 ignorePlayerUntil = Time.time + stuckIgnoreDuration;
 
                 Vector2 randomDir = Random.insideUnitCircle.normalized;
-                Rigidbody2D rb = GetComponent<Rigidbody2D>();
-
                 if (rb != null)
                 {
                     rb.AddForce(randomDir * stuckImpulseForce, ForceMode2D.Impulse);
@@ -393,22 +398,14 @@ public class EnemyAI : MonoBehaviour
 
     private List<SteeringBehaviour> GetActiveBehaviours()
     {
-        switch (currentState)
+        return currentState switch
         {
-            case AIState.Chase:
-                return chaseBehaviours ?? EmptyBehaviours;
-
-            case AIState.Investigate:
-                return investigateBehaviours ?? EmptyBehaviours;
-
-            case AIState.Attack:
-            case AIState.Wait:
-                return EmptyBehaviours;
-
-            case AIState.Patrol:
-            default:
-                return patrolBehaviours ?? EmptyBehaviours;
-        }
+            AIState.Chase => chaseBehaviours ?? EmptyBehaviours,
+            AIState.Investigate => investigateBehaviours ?? EmptyBehaviours,
+            AIState.Attack or AIState.Wait => EmptyBehaviours,
+            AIState.Patrol => patrolBehaviours ?? EmptyBehaviours,
+            _ => patrolBehaviours ?? EmptyBehaviours
+        };
     }
 
     private Transform GetLookTarget(bool seesPlayer)
@@ -489,10 +486,7 @@ public class EnemyAI : MonoBehaviour
             {
                 SetExclamation(true);
 
-                if (alertSoundCoroutine == null)
-                {
-                    alertSoundCoroutine = StartCoroutine(PlayStingerThenGrowl());
-                }
+                alertSoundCoroutine ??= StartCoroutine(PlayStingerThenGrowl());
             }
             else
             {
