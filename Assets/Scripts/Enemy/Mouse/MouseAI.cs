@@ -29,10 +29,13 @@ public class MouseAI : MonoBehaviour
     private float stuckCheckTimer;
     private bool isUnstucking;
     private Coroutine unstuckCoroutine;
+    private int playerLayerMask;
 
     private void Start()
     {
+        
         lastPosition = transform.position;
+        playerLayerMask = LayerMask.GetMask("Player");
     }
 
     private void Update()
@@ -71,7 +74,7 @@ public class MouseAI : MonoBehaviour
         Collider2D playerCollider = Physics2D.OverlapCircle(
             transform.position,
             attackDistance,
-            LayerMask.GetMask("Player")
+            playerLayerMask
         );
 
         if (playerCollider != null)
