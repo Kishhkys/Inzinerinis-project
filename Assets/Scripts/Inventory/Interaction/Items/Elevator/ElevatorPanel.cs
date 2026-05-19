@@ -8,7 +8,7 @@ public class ElevatorPanel : MonoBehaviour, IInteractable
     public Elevator elevator;
 
     [Header("Required Items In Order")]
-    public List<int> requiredItemIDs = new List<int>();
+    public List<int> requiredItemIDs = new();
 
     [Header("Settings")]
     public bool removeItemsAfterRepair = true;

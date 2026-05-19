@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
+[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(SoundEffectLibrary))]
 public class AmbientSoundManager : MonoBehaviour
 {
     private static AmbientSoundManager Instance;

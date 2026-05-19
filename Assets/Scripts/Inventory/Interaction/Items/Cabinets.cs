@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Drawers : MonoBehaviour, IInteractable
 {
-    public bool isOpened { get; private set; }
+    public bool IsOpened { get; private set; }
     public string CabinetID { get; private set; }
 
     [Header("Item Spawn")]
@@ -29,7 +29,7 @@ public class Drawers : MonoBehaviour, IInteractable
 
     public bool CanInteract()
     {
-        return !isOpened && !isUnlocking;
+        return !IsOpened && !isUnlocking;
     }
 
     public void Interact()
@@ -69,7 +69,7 @@ public class Drawers : MonoBehaviour, IInteractable
 
     private void OpenDrawers()
     {
-        isOpened = true;
+        IsOpened = true;
         isUnlocking = false;
 
         SoundEffectManager.PlayClip("Drawers", "Drawers_open", 1f, true, 0f, transform.position);

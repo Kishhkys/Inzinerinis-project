@@ -1,10 +1,13 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+[RequireComponent(typeof(CanvasGroup))]
+[RequireComponent(typeof(RectTransform))]
 public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     Transform originalParent;
     CanvasGroup canvasGroup;
+    RectTransform rectTransform;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -25,7 +28,12 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         canvasGroup.blocksRaycasts = true;
         canvasGroup.alpha = 1f;
 
-        Slot dropSlot = eventData.pointerEnter?.GetComponent<Slot>();
+        Slot dropSlot = null;
+
+        if (eventData.pointerEnter != null)
+        {
+            eventData.pointerEnter.TryGetComponent(out dropSlot);
+        }
         
         if (dropSlot == null) 
         {
@@ -38,19 +46,29 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         
         }
 
-        Slot originalSlot = originalParent.GetComponent<Slot>();
+        originalParent.TryGetComponent(out Slot originalSlot);
 
         if (dropSlot != null)
         {
             if (dropSlot.currentItem != null)
             {
-                dropSlot.currentItem.transform.SetParent(originalSlot.transform);
-                originalSlot.currentItem = dropSlot.currentItem;
-                dropSlot.currentItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                if (originalSlot != null)
+                {
+                    dropSlot.currentItem.transform.SetParent(originalSlot.transform);
+                    originalSlot.currentItem = dropSlot.currentItem;
+                }
+
+                if (dropSlot.currentItem.TryGetComponent(out RectTransform dropItemTransform))
+                {
+                    dropItemTransform.anchoredPosition = Vector2.zero;
+                }
             }
             else
             {
-                originalSlot.currentItem = null;
+                if (originalSlot != null)
+                {
+                    originalSlot.currentItem = null;
+                }
 
             }
 
@@ -62,12 +80,13 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         {
             transform.SetParent(originalParent);
         }
-        GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        rectTransform.anchoredPosition = Vector2.zero;
     }
 
-    void Start()
+    private void Awake()
     {
-        canvasGroup = GetComponent<CanvasGroup>();
+        TryGetComponent(out canvasGroup);
+        TryGetComponent(out rectTransform);
     }
 
 

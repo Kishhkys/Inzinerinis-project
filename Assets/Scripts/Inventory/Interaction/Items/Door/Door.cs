@@ -1,9 +1,14 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class Door : MonoBehaviour, IInteractable
 {
-    public bool isOpened { get; private set; }
+    private static readonly int SetOpenedHash = Animator.StringToHash("setOpened");
+    private static readonly WaitForSeconds UnlockDelay = new(3f);
+
+    public bool IsOpened { get; private set; }
     public string ChestID { get; private set; }
 
     public Sprite defaultSprite;
@@ -22,8 +27,8 @@ public class Door : MonoBehaviour, IInteractable
 
     void Awake()
     {
-        animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        TryGetComponent(out animator);
+        TryGetComponent(out spriteRenderer);
     }
 
     void Start()
@@ -43,7 +48,7 @@ public class Door : MonoBehaviour, IInteractable
 
     public bool CanInteract()
     {
-        return !isOpened && !isUnlocking;
+        return !IsOpened && !isUnlocking;
     }
 
     public void Interact()
@@ -104,7 +109,7 @@ public class Door : MonoBehaviour, IInteractable
             spriteRenderer.sprite = defaultSprite;
         }
 
-        yield return new WaitForSeconds(3f);
+        yield return UnlockDelay;
 
         yield return StartCoroutine(OpenAndTeleport());
     }
@@ -117,7 +122,7 @@ public class Door : MonoBehaviour, IInteractable
 
         if (animator != null)
         {
-            animator.SetBool("setOpened", true);
+            animator.SetBool(SetOpenedHash, true);
         }
 
         float duration = SoundEffectManager.PlayClip(
@@ -152,9 +157,9 @@ public class Door : MonoBehaviour, IInteractable
 
     public void SetOpened(bool opened)
     {
-        isOpened = opened;
+        IsOpened = opened;
 
-        if (isOpened && spriteRenderer != null)
+        if (IsOpened && spriteRenderer != null)
         {
             spriteRenderer.sprite = openedSprite;
         }

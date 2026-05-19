@@ -1,14 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Image))]
 public class PuzzleFade : MonoBehaviour
 {
     private Image img;
 
     void OnEnable()
     {
-        img = GetComponent<Image>();
+        TryGetComponent(out img);
         Color c = img.color;
-        img.color = new Color(c.r, c.g, c.b, 1f);
+        img.color = new(c.r, c.g, c.b, 1f);
     }
 }

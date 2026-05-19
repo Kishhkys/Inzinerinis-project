@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(SoundEffectLibrary))]
 public class SoundEffectManager : MonoBehaviour
 {
     private static SoundEffectManager instance;

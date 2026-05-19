@@ -1,6 +1,8 @@
 using Unity.Cinemachine;
 using UnityEngine;
 
+[RequireComponent(typeof(EnemyMover))]
+[RequireComponent(typeof(CinemachineImpulseSource))]
 public class Enemy : MonoBehaviour
 {
 
@@ -21,8 +23,8 @@ public class Enemy : MonoBehaviour
 
     private void Awake()
     {
-        agentMover = GetComponent<EnemyMover>();
-        impulseSource = GetComponent<CinemachineImpulseSource>();
+        TryGetComponent(out agentMover);
+        TryGetComponent(out impulseSource);
     }
 
     private void Start()
@@ -49,8 +51,7 @@ public class Enemy : MonoBehaviour
         Collider2D playerCollider = Physics2D.OverlapCircle(transform.position, attackRange, LayerMask.GetMask("Player"));
         if (playerCollider != null)
         {
-            PlayerHealth playerHealth = playerCollider.GetComponent<PlayerHealth>();
-            if (playerHealth != null)
+            if (playerCollider.TryGetComponent(out PlayerHealth playerHealth))
             {
                 Vector2 hitPoint = (Vector2)playerCollider.transform.position + Random.insideUnitCircle * hitPointScatterRadius;
                 CameraShakeManager.instance.CameraShake(impulseSource);

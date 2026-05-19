@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Drain : MonoBehaviour, IInteractable
 {
-    public bool isUsed { get; private set; }
+    public bool IsUsed { get; private set; }
 
     [Header("Required Item")]
     public int requiredItemID;
@@ -20,7 +20,7 @@ public class Drain : MonoBehaviour, IInteractable
 
     public bool CanInteract()
     {
-        return !isUsed && !isUsing;
+        return !IsUsed && !isUsing;
     }
 
     public void Interact()
@@ -53,7 +53,7 @@ public class Drain : MonoBehaviour, IInteractable
     private IEnumerator UseDrain(InventoryController inventory, Item selectedItem)
     {
         isUsing = true;
-        isUsed = true;
+        IsUsed = true;
 
         SoundEffectManager.PlayClip("Drain", "Drain", 0.1f, true, 0f, transform.position);
         selectedItem.UseItem();

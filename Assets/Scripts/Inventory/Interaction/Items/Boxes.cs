@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Boxes : MonoBehaviour, IInteractable
 {
-    public bool isOpened { get; private set; }
+    public bool IsOpened { get; private set; }
     public string BoxID { get; private set; }
 
     [Header("Item Spawn")]
@@ -19,7 +19,7 @@ public class Boxes : MonoBehaviour, IInteractable
 
     public bool CanInteract()
     {
-        return !isOpened;
+        return !IsOpened;
     }
 
     public void Interact()
@@ -31,7 +31,7 @@ public class Boxes : MonoBehaviour, IInteractable
     private void OpenBox()
     {
         SoundEffectManager.PlayClip("Elevator", "Cardboard_box", 2f, true, 1f, transform.position);
-        isOpened = true;
+        IsOpened = true;
         StartCoroutine(SpawnItemAfterDelay());
     }
 

@@ -4,6 +4,8 @@ using UnityEngine.UI;
 using Unity.Cinemachine;
 using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(PlayerController))]
+[RequireComponent(typeof(Collider2D))]
 public class PlayerHealth : MonoBehaviour
 {
     private float health = 0f;
@@ -36,7 +38,15 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private GameObject inventoryPanel;
     [SerializeField] private GameObject popupPanel;
 
+    private PlayerController playerController;
+    private Collider2D playerCollider;
     private bool isDead = false;
+
+    private void Awake()
+    {
+        TryGetComponent(out playerController);
+        TryGetComponent(out playerCollider);
+    }
 
     private void Start()
     {
@@ -95,8 +105,6 @@ public class PlayerHealth : MonoBehaviour
 
         if (mod < 0)
         {
-            PlayerController playerController = GetComponent<PlayerController>();
-
             if (playerController != null)
             {
                 playerController.NotifyDamaged();
@@ -113,9 +121,7 @@ public class PlayerHealth : MonoBehaviour
 
                 GameObject blood = Instantiate(bloodPrefab, spawnPos, Quaternion.identity);
 
-                SpriteRenderer bloodRenderer = blood.GetComponent<SpriteRenderer>();
-
-                if (bloodRenderer != null)
+                if (blood.TryGetComponent(out SpriteRenderer bloodRenderer))
                 {
                     bloodRenderer.sortingLayerName = "Decor";
                 }
@@ -145,8 +151,6 @@ public class PlayerHealth : MonoBehaviour
 
         isDead = true;
 
-        PlayerController playerController = GetComponent<PlayerController>();
-
         if (playerController != null)
         {
             playerController.StopFootsteps();
@@ -167,8 +171,6 @@ public class PlayerHealth : MonoBehaviour
             playerSpriteRenderer.sortingLayerName = "Player";
             playerSpriteRenderer.sortingOrder = 1;
         }
-
-        Collider2D playerCollider = GetComponent<Collider2D>();
 
         if (playerCollider != null)
         {

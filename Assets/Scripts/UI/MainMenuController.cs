@@ -4,6 +4,9 @@ using System.Collections;
 
 public class MainMenuController : MonoBehaviour
 {
+    private static readonly WaitForSecondsRealtime PlayTransitionDelay = new(0.3f);
+    private static readonly WaitForSecondsRealtime QuitTransitionDelay = new(1f);
+
     [Header("Loading")]
     [SerializeField] private GameObject loadingPanel;
     [SerializeField] private float loadingDelay = 1f;
@@ -34,7 +37,7 @@ public class MainMenuController : MonoBehaviour
 
         AmbientSoundManager.FadeOutMusic(1f);
 
-        yield return new WaitForSecondsRealtime(0.3f);
+        yield return PlayTransitionDelay;
 
         if (loadingPanel != null)
         {
@@ -63,7 +66,7 @@ public class MainMenuController : MonoBehaviour
 
         AmbientSoundManager.FadeOutMusic(1f);
 
-        yield return new WaitForSecondsRealtime(1f);
+        yield return QuitTransitionDelay;
 
         Application.Quit();
     }

@@ -1,5 +1,7 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Animator))]
 public class EnemyMover : MonoBehaviour, ITeleportable
 {
     public enum FootstepSound
@@ -12,6 +14,11 @@ public class EnemyMover : MonoBehaviour, ITeleportable
     private Rigidbody2D rb2d;
     private Animator animator;
     private AudioSource enemyAudioSource;
+    private static readonly int IsWalkingHash = Animator.StringToHash("isWalking");
+    private static readonly int InputXHash = Animator.StringToHash("InputX");
+    private static readonly int InputYHash = Animator.StringToHash("InputY");
+    private static readonly int LastInputXHash = Animator.StringToHash("LastInputX");
+    private static readonly int LastInputYHash = Animator.StringToHash("LastInputY");
 
     [Header("Movement")]
     [SerializeField] private float maxSpeed = 2f;
@@ -37,11 +44,10 @@ public class EnemyMover : MonoBehaviour, ITeleportable
 
     private void Awake()
     {
-        rb2d = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
-        enemyAudioSource = GetComponent<AudioSource>();
+        TryGetComponent(out rb2d);
+        TryGetComponent(out animator);
 
-        if (enemyAudioSource == null)
+        if (!TryGetComponent(out enemyAudioSource))
         {
             enemyAudioSource = gameObject.AddComponent<AudioSource>();
         }
@@ -74,9 +80,9 @@ public class EnemyMover : MonoBehaviour, ITeleportable
 
             if (animator != null)
             {
-                animator.SetBool("isWalking", true);
-                animator.SetFloat("InputX", MovementInput.x);
-                animator.SetFloat("InputY", MovementInput.y);
+                animator.SetBool(IsWalkingHash, true);
+                animator.SetFloat(InputXHash, MovementInput.x);
+                animator.SetFloat(InputYHash, MovementInput.y);
             }
         }
         else
@@ -85,9 +91,9 @@ public class EnemyMover : MonoBehaviour, ITeleportable
 
             if (animator != null)
             {
-                animator.SetBool("isWalking", false);
-                animator.SetFloat("LastInputX", oldMovementInput.x);
-                animator.SetFloat("LastInputY", oldMovementInput.y);
+                animator.SetBool(IsWalkingHash, false);
+                animator.SetFloat(LastInputXHash, oldMovementInput.x);
+                animator.SetFloat(LastInputYHash, oldMovementInput.y);
             }
         }
 

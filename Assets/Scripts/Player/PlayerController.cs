@@ -3,8 +3,17 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
 
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour, ITeleportable
 {
+    private static readonly int IsMovingHash = Animator.StringToHash("isMoving");
+    private static readonly int InputXHash = Animator.StringToHash("inputX");
+    private static readonly int InputYHash = Animator.StringToHash("inputY");
+    private static readonly int LastInputXHash = Animator.StringToHash("LastInputX");
+    private static readonly int LastInputYHash = Animator.StringToHash("LastInputY");
+
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float runSpeed = 1.5f;
@@ -29,15 +38,15 @@ public class PlayerController : MonoBehaviour, ITeleportable
     [SerializeField] private float flashlightRange = 4.5f;
     [SerializeField] private float flashlightOuterAngle = 55f;
     [SerializeField] private float flashlightInnerAngle = 35f;
-    [SerializeField] private Color flashlightColor = new Color(1f, 0.92f, 0.72f, 1f);
+    [SerializeField] private Color flashlightColor = new(1f, 0.92f, 0.72f, 1f);
     [SerializeField] private float flashlightForwardOffset = 0.28f;
     [SerializeField] private float flashlightRightHandOffset = 0.18f;
-    [SerializeField] private Vector2 flashlightBaseOffset = new Vector2(0f, -0.05f);
+    [SerializeField] private Vector2 flashlightBaseOffset = new(0f, -0.05f);
     [SerializeField] private Sprite flashlightOffHandSprite;
     [SerializeField] private Sprite flashlightOnHandSprite;
     [SerializeField] private float flashlightSpriteDirectionOffset = 135f;
     [SerializeField] private int flashlightSpriteSortingOrder = 3;
-    [SerializeField] private Vector2 flashlightRightFacingSpritePosition = new Vector2(0.08f, -0.2f);
+    [SerializeField] private Vector2 flashlightRightFacingSpritePosition = new(0.08f, -0.2f);
 
     private Rigidbody2D rb;
     private Collider2D playerCollider;
@@ -55,6 +64,11 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
     private Color[] originalSpriteColors;
     private readonly RaycastHit2D[] wallHits = new RaycastHit2D[4];
+    private readonly ContactFilter2D wallContactFilter = new()
+    {
+        useLayerMask = true,
+        useTriggers = false
+    };
 
     private Light2D flashlight;
     private Transform flashlightTransform;
@@ -77,9 +91,9 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        playerCollider = GetComponent<Collider2D>();
-        animator = GetComponent<Animator>();
+        TryGetComponent(out rb);
+        TryGetComponent(out playerCollider);
+        TryGetComponent(out animator);
 
         CreateFlashlight();
 
@@ -150,7 +164,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
     {
         if (animator != null)
         {
-            animator.SetBool("isMoving", rb.linearVelocity.magnitude > 0);
+            animator.SetBool(IsMovingHash, rb.linearVelocity.magnitude > 0);
         }
     }
 
@@ -177,9 +191,9 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
             if (animator != null)
             {
-                animator.SetBool("isMoving", false);
-                animator.SetFloat("inputX", 0f);
-                animator.SetFloat("inputY", 0f);
+                animator.SetBool(IsMovingHash, false);
+                animator.SetFloat(InputXHash, 0f);
+                animator.SetFloat(InputYHash, 0f);
             }
 
             return;
@@ -189,9 +203,9 @@ public class PlayerController : MonoBehaviour, ITeleportable
         {
             if (animator != null)
             {
-                animator.SetBool("isMoving", false);
-                animator.SetFloat("LastInputX", moveInput.x);
-                animator.SetFloat("LastInputY", moveInput.y);
+                animator.SetBool(IsMovingHash, false);
+                animator.SetFloat(LastInputXHash, moveInput.x);
+                animator.SetFloat(LastInputYHash, moveInput.y);
             }
         }
 
@@ -199,8 +213,8 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
         if (animator != null)
         {
-            animator.SetFloat("inputX", moveInput.x);
-            animator.SetFloat("inputY", moveInput.y);
+            animator.SetFloat(InputXHash, moveInput.x);
+            animator.SetFloat(InputYHash, moveInput.y);
         }
 
         if (moveInput.sqrMagnitude > MinSqrMagnitude)
@@ -268,12 +282,8 @@ public class PlayerController : MonoBehaviour, ITeleportable
             return false;
         }
 
-        ContactFilter2D filter = new ContactFilter2D
-        {
-            useLayerMask = true,
-            layerMask = wallLayerMask,
-            useTriggers = false
-        };
+        ContactFilter2D filter = wallContactFilter;
+        filter.layerMask = wallLayerMask;
 
         int hitCount = 0;
         hitCount += playerCollider.Cast(Vector2.up, filter, wallHits, wallCheckDistance);
@@ -339,7 +349,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
     private void CreateFlashlight()
     {
-        GameObject flashlightObject = new GameObject("Player Flashlight");
+        GameObject flashlightObject = new("Player Flashlight");
         flashlightObject.transform.SetParent(transform, false);
 
         flashlightTransform = flashlightObject.transform;
@@ -372,7 +382,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
             return;
         }
 
-        GameObject spriteObject = new GameObject("Player Flashlight Sprite");
+        GameObject spriteObject = new("Player Flashlight Sprite");
         spriteObject.transform.SetParent(transform, false);
 
         flashlightSpriteTransform = spriteObject.transform;
@@ -414,23 +424,26 @@ public class PlayerController : MonoBehaviour, ITeleportable
             ? lastFacingDirection.normalized
             : Vector2.down;
 
-        Vector2 rightHandDirection = new Vector2(direction.y, -direction.x);
+        Vector2 rightHandDirection = new(direction.y, -direction.x);
 
         Vector2 offset =
             flashlightBaseOffset +
             direction * flashlightForwardOffset +
             rightHandDirection * flashlightRightHandOffset;
 
-        flashlightTransform.localPosition = new Vector3(offset.x, offset.y, 0f);
-
         float directionAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        flashlightTransform.localRotation = Quaternion.Euler(0f, 0f, directionAngle - FlashlightAngleOffset);
+        flashlightTransform.SetLocalPositionAndRotation(
+            offset,
+            Quaternion.Euler(0f, 0f, directionAngle - FlashlightAngleOffset)
+        );
 
         if (flashlightSpriteTransform != null)
         {
             Vector2 spriteOffset = GetFlashlightSpritePosition(direction, offset);
-            flashlightSpriteTransform.localPosition = new Vector3(spriteOffset.x, spriteOffset.y, 0f);
-            flashlightSpriteTransform.localRotation = Quaternion.Euler(0f, 0f, directionAngle + flashlightSpriteDirectionOffset);
+            flashlightSpriteTransform.SetLocalPositionAndRotation(
+                spriteOffset,
+                Quaternion.Euler(0f, 0f, directionAngle + flashlightSpriteDirectionOffset)
+            );
 
             if (flashlightSpriteRenderer != null)
             {
@@ -581,10 +594,10 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
         if (animator != null)
         {
-            animator.SetFloat("inputX", direction.x);
-            animator.SetFloat("inputY", direction.y);
-            animator.SetFloat("LastInputX", direction.x);
-            animator.SetFloat("LastInputY", direction.y);
+            animator.SetFloat(InputXHash, direction.x);
+            animator.SetFloat(InputYHash, direction.y);
+            animator.SetFloat(LastInputXHash, direction.x);
+            animator.SetFloat(LastInputYHash, direction.y);
         }
     }
 
@@ -601,7 +614,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
         if (animator != null)
         {
-            animator.SetBool("isMoving", false);
+            animator.SetBool(IsMovingHash, false);
         }
 
         StopFootsteps();

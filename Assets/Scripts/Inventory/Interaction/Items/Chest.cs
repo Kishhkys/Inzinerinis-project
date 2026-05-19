@@ -4,7 +4,9 @@ using UnityEngine.InputSystem;
 
 public class Chest : MonoBehaviour, IInteractable
 {
-    public bool isOpened { get; private set; }
+    private static readonly WaitForSeconds UnlockDelay = new(3f);
+
+    public bool IsOpened { get; private set; }
     public string ChestID { get; private set; }
     public GameObject itemPrefab;
     public Sprite defaultSprite;
@@ -14,10 +16,16 @@ public class Chest : MonoBehaviour, IInteractable
 
     private bool isLocked = false;
     private bool isUnlocking = false;
+    private SpriteRenderer spriteRenderer;
+
+    private void Awake()
+    {
+        TryGetComponent(out spriteRenderer);
+    }
 
     public bool CanInteract()
     {
-        return !isOpened && !isUnlocking;
+        return !IsOpened && !isUnlocking;
     }
 
     public void Interact()
@@ -56,8 +64,13 @@ public class Chest : MonoBehaviour, IInteractable
     private IEnumerator UnlockAndOpenChest()
     {
         isLocked = false;
-        GetComponent<SpriteRenderer>().sprite = defaultSprite;
-        yield return new WaitForSeconds(3f);
+
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.sprite = defaultSprite;
+        }
+
+        yield return UnlockDelay;
         OpenChest();
     }
 
@@ -75,11 +88,11 @@ public class Chest : MonoBehaviour, IInteractable
 
     public void SetOpened(bool opened)
     {
-        isOpened = opened;
+        IsOpened = opened;
 
-        if (isOpened)
+        if (IsOpened && spriteRenderer != null)
         {
-            GetComponent<SpriteRenderer>().sprite = openedSprite;
+            spriteRenderer.sprite = openedSprite;
         }
     }
 
@@ -90,7 +103,11 @@ public class Chest : MonoBehaviour, IInteractable
         if (!string.IsNullOrEmpty(requiredKeyID))
         {
             isLocked = true;
-            GetComponent<SpriteRenderer>().sprite = lockedSprite;
+
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.sprite = lockedSprite;
+            }
         }
     }
 

@@ -84,7 +84,7 @@ public class SeekBehaviour : SteeringBehaviour
                 Gizmos.color = Color.green;
                 for (int i = 0; i < interestsTemp.Length; i++)
                 {
-                    Gizmos.DrawRay(transform.position, Directions.eightDirections[i] * interestsTemp[i] * rayLength);
+                    Gizmos.DrawRay(transform.position, rayLength * interestsTemp[i] * Directions.eightDirections[i]);
                 }
                 if (reachedLastTarget == false)
                 {

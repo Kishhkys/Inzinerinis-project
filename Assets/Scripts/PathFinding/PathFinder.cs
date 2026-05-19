@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PathFinder : MonoBehaviour
 {
-    [SerializeField] private List<PathNode> allNodes = new List<PathNode>();
+    [SerializeField] private List<PathNode> allNodes = new();
 
     [Header("Line of Sight")]
     [SerializeField] private LayerMask obstacleMask;
@@ -22,12 +22,12 @@ public class PathFinder : MonoBehaviour
         if (startNode == null || targetNode == null)
             return null;
 
-        List<PathNode> openSet = new List<PathNode> { startNode };
-        HashSet<PathNode> closedSet = new HashSet<PathNode>();
+        List<PathNode> openSet = new() { startNode };
+        HashSet<PathNode> closedSet = new();
 
-        Dictionary<PathNode, PathNode> cameFrom = new Dictionary<PathNode, PathNode>();
-        Dictionary<PathNode, float> gScore = new Dictionary<PathNode, float>();
-        Dictionary<PathNode, float> fScore = new Dictionary<PathNode, float>();
+        Dictionary<PathNode, PathNode> cameFrom = new();
+        Dictionary<PathNode, float> gScore = new();
+        Dictionary<PathNode, float> fScore = new();
 
         foreach (var node in allNodes)
         {
@@ -76,7 +76,7 @@ public class PathFinder : MonoBehaviour
 
     private List<PathNode> ReconstructPath(Dictionary<PathNode, PathNode> cameFrom, PathNode current)
     {
-        List<PathNode> path = new List<PathNode> { current };
+        List<PathNode> path = new() { current };
 
         while (cameFrom.ContainsKey(current))
         {

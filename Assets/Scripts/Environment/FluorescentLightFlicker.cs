@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
+[RequireComponent(typeof(Light2D))]
+[RequireComponent(typeof(AudioSource))]
 public class FluorescentLightFlicker : MonoBehaviour
 {
     [Header("References")]
@@ -15,10 +17,10 @@ public class FluorescentLightFlicker : MonoBehaviour
     [SerializeField] private float dimSpriteAlpha = 0.45f;
 
     [Header("Timing")]
-    [SerializeField] private Vector2 stableDurationRange = new Vector2(3f, 8f);
-    [SerializeField] private Vector2 flickerDurationRange = new Vector2(0.15f, 0.8f);
-    [SerializeField] private Vector2 flickerStepDurationRange = new Vector2(0.03f, 0.08f);
-    [SerializeField] private Vector2 offChanceRange = new Vector2(0.2f, 0.45f);
+    [SerializeField] private Vector2 stableDurationRange = new(3f, 8f);
+    [SerializeField] private Vector2 flickerDurationRange = new(0.15f, 0.8f);
+    [SerializeField] private Vector2 flickerStepDurationRange = new(0.03f, 0.08f);
+    [SerializeField] private Vector2 offChanceRange = new(0.2f, 0.45f);
 
     [Header("Audio")]
     [SerializeField] private AudioClip ambientBuzzClip;
@@ -35,12 +37,12 @@ public class FluorescentLightFlicker : MonoBehaviour
     {
         if (targetLight == null)
         {
-            targetLight = GetComponent<Light2D>();
+            TryGetComponent(out targetLight);
         }
 
         if (audioSource == null)
         {
-            audioSource = GetComponent<AudioSource>();
+            TryGetComponent(out audioSource);
         }
 
         if (fixtureSprite != null)

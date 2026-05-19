@@ -60,7 +60,7 @@ public class ObstacleAvoidanceBehaviour : SteeringBehaviour
                 {
                     Gizmos.DrawRay(
                         transform.position,
-                        Directions.eightDirections[i] * dangersResultTemp[i] * rayLength
+                        rayLength * dangersResultTemp[i] * Directions.eightDirections[i]
                         );
                 }
             }
