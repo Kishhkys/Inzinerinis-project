@@ -1734,6 +1734,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   maxHealth: 100
   healthBar: {fileID: 252866824}
+  immortalForPerformanceTesting: 1
   respawnDelay: 4
   deathScreen: {fileID: 403117492}
   respawnLoadingPanel: {fileID: 1631078659}
@@ -19457,6 +19458,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1653010244}
   - component: {fileID: 1653010243}
+  - component: {fileID: 1653010245}
   m_Layer: 0
   m_Name: PerformanceSpawner
   m_TagString: Untagged
@@ -19480,11 +19482,17 @@ MonoBehaviour:
   spawnedEnemiesParent: {fileID: 0}
   spawnOnStart: 1
   startDelay: 2
-  spawnInterval: 5
-  maxSpawnedEnemies: 25
+  spawnInterval: 1
+  spawnBatchSize: 2
+  maxSpawnedEnemies: 100
   spawnPoints: []
   randomSpawnAreaSize: {x: 6, y: 4}
   useRandomPointWhenNoSpawnPoints: 1
+  despawnBatchKey: 30
+  despawnBatchSize: 2
+  repeatDespawnWhileKeyHeld: 1
+  despawnRepeatInterval: 0.25
+  logDespawnEvents: 1
 --- !u!4 &1653010244
 Transform:
   m_ObjectHideFlags: 0
@@ -19500,6 +19508,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1653010245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1653010242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d17f5d05e8d4c03ad1976d9db474f2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PerformanceCsvLogger
+  enemySpawner: {fileID: 0}
+  fileName: performance-stress-test.csv
+  sampleInterval: 1
 --- !u!1 &1659787234
 GameObject:
   m_ObjectHideFlags: 0

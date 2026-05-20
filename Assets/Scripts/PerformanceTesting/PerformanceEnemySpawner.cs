@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 public class PerformanceEnemySpawner : MonoBehaviour
 {
@@ -12,6 +14,7 @@ public class PerformanceEnemySpawner : MonoBehaviour
     [SerializeField] private bool spawnOnStart = true;
     [SerializeField] private float startDelay = 2f;
     [SerializeField] private float spawnInterval = 5f;
+    [SerializeField] private int spawnBatchSize = 1;
     [SerializeField] private int maxSpawnedEnemies = 25;
 
     [Header("Spawn Area")]
@@ -19,18 +22,57 @@ public class PerformanceEnemySpawner : MonoBehaviour
     [SerializeField] private Vector2 randomSpawnAreaSize = new(6f, 4f);
     [SerializeField] private bool useRandomPointWhenNoSpawnPoints = true;
 
+    [Header("Manual Despawn")]
+    [SerializeField] private Key despawnBatchKey = Key.P;
+    [SerializeField] private int despawnBatchSize = 5;
+    [SerializeField] private bool repeatDespawnWhileKeyHeld = true;
+    [SerializeField] private float despawnRepeatInterval = 0.25f;
+    [SerializeField] private bool logDespawnEvents = true;
+
     private readonly List<GameObject> spawnedEnemies = new();
     private Coroutine spawnRoutine;
     private int nextSpawnPointIndex;
+    private float nextHeldDespawnTime;
     private bool warnedMissingPrefab;
+    private bool maxSpawnedEnemiesReached;
 
     public int SpawnedCount => spawnedEnemies.Count;
+    public bool MaxSpawnedEnemiesReached => maxSpawnedEnemiesReached;
 
     private void Start()
     {
         if (spawnOnStart)
         {
             StartSpawning();
+        }
+    }
+
+    private void Update()
+    {
+        Keyboard keyboard = Keyboard.current;
+
+        if (keyboard == null)
+        {
+            return;
+        }
+
+        KeyControl despawnKeyControl = despawnBatchKey == Key.P
+            ? keyboard.pKey
+            : keyboard[despawnBatchKey];
+
+        float now = Time.unscaledTime;
+
+        if (despawnKeyControl.wasPressedThisFrame)
+        {
+            nextHeldDespawnTime = now + despawnRepeatInterval;
+            DespawnEnemyBatch();
+            return;
+        }
+
+        if (repeatDespawnWhileKeyHeld && despawnKeyControl.isPressed && now >= nextHeldDespawnTime)
+        {
+            nextHeldDespawnTime = now + despawnRepeatInterval;
+            DespawnEnemyBatch();
         }
     }
 
@@ -60,8 +102,9 @@ public class PerformanceEnemySpawner : MonoBehaviour
     {
         RemoveDestroyedEnemies();
 
-        if (spawnedEnemies.Count >= maxSpawnedEnemies)
+        if (maxSpawnedEnemiesReached || spawnedEnemies.Count >= maxSpawnedEnemies)
         {
+            maxSpawnedEnemiesReached = true;
             return;
         }
 
@@ -85,6 +128,29 @@ public class PerformanceEnemySpawner : MonoBehaviour
 
         enemy.name = $"{enemyPrefab.name}_Perf_{spawnedEnemies.Count + 1:00}";
         spawnedEnemies.Add(enemy);
+
+        if (spawnedEnemies.Count >= maxSpawnedEnemies)
+        {
+            maxSpawnedEnemiesReached = true;
+        }
+    }
+
+    [ContextMenu("Spawn Enemy Batch")]
+    public void SpawnEnemyBatch()
+    {
+        RemoveDestroyedEnemies();
+
+        if (maxSpawnedEnemiesReached)
+        {
+            return;
+        }
+
+        int countToSpawn = Mathf.Min(spawnBatchSize, maxSpawnedEnemies - spawnedEnemies.Count);
+
+        for (int i = 0; i < countToSpawn; i++)
+        {
+            SpawnEnemy();
+        }
     }
 
     [ContextMenu("Despawn Spawned Enemies")]
@@ -101,6 +167,47 @@ public class PerformanceEnemySpawner : MonoBehaviour
         spawnedEnemies.Clear();
     }
 
+    [ContextMenu("Reset Max-Reached Flag")]
+    public void ResetMaxReachedFlag()
+    {
+        maxSpawnedEnemiesReached = false;
+    }
+
+    [ContextMenu("Despawn Enemy Batch")]
+    public void DespawnEnemyBatch()
+    {
+        RemoveDestroyedEnemies();
+
+        int countToDespawn = Mathf.Min(despawnBatchSize, spawnedEnemies.Count);
+
+        if (countToDespawn <= 0)
+        {
+            if (logDespawnEvents)
+            {
+                Debug.Log("PerformanceEnemySpawner despawn requested, but no spawned enemies are currently tracked.", this);
+            }
+
+            return;
+        }
+
+        for (int i = 0; i < countToDespawn; i++)
+        {
+            int lastIndex = spawnedEnemies.Count - 1;
+            GameObject enemy = spawnedEnemies[lastIndex];
+            spawnedEnemies.RemoveAt(lastIndex);
+
+            if (enemy != null)
+            {
+                Destroy(enemy);
+            }
+        }
+
+        if (logDespawnEvents)
+        {
+            Debug.Log($"PerformanceEnemySpawner despawned {countToDespawn} enemies. Remaining tracked enemies: {spawnedEnemies.Count}.", this);
+        }
+    }
+
     private IEnumerator SpawnLoop()
     {
         if (startDelay > 0f)
@@ -110,7 +217,7 @@ public class PerformanceEnemySpawner : MonoBehaviour
 
         while (enabled)
         {
-            SpawnEnemy();
+            SpawnEnemyBatch();
             yield return new WaitForSeconds(spawnInterval);
         }
 
@@ -159,7 +266,10 @@ public class PerformanceEnemySpawner : MonoBehaviour
     {
         startDelay = Mathf.Max(0f, startDelay);
         spawnInterval = Mathf.Max(0.1f, spawnInterval);
+        spawnBatchSize = Mathf.Max(1, spawnBatchSize);
         maxSpawnedEnemies = Mathf.Max(1, maxSpawnedEnemies);
+        despawnBatchSize = Mathf.Max(1, despawnBatchSize);
+        despawnRepeatInterval = Mathf.Max(0.05f, despawnRepeatInterval);
         randomSpawnAreaSize.x = Mathf.Max(0f, randomSpawnAreaSize.x);
         randomSpawnAreaSize.y = Mathf.Max(0f, randomSpawnAreaSize.y);
     }

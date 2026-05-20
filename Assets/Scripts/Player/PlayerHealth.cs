@@ -14,6 +14,9 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private Slider healthBar;
 
+    [Header("Performance Testing")]
+    [SerializeField] private bool immortalForPerformanceTesting = true;
+
     [Header("Death")]
     [SerializeField] private float respawnDelay = 5f;
     [SerializeField] private GameObject deathScreen;
@@ -98,6 +101,18 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isDead)
         {
+            return;
+        }
+
+        if (immortalForPerformanceTesting && mod < 0f)
+        {
+            health = maxHealth;
+
+            if (healthBar != null)
+            {
+                healthBar.value = health;
+            }
+
             return;
         }
 
