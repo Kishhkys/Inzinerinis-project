@@ -6,6 +6,7 @@ using UnityEngine.Profiling;
 public class PerformanceCsvLogger : MonoBehaviour
 {
     [SerializeField] private PerformanceEnemySpawner enemySpawner;
+    [SerializeField] private bool autoFindEnemySpawner = true;
     [SerializeField] private string fileName = "performance-stress-test.csv";
     [SerializeField] private bool saveToProjectReportsFolder = true;
     [SerializeField] private string projectRelativeFolder = "Reports";
@@ -17,9 +18,12 @@ public class PerformanceCsvLogger : MonoBehaviour
     private ProfilerRecorder mainThreadRecorder;
     private ProfilerRecorder gcAllocatedRecorder;
     private ProfilerRecorder gcReservedRecorder;
+    private bool warnedMissingEnemySpawner;
 
     private void OnEnable()
     {
+        TryResolveEnemySpawner();
+
         startTime = Time.realtimeSinceStartup;
         nextSampleTime = 0f;
 
@@ -44,6 +48,7 @@ public class PerformanceCsvLogger : MonoBehaviour
         }
 
         nextSampleTime = Time.realtimeSinceStartup + sampleInterval;
+        TryResolveEnemySpawner();
 
         float frameTimeMs = Time.unscaledDeltaTime * 1000f;
         float fps = Time.unscaledDeltaTime > 0f ? 1f / Time.unscaledDeltaTime : 0f;
@@ -84,6 +89,32 @@ public class PerformanceCsvLogger : MonoBehaviour
     private void OnValidate()
     {
         sampleInterval = Mathf.Max(0.05f, sampleInterval);
+    }
+
+    private void TryResolveEnemySpawner()
+    {
+        if (enemySpawner != null || !autoFindEnemySpawner)
+        {
+            return;
+        }
+
+        enemySpawner = GetComponent<PerformanceEnemySpawner>();
+
+        if (enemySpawner == null)
+        {
+            enemySpawner = FindFirstObjectByType<PerformanceEnemySpawner>();
+        }
+
+        if (enemySpawner != null)
+        {
+            warnedMissingEnemySpawner = false;
+            Debug.Log("PerformanceCsvLogger connected to enemy spawner: " + enemySpawner.name, this);
+        }
+        else if (!warnedMissingEnemySpawner)
+        {
+            Debug.LogWarning("PerformanceCsvLogger could not find a PerformanceEnemySpawner. CSV enemy_count will stay 0.", this);
+            warnedMissingEnemySpawner = true;
+        }
     }
 
     private string GetLogFilePath()
