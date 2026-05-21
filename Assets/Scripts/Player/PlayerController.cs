@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
         if (movementBlocked)
         {
-            rb.Velocity = Vector2.zero;
+            rb.velocity = Vector2.zero;
             UpdateHidePrompt();
             return;
         }
@@ -157,20 +157,20 @@ public class PlayerController : MonoBehaviour, ITeleportable
     private void ApplyMovement(bool isRunning)
     {
         float speed = isRunning ? runSpeed : moveSpeed;
-        rb.linearVelocity = moveInput * speed;
+        rb.velocity = moveInput * speed;
     }
 
     private void UpdateAnimatorMovement()
     {
         if (animator != null)
         {
-            animator.SetBool(IsMovingHash, rb.linearVelocity.magnitude > 0);
+            animator.SetBool(IsMovingHash, rb.velocity.magnitude > 0);
         }
     }
 
     private void UpdateFootsteps(bool isRunning)
     {
-        if (rb.linearVelocity.magnitude > 0)
+        if (rb.velocity.magnitude > 0)
         {
             if (!playingFootsteps || isRunning != wasRunning)
             {
@@ -231,7 +231,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
             return;
         }
 
-        bool isMoving = rb.linearVelocity.sqrMagnitude > movementThreshold * movementThreshold;
+        bool isMoving = rb.velocity.sqrMagnitude > movementThreshold * movementThreshold;
         bool touchingWall = IsTouchingWall();
         bool recentlyDetected = Time.time - lastDetectedTime <= detectionMemory;
         bool hideBlocked = Time.time < hideBlockedUntil;
@@ -255,7 +255,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
             return;
         }
 
-        bool isMoving = rb.linearVelocity.sqrMagnitude > movementThreshold * movementThreshold;
+        bool isMoving = rb.velocity.sqrMagnitude > movementThreshold * movementThreshold;
         bool canHideWithCtrl = IsNearWall();
         bool recentlyDetected = Time.time - lastDetectedTime <= detectionMemory;
         bool hideBlocked = Time.time < hideBlockedUntil;
@@ -373,13 +373,33 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
     private void CreateFlashlightSprite()
     {
-        loadedFlashlightOffSprite = flashlightOffHandSprite != null ? flashlightOffHandSprite : Resources.Load<Sprite>("PlayerFlashlightOff");
-        loadedFlashlightOnSprite = flashlightOnHandSprite != null ? flashlightOnHandSprite : Resources.Load<Sprite>("PlayerFlashlightOn");
+        loadedFlashlightOffSprite = flashlightOffHandSprite != null
+            ? flashlightOffHandSprite
+            : Resources.Load<Sprite>("PlayerFlashlightOff");
 
-        if (loadedFlashlightOffSprite == null || loadedFlashlightOnSprite == null)
+        loadedFlashlightOnSprite = flashlightOnHandSprite != null
+            ? flashlightOnHandSprite
+            : Resources.Load<Sprite>("PlayerFlashlightOn");
+
+        // If both sprites are missing, skip creating the sprite object but keep the Light2D functional.
+        if (loadedFlashlightOffSprite == null && loadedFlashlightOnSprite == null)
         {
-            Debug.LogWarning("Player flashlight sprite is missing.");
+            if (Debug.isDebugBuild)
+            {
+                Debug.LogWarning("Player flashlight sprites not found in inspector or Resources.");
+            }
             return;
+        }
+
+        // If only one sprite is present, reuse it for both on/off states to avoid missing visuals.
+        if (loadedFlashlightOffSprite == null)
+        {
+            loadedFlashlightOffSprite = loadedFlashlightOnSprite;
+        }
+
+        if (loadedFlashlightOnSprite == null)
+        {
+            loadedFlashlightOnSprite = loadedFlashlightOffSprite;
         }
 
         GameObject spriteObject = new("Player Flashlight Sprite");
@@ -535,7 +555,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
         movementBlocked = true;
 
-        rb.linearVelocity = Vector2.zero;
+        rb.velocity = Vector2.zero;
         moveInput = Vector2.zero;
 
         if (playerCollider != null)
@@ -550,7 +570,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
         yield return new WaitForFixedUpdate();
 
-        rb.linearVelocity = Vector2.zero;
+        rb.velocity = Vector2.zero;
 
         if (playerCollider != null)
         {
@@ -607,7 +627,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
         if (rb != null)
         {
-            rb.linearVelocity = Vector2.zero;
+            rb.velocity = Vector2.zero;
         }
 
         moveInput = Vector2.zero;

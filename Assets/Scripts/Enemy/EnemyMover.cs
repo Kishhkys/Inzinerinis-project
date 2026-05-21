@@ -98,7 +98,7 @@ public class EnemyMover : MonoBehaviour, ITeleportable
         }
 
         currentSpeed = Mathf.Clamp(currentSpeed, 0f, maxSpeed);
-        rb2d.Velocity = oldMovementInput * currentSpeed;
+        rb2d.velocity = oldMovementInput * currentSpeed;
 
         if (MovementInput.magnitude > 0 && !playingFootsteps)
         {
@@ -123,7 +123,7 @@ public class EnemyMover : MonoBehaviour, ITeleportable
         oldMovementInput = Vector2.zero;
         currentSpeed = 0f;
 
-        rb2d.linearVelocity = Vector2.zero;
+        rb2d.velocity = Vector2.zero;
         transform.position = newPosition;
 
         teleportBlockedUntil = Time.time + blockDuration;
