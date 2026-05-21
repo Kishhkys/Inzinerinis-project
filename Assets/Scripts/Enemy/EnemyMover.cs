@@ -98,7 +98,7 @@ public class EnemyMover : MonoBehaviour, ITeleportable
         }
 
         currentSpeed = Mathf.Clamp(currentSpeed, 0f, maxSpeed);
-        rb2d.linearVelocity = oldMovementInput * currentSpeed;
+        rb2d.Velocity = oldMovementInput * currentSpeed;
 
         if (MovementInput.magnitude > 0 && !playingFootsteps)
         {

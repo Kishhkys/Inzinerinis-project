@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour, ITeleportable
 
         if (movementBlocked)
         {
-            rb.linearVelocity = Vector2.zero;
+            rb.Velocity = Vector2.zero;
             UpdateHidePrompt();
             return;
         }
